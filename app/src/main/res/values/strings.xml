@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">My Employee Attendance Register</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="sub_title">Attendance Register</string>
+    <string name="title">Employee Register</string>
+    <string name="sites">Sites</string>
+    <string name="employees">Employees</string>
+    <string name="stats">Stats</string>
+    <string name="attendance">Attendance</string>
+</resources>
