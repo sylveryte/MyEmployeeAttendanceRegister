@@ -1,5 +1,6 @@
 package com.codedleaf.sylveryte.myemployeeattendanceregister;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -29,8 +30,7 @@ public class HomeActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Yo, under construction", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                startActivityForResult(AdditionActivity.fetchIntent(HomeActivity.this,AdditionActivity.FRAGMENT_CODE_ADD_SITE),01);
             }
         });
 
@@ -45,7 +45,7 @@ public class HomeActivity extends AppCompatActivity
 
 
         FragmentManager fragmentManager=getSupportFragmentManager();
-        Fragment fragment=Sites_Fragment.newInstance();
+        Fragment fragment= SitesFragment.newInstance();
 
         fragmentManager.beginTransaction()
                 .add(R.id.home_fragment_container,fragment)

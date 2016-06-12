@@ -1,10 +1,8 @@
 package com.codedleaf.sylveryte.myemployeeattendanceregister;
 
-import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
+
 
 /**
  * Created by sylveryte on 12/6/16.
@@ -14,10 +12,23 @@ public class SitesLab {
     public static SitesLab sLab;
 
     List<Site> mSites;
+    List<LabObservable> mObserverables;
+
 
     private SitesLab()
     {
-            mSites=new ArrayList<>();
+        mSites=new ArrayList<>();
+        mObserverables=new ArrayList<>();
+
+
+        //// TODO: 12/6/16 get rid of this fake db
+        for (int i=42;i<200;i++)
+        {
+            Site site=new Site();
+            site.setTitle("Site "+i);
+            mSites.add(site);
+        }
+
     }
 
     public static SitesLab getInstanceOf()
@@ -28,24 +39,28 @@ public class SitesLab {
 
         }
 
-        if (sLab!=null)
-        {
-            Entry e=new Entry();
-        }
-
         return sLab;
     }
 
     public void addSite(Site site)
     {
         mSites.add(site);
+        alertAllObservers();
     }
 
-    //// TODO: 12/6/16 replace this with global iterator
-    public Site getASite()
+
+    public void addListener(LabObservable labObservable)
     {
-        Random random=new Random();
-        return mSites.get(random.nextInt(mSites.size()));
+        mObserverables.add(labObservable);
     }
 
+    private void alertAllObservers()
+    {
+        for (LabObservable labObservable :mObserverables)
+            labObservable.update();
+    }
+
+    public List<Site> getSites() {
+        return mSites;
+    }
 }

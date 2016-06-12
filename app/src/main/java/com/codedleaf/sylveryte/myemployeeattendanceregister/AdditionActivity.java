@@ -1,29 +1,35 @@
 package com.codedleaf.sylveryte.myemployeeattendanceregister;
 
-import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
+import android.content.Context;
+import android.content.Intent;
+import android.support.v4.app.Fragment;
 
-public class AdditionActivity extends AppCompatActivity {
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_addition);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+public class AdditionActivity extends SingleFragmentActivity {
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+
+    public static final String FRAGMENT_CODE="codedleaf.addition.fragment.code";
+    public static final int FRAGMENT_CODE_ADD_SITE=722;
+    public static final int FRAGMENT_CODE_ADD_EMPLOYEE=721;
+
+    public static Intent fetchIntent(Context context, int fragCode)
+    {
+        Intent i=new Intent(context,AdditionActivity.class);
+        i.putExtra(FRAGMENT_CODE,fragCode);
+        return i;
     }
 
+    @Override
+    protected Fragment createFragment() {
+        switch (getIntent().getIntExtra(FRAGMENT_CODE,FRAGMENT_CODE_ADD_SITE))
+        {
+            case FRAGMENT_CODE_ADD_SITE:
+            {
+                return SiteAdditionFragment.createInstance();
+            }
+
+        }
+
+        return SiteAdditionFragment.createInstance();
+    }
 }

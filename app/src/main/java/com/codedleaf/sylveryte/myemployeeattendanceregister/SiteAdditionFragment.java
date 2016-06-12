@@ -40,7 +40,11 @@ public class SiteAdditionFragment extends Fragment {
             }
         });
 
-
         return v;
+    }
+
+    public static SiteAdditionFragment createInstance()
+    {
+        return new SiteAdditionFragment();
     }
 }
