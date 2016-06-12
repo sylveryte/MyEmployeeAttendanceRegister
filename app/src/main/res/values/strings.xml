@@ -11,4 +11,5 @@
     <string name="employees">Employees</string>
     <string name="stats">Stats</string>
     <string name="attendance">Attendance</string>
+    <string name="title_activity_addition">AdditionActivity</string>
 </resources>

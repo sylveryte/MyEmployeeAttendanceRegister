@@ -27,7 +27,6 @@ public class Entry {
     {
         mDate=new Date();
         mRemark=PRESENT;
-
     }
 
     public Date getDate() {
@@ -56,10 +55,6 @@ public class Entry {
 
     public UUID getEmployeeId() {
         return mEmployeeId;
-    }
-
-    public void setEmployeeId(UUID employeeId) {
-        mEmployeeId = employeeId;
     }
 
     public String getNote() {

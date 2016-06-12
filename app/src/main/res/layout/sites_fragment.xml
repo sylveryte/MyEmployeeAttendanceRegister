@@ -8,6 +8,6 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Kyaa bolta h buntay"
-        android:id="@+id/textView2"/>
+        android:id="@+id/textView_site_title"/>
 
 </LinearLayout>

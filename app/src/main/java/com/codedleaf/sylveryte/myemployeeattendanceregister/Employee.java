@@ -1,5 +1,6 @@
 package com.codedleaf.sylveryte.myemployeeattendanceregister;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,6 +26,7 @@ public class Employee {
         mIsMale=true;
         mIsActive =true;
         mEployeeId=UUID.randomUUID();
+        mDesignations =new ArrayList<>();
     }
 
     public void addDesignation(Designation designation)
