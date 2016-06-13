@@ -22,10 +22,11 @@ public class SitesLab {
 
 
         //// TODO: 12/6/16 get rid of this fake db
-        for (int i=42;i<200;i++)
+        for (int i=1;i<25;i++)
         {
             Site site=new Site();
-            site.setTitle("Site "+i);
+            site.setTitle("Site "+i*763);
+            site.setDescription("codedleaf bc!");
             mSites.add(site);
         }
 

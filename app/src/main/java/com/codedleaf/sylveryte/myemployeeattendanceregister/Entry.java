@@ -57,6 +57,10 @@ public class Entry {
         return mEmployeeId;
     }
 
+    public void setEmployeeId(UUID employeeId) {
+        mEmployeeId = employeeId;
+    }
+
     public String getNote() {
         return mNote;
     }

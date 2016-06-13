@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,9 +20,9 @@ public class SitesFragment extends Fragment implements LabObservable {
 
 
     SitesLab mSitesLab;
-    List<Site> mSites;
     View mView;
     RecyclerView mSitesRecyclerView;
+    SiteAdapter mSiteAdapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -30,7 +31,7 @@ public class SitesFragment extends Fragment implements LabObservable {
 
         mSitesLab=SitesLab.getInstanceOf();
         mSitesLab.addListener(this);
-        mSites=mSitesLab.getSites();
+
     }
 
     @Nullable
@@ -40,33 +41,64 @@ public class SitesFragment extends Fragment implements LabObservable {
         mView=inflater.inflate(R.layout.sites_fragment,container,false);
 
         mSitesRecyclerView=(RecyclerView)mView.findViewById(R.id.site_fragment_recycler_view);
-        mSitesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-
-        //// TODO: 12/6/16 clean all this too :)
-        updateView();
+        mSitesRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
+        mSiteAdapter=new SiteAdapter(mSitesLab.getSites());
+        mSitesRecyclerView.setAdapter(mSiteAdapter);
 
         return mView;
     }
 
+
+    private class SiteAdapter extends RecyclerView.Adapter<SiteHolder>
+    {
+        List<Site> mLocalSites;
+
+        public SiteAdapter(List<Site> sites)
+        {
+            mLocalSites=sites;
+        }
+        @Override
+        public SiteHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            LayoutInflater inflater=getActivity().getLayoutInflater();
+            View view=inflater.inflate(R.layout.list_view_card,parent,false);
+
+            return new SiteHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(SiteHolder holder, int position) {
+            holder.bind(mLocalSites.get(position));
+        }
+
+        @Override
+        public int getItemCount() {
+            return mLocalSites.size();
+        }
+    }
+
     private class SiteHolder extends RecyclerView.ViewHolder
     {
-        public
+        TextView title;
+        TextView description;
 
         public SiteHolder(View itemView) {
             super(itemView);
 
+            title=(TextView)itemView.findViewById(R.id.list_title);
+            description=(TextView)itemView.findViewById(R.id.list_description);
+
         }
+
+        public void bind(Site site)
+        {
+            title.setText(site.getTitle());
+            description.setText(site.getDescription());
+        }
+
     }
 
     private void updateView() {
-
-        //// TODO: 12/6/16 we probably dont need this get rid of it
-        TextView siteTitle=(TextView)mView.findViewById(R.id.textView_site_title);
-
-        Site site=mSites.get(mSites.size()-1);
-
-        siteTitle.setText(site.getTitle());
+        mSiteAdapter.notifyDataSetChanged();
     }
 
     @Override

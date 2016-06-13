@@ -33,7 +33,6 @@ public class Employee {
     {
         mDesignations.add(designation.getDesignationId());
 
-
         //Add into the table code her
         // TODO: 12/6/16 table insert code here
 
