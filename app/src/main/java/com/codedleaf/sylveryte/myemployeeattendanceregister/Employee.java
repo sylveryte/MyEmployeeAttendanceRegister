@@ -3,6 +3,7 @@ package com.codedleaf.sylveryte.myemployeeattendanceregister;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.jar.Pack200;
 
 /**
  * Created by sylveryte on 12/6/16.
@@ -18,6 +19,7 @@ public class Employee {
     String mAdress;
     String mNote;
     List<UUID> mDesignations;
+    List<UUID> mSites;
     Boolean mIsActive;
     UUID mEployeeId;
 
@@ -27,16 +29,36 @@ public class Employee {
         mIsActive =true;
         mEployeeId=UUID.randomUUID();
         mDesignations =new ArrayList<>();
+        mSites=new ArrayList<>();
     }
 
     public void addDesignation(Designation designation)
     {
         mDesignations.add(designation.getDesignationId());
-
         //Add into the table code her
         // TODO: 12/6/16 table insert code here
-
         //use update for remove and this too
+    }
+    public String getDesignationString()
+    {
+        return "no Desg lab :p";
+    }
+
+    public void addSite(Site site)
+    {
+        mSites.add(site.getSiteId());
+        //Add into the table code her
+        // TODO: 14/6/16 table insert code here
+        //use update for remove and this too
+    }
+    public String getSiteString()
+    {
+        String sites="";
+        for (UUID id: mSites)
+        {
+            sites=","+SitesLab.getInstanceOf().getSiteNameById(id);
+        }
+        return sites;
     }
 
     public void removeDesignation(Designation designation )

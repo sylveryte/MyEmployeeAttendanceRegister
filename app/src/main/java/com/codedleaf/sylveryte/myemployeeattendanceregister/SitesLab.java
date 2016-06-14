@@ -2,23 +2,25 @@ package com.codedleaf.sylveryte.myemployeeattendanceregister;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 
 /**
  * Created by sylveryte on 12/6/16.
  */
-public class SitesLab {
+public class SitesLab implements LabObeservable {
 
     public static SitesLab sLab;
 
-    List<Site> mSites;
-    List<LabObservable> mObserverables;
+    private List<Site> mSites;
+    private List<LabObserver> mLabObservers;
+
 
 
     private SitesLab()
     {
         mSites=new ArrayList<>();
-        mObserverables=new ArrayList<>();
+        mLabObservers=new ArrayList<>();
 
 
         //// TODO: 12/6/16 get rid of this fake db
@@ -49,19 +51,30 @@ public class SitesLab {
         alertAllObservers();
     }
 
-
-    public void addListener(LabObservable labObservable)
+    public String getSiteNameById(UUID uuid)
     {
-        mObserverables.add(labObservable);
-    }
-
-    private void alertAllObservers()
-    {
-        for (LabObservable labObservable :mObserverables)
-            labObservable.update();
+        for (Site site: mSites)
+        {
+            if (site.getSiteId().equals(uuid))
+            {
+                return site.getTitle();
+            }
+        }
+        return "No sites Assigned";
     }
 
     public List<Site> getSites() {
         return mSites;
+    }
+
+    public void addListener(LabObserver labObserver)
+    {
+        mLabObservers.add(labObserver);
+    }
+
+    public void alertAllObservers()
+    {
+        for (LabObserver labObserver :mLabObservers)
+            labObserver.update();
     }
 }

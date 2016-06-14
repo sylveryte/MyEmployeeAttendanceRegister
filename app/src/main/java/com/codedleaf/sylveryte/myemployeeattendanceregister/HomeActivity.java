@@ -16,8 +16,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.List;
+
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    FragmentManager mFragmentManager;
+    private static final String FRAGMENT_CODE = "codedleafbro";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,12 +49,9 @@ public class HomeActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 
-        FragmentManager fragmentManager=getSupportFragmentManager();
-        Fragment fragment= SitesFragment.newInstance();
 
-        fragmentManager.beginTransaction()
-                .add(R.id.home_fragment_container,fragment)
-                .commit();
+       startFragment(SitesFragment.newInstance());
+
 
     }
 
@@ -85,6 +87,30 @@ public class HomeActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    private void startFragment(Fragment fragment) {
+        FragmentManager fm = getSupportFragmentManager();
+
+        //clean up any fragments blah blah
+        List<Fragment> frags=fm.getFragments();
+        if(frags!=null)
+        {
+
+            for (Fragment frag:frags)
+            {
+                //did remove tostring after tag
+                if(frag.getTag().equals(FRAGMENT_CODE))
+                {
+                    fm.beginTransaction().remove(frag).commit();
+                }
+            }
+        }
+
+        fm.beginTransaction()
+                .add(R.id.home_fragment_container, fragment,FRAGMENT_CODE)
+                .commit();
+    }
+
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -94,9 +120,9 @@ public class HomeActivity extends AppCompatActivity
         if (id == R.id.nav_attendance) {
 
         } else if (id == R.id.nav_sites) {
-
+            startFragment(SitesFragment.newInstance());
         } else if (id == R.id.nav_employees) {
-
+            startFragment(EmployeeFragment.newInstance());
         } else if (id == R.id.nav_stats) {
 
         } else if (id == R.id.nav_share) {

@@ -3,7 +3,6 @@ package com.codedleaf.sylveryte.myemployeeattendanceregister;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
@@ -16,13 +15,12 @@ import java.util.List;
 /**
  * Created by sylveryte on 11/6/16.
  */
-public class SitesFragment extends Fragment implements LabObservable {
+public class SitesFragment extends Fragment implements LabObserver {
 
 
-    SitesLab mSitesLab;
-    View mView;
-    RecyclerView mSitesRecyclerView;
-    SiteAdapter mSiteAdapter;
+    private SitesLab mSitesLab;
+    private RecyclerView mRecyclerView;
+    private SiteAdapter mSiteAdapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,14 +36,14 @@ public class SitesFragment extends Fragment implements LabObservable {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        mView=inflater.inflate(R.layout.sites_fragment,container,false);
+        View view=inflater.inflate(R.layout.recycler_fragment,container,false);
 
-        mSitesRecyclerView=(RecyclerView)mView.findViewById(R.id.site_fragment_recycler_view);
-        mSitesRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
+        mRecyclerView =(RecyclerView)view.findViewById(R.id.fragment_recycler_view);
+        mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
         mSiteAdapter=new SiteAdapter(mSitesLab.getSites());
-        mSitesRecyclerView.setAdapter(mSiteAdapter);
+        mRecyclerView.setAdapter(mSiteAdapter);
 
-        return mView;
+        return view;
     }
 
 
@@ -60,7 +58,7 @@ public class SitesFragment extends Fragment implements LabObservable {
         @Override
         public SiteHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater inflater=getActivity().getLayoutInflater();
-            View view=inflater.inflate(R.layout.list_view_card,parent,false);
+            View view=inflater.inflate(R.layout.site_card,parent,false);
 
             return new SiteHolder(view);
         }
@@ -84,8 +82,8 @@ public class SitesFragment extends Fragment implements LabObservable {
         public SiteHolder(View itemView) {
             super(itemView);
 
-            title=(TextView)itemView.findViewById(R.id.list_title);
-            description=(TextView)itemView.findViewById(R.id.list_description);
+            title=(TextView)itemView.findViewById(R.id.site_card_title);
+            description=(TextView)itemView.findViewById(R.id.site_card_description);
 
         }
 
