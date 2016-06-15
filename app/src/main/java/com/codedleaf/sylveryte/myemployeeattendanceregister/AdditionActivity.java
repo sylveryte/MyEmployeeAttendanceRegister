@@ -27,7 +27,10 @@ public class AdditionActivity extends SingleFragmentActivity {
             {
                 return SiteAdditionFragment.createInstance();
             }
-
+            case FRAGMENT_CODE_ADD_EMPLOYEE:
+            {
+                return EmployeeAdditionFragment.createInstance();
+            }
         }
 
         return SiteAdditionFragment.createInstance();

@@ -53,12 +53,17 @@ public class Employee {
     }
     public String getSiteString()
     {
-        String sites="";
-        for (UUID id: mSites)
+        if(!mSites.isEmpty())
         {
-            sites=","+SitesLab.getInstanceOf().getSiteNameById(id);
+            SitesLab sitesLab=SitesLab.getInstanceOf();
+            String sites=sitesLab.getSiteNameById(mSites.get(0));
+            for (int i=1;i<mSites.size();i++)
+            {
+                sites=","+SitesLab.getInstanceOf().getSiteNameById(mSites.get(i));
+            }
+            return sites;
         }
-        return sites;
+        return "No sites Assigned";
     }
 
     public void removeDesignation(Designation designation )

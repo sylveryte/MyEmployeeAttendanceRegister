@@ -23,6 +23,7 @@ public class HomeActivity extends AppCompatActivity
 
     FragmentManager mFragmentManager;
     private static final String FRAGMENT_CODE = "codedleafbro";
+    private int mSelectedId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,10 +33,29 @@ public class HomeActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+
+        assert fab != null;
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivityForResult(AdditionActivity.fetchIntent(HomeActivity.this,AdditionActivity.FRAGMENT_CODE_ADD_SITE),01);
+                int fragCode=AdditionActivity.FRAGMENT_CODE_ADD_SITE;
+
+                //which addition frag to start decided here
+
+                if (mSelectedId == R.id.nav_attendance) {
+
+                } else if (mSelectedId == R.id.nav_sites) {
+                        fragCode=AdditionActivity.FRAGMENT_CODE_ADD_SITE;
+                } else if (mSelectedId == R.id.nav_employees) {
+                        fragCode=AdditionActivity.FRAGMENT_CODE_ADD_EMPLOYEE;
+                } else if (mSelectedId == R.id.nav_stats) {
+
+                } else if (mSelectedId == R.id.nav_share) {
+
+                } else if (mSelectedId == R.id.nav_send) {
+
+                }
+                startActivityForResult(AdditionActivity.fetchIntent(HomeActivity.this,fragCode),01);
             }
         });
 
@@ -116,6 +136,7 @@ public class HomeActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        mSelectedId=id;
 
         if (id == R.id.nav_attendance) {
 
