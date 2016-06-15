@@ -3,4 +3,6 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="colorEmployeeCard">#ce7292</color>
+    <color name="colorSiteCard">#7fde9f</color>
 </resources>
