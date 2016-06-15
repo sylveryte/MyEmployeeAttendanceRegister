@@ -24,7 +24,7 @@ public class SitesLab implements LabObeservable {
 
 
         //// TODO: 12/6/16 get rid of this fake db
-        for (int i=1;i<25;i++)
+        for (int i=1;i<5;i++)
         {
             Site site=new Site();
             site.setTitle("Site "+i*763);

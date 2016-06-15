@@ -20,7 +20,7 @@ public class EmployeeLab implements LabObeservable {
         mLabObservers=new ArrayList<>();
 
         //// TODO: 14/6/16 clean up
-        for (int i=0; i<14;i++)
+        for (int i=0; i<4;i++)
         {
             Employee employee=new Employee();
             employee.setName("Rext "+i*234);
