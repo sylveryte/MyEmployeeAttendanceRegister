@@ -1,12 +1,8 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
                                     android:layout_width="match_parent"
-<<<<<<< HEAD
                                     android:layout_gravity="center"
                                     android:backgroundTint="@color/colorLightGrey"
                                     android:layout_height="wrap_content"
-=======
-                                    android:layout_height="match_parent"
->>>>>>> 90fd633ae6a99ff6fd78612066532db8e63b1857
                                     android:layout_margin="15dp">
 <LinearLayout
     android:layout_width="match_parent"
