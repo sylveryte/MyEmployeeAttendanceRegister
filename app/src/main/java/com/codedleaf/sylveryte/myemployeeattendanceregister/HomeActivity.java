@@ -48,6 +48,8 @@ public class HomeActivity extends AppCompatActivity
                         fragCode=AdditionActivity.FRAGMENT_CODE_ADD_SITE;
                 } else if (mSelectedId == R.id.nav_employees) {
                         fragCode=AdditionActivity.FRAGMENT_CODE_ADD_EMPLOYEE;
+                } else if (mSelectedId == R.id.nav_designation) {
+                        fragCode=AdditionActivity.FRAGMENT_CODE_ADD_DESIGNATION;
                 } else if (mSelectedId == R.id.nav_stats) {
 
                 } else if (mSelectedId == R.id.nav_share) {
@@ -144,6 +146,8 @@ public class HomeActivity extends AppCompatActivity
             startFragment(SitesFragment.newInstance());
         } else if (id == R.id.nav_employees) {
             startFragment(EmployeeFragment.newInstance());
+        } else if (id == R.id.nav_designation) {
+            startFragment(DesignationFragment.newInstance());
         } else if (id == R.id.nav_stats) {
 
         } else if (id == R.id.nav_share) {

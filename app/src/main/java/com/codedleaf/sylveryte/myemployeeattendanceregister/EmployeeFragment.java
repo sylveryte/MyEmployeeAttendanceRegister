@@ -5,7 +5,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,11 +77,11 @@ public class EmployeeFragment extends Fragment implements LabObserver {
     {
 
 
-        TextView name;
-        TextView site;
-        TextView designation;
-        TextView age;
-        TextView active;
+        private TextView name;
+        private TextView site;
+        private TextView designation;
+        private TextView age;
+        private TextView active;
 
         public EmployeeHolder(View itemView)
         {
@@ -109,6 +108,7 @@ public class EmployeeFragment extends Fragment implements LabObserver {
     @Override
     public void update() {
 
+            mEmployeeAdapter.notifyDataSetChanged();
     }
 
     public static Fragment newInstance()

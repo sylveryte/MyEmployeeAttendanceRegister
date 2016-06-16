@@ -12,4 +12,7 @@
     <string name="stats">Stats</string>
     <string name="attendance">Attendance</string>
     <string name="title_activity_addition">AdditionActivity</string>
+    <string name="designation">Designation</string>
+    <string name="description">description</string>
+    <string name="Site">Site</string>
 </resources>

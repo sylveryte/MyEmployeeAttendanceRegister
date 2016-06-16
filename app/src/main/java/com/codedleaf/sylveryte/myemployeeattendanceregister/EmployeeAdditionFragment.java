@@ -15,11 +15,11 @@ import android.widget.EditText;
 public class EmployeeAdditionFragment extends Fragment {
 
 
-    EditText mName;
-    EditText mAddress;
-    EditText mAge;
-    EditText mMaleFemale;
-    Button mAddButton;
+    private EditText mName;
+    private EditText mAddress;
+    private EditText mAge;
+    private EditText mMaleFemale;
+    private Button mAddButton;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

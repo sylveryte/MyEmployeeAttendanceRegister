@@ -47,6 +47,7 @@ public class EmployeeLab implements LabObeservable {
     public void addEmployee(Employee employee)
     {
         mEmployees.add(employee);
+        alertAllObservers();
     }
 
     public List<Employee> getEmployees()

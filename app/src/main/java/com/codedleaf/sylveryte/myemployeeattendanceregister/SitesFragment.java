@@ -76,8 +76,8 @@ public class SitesFragment extends Fragment implements LabObserver {
 
     private class SiteHolder extends RecyclerView.ViewHolder
     {
-        TextView title;
-        TextView description;
+        private TextView title;
+        private TextView description;
 
         public SiteHolder(View itemView) {
             super(itemView);
