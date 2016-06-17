@@ -5,7 +5,7 @@ import java.util.UUID;
 /**
  * Created by sylveryte on 12/6/16.
  */
-public class Designation {
+public class Designation implements Pickable {
 
     String mTitle;
     String mDescription;

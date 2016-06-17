@@ -8,7 +8,7 @@ import java.util.UUID;
 /**
  * Created by sylveryte on 12/6/16.
  */
-public class Site {
+public class Site implements Pickable {
 
 
     String mTitle;

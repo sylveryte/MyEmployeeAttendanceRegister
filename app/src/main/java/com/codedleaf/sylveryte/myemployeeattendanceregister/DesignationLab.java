@@ -2,6 +2,7 @@ package com.codedleaf.sylveryte.myemployeeattendanceregister;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by sylveryte on 15/6/16.
@@ -57,5 +58,16 @@ public class DesignationLab implements LabObeservable {
             sDesignationLab=new DesignationLab();
         }
         return sDesignationLab;
+    }
+
+    public String getDesignationNameById(UUID uuid) {
+        for (Designation designation: mDesignations)
+        {
+            if (designation.getDesignationId().equals(uuid))
+            {
+                return designation.getTitle();
+            }
+        }
+        return "No Designation Assigned";
     }
 }

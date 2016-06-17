@@ -8,7 +8,7 @@ import java.util.jar.Pack200;
 /**
  * Created by sylveryte on 12/6/16.
  */
-public class Employee {
+public class Employee implements Pickable{
 
 
 
@@ -41,7 +41,17 @@ public class Employee {
     }
     public String getDesignationString()
     {
-        return "no Desg lab :p";
+        if(!mDesignations.isEmpty())
+        {
+            DesignationLab designationLab=DesignationLab.getInstanceOf();
+            String desgnations=designationLab.getDesignationNameById(mSites.get(0));
+            for (int i=1;i<mDesignations.size();i++)
+            {
+                desgnations=","+designationLab.getDesignationNameById(mDesignations.get(i));
+            }
+            return desgnations;
+        }
+        return "no Designation Assigned";
     }
 
     public void addSite(Site site)
@@ -64,6 +74,21 @@ public class Employee {
             return sites;
         }
         return "No sites Assigned";
+    }
+
+    @Override
+    public String getTitle() {
+        return getName();
+    }
+
+    @Override
+    public String getDescription() {
+        return getMaleFemaleString()+" "+getAge()+ " "+getDesignationString();
+    }
+
+    public  String getMaleFemaleString()
+    {
+        return isMale()?"Male":"Female";
     }
 
     public void removeDesignation(Designation designation )
