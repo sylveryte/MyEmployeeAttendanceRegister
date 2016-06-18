@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import java.util.UUID;
@@ -22,7 +24,9 @@ public class EmployeeAdditionFragment extends Fragment {
     private EditText mName;
     private EditText mAddress;
     private EditText mAge;
-    private EditText mMaleFemale;
+    private RadioGroup mRadioGroupMaleFemale;
+    private RadioButton mRadioButtonMale;
+    private RadioButton mRadioButtonFemale;
     private Button mAddButton;
     private Button mChooseDesignationButton;
     private Button mChooseSiteButton;
@@ -47,9 +51,11 @@ public class EmployeeAdditionFragment extends Fragment {
         mName=(EditText)view.findViewById(R.id.employee_add_name);
         mAddress=(EditText)view.findViewById(R.id.employee_add_address);
         mAge=(EditText)view.findViewById(R.id.employee_add_age);
-        mMaleFemale=(EditText)view.findViewById(R.id.employee_add_male_female);
         mDesignations=(TextView)view.findViewById(R.id.employee_add_textview_designation);
         mSites=(TextView)view.findViewById(R.id.employee_add_textview_site);
+        mRadioGroupMaleFemale=(RadioGroup)view.findViewById(R.id.employee_add_radiobuttongroup_malefemale);
+        mRadioButtonFemale=(RadioButton)view.findViewById(R.id.employee_add_radiobutton_female);
+        mRadioButtonMale=(RadioButton)view.findViewById(R.id.employee_add_radiobutton_male);
         mAddButton=(Button)view.findViewById(R.id.employee_add_add_button);
         mChooseDesignationButton=(Button)view.findViewById(R.id.employee_choose_designation_button);
         mChooseSiteButton=(Button)view.findViewById(R.id.employee_choose_site_button);
@@ -80,8 +86,24 @@ public class EmployeeAdditionFragment extends Fragment {
                 mEmployee.setName(mName.getText().toString());
                 mEmployee.setAge(Integer.parseInt(mAge.getText().toString()));
                 mEmployee.setAdress(mAddress.getText().toString());
-                mEmployee.setMale(mMaleFemale.getText().toString().compareToIgnoreCase("male")==0);
                 getActivity().finish();
+            }
+        });
+
+        mRadioGroupMaleFemale.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if(checkedId==R.id.employee_add_radiobutton_male)
+                {
+                    mRadioButtonFemale.setChecked(false);
+                    mRadioButtonMale.setChecked(true);
+                    mEmployee.setMale(true);
+                }else if (checkedId==R.id.employee_add_radiobutton_female)
+                {
+                    mRadioButtonMale.setChecked(false);
+                    mRadioButtonFemale.setChecked(true);
+                    mEmployee.setMale(false);
+                }
             }
         });
 
@@ -93,7 +115,17 @@ public class EmployeeAdditionFragment extends Fragment {
     {
         mName.setText(mEmployee.getName());
         mAddress.setText(mEmployee.getAdress());
-        mMaleFemale.setText(mEmployee.getMaleFemaleString());
+
+        if(mEmployee.isMale())
+        {
+            mRadioButtonMale.setChecked(true);
+            mRadioButtonFemale.setChecked(false);
+        }else if (!mEmployee.isMale())
+        {
+            mRadioButtonFemale.setChecked(true);
+            mRadioButtonMale.setChecked(false);
+        }
+
         mSites.setText(mEmployee.getSiteString());
         mDesignations.setText(mEmployee.getDesignationString());
         mAge.setText(mEmployee.getAgeString());
