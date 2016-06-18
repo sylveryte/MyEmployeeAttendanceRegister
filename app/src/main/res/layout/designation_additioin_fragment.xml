@@ -28,7 +28,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add Designation"
+        android:text="Done"
         android:id="@+id/button_add_designation"
         android:layout_gravity="center_horizontal"/>
 </LinearLayout>

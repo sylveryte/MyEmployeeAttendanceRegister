@@ -20,7 +20,8 @@
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
                 android:text="Name"
                 android:layout_column="0"/>
 
@@ -38,17 +39,18 @@
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
                 android:text="Address"
                 android:layout_column="0"/>
 
             <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:inputType="textPersonName"
                 android:ems="10"
                 android:id="@+id/employee_add_address"
-                android:layout_column="1"/>
+                android:layout_column="1"
+                android:inputType="textLongMessage"/>
         </TableRow>
         <TableRow
             android:layout_width="match_parent"
@@ -56,17 +58,20 @@
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
                 android:text="Age"
                 android:layout_column="0"/>
 
             <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:inputType="textPersonName"
                 android:ems="10"
                 android:id="@+id/employee_add_age"
-                android:layout_column="1"/>
+                android:layout_column="1"
+                android:autoText="false"
+                android:allowUndo="false"
+                android:inputType="numberSigned"/>
         </TableRow>
         <TableRow
             android:layout_width="match_parent"
@@ -74,17 +79,31 @@
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Male/Female"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="Gender"
                 android:layout_column="0"/>
 
-            <EditText
-                android:layout_width="wrap_content"
+            <RadioGroup
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPersonName"
-                android:ems="10"
-                android:id="@+id/employee_add_male_female"
-                android:layout_column="1"/>
+                android:orientation="horizontal"
+                android:id="@+id/employee_add_radiobuttongroup_malefemale"
+                android:layout_column="1">
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Male"
+                        android:id="@+id/employee_add_radiobutton_male"/>
+
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Female"
+                        android:id="@+id/employee_add_radiobutton_female"
+                        android:layout_gravity="right"/>
+            </RadioGroup>
+
         </TableRow>
 
         <TableRow
@@ -133,7 +152,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="add"
+        android:text="Done"
         android:id="@+id/employee_add_add_button"
         android:layout_gravity="center"/>
 </LinearLayout>
