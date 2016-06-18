@@ -1,5 +1,6 @@
 package com.codedleaf.sylveryte.myemployeeattendanceregister;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -82,10 +83,21 @@ public class EmployeeFragment extends Fragment implements LabObserver {
         private TextView designation;
         private TextView age;
         private TextView active;
+        private Employee mEmployee;
 
         public EmployeeHolder(View itemView)
         {
             super(itemView);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent=AdditionActivity.fetchIntent(getActivity(),AdditionActivity.FRAGMENT_CODE_EDIT_EMPLOYEE);
+                    intent.putExtra(AdditionActivity.FRAGMENT_STRING_EDIT_EMPLOYEE,mEmployee.getId());
+                    startActivity(intent);
+                }
+            });
+
             name=(TextView)itemView.findViewById(R.id.employee_card_name);
             site=(TextView)itemView.findViewById(R.id.employee_card_site);
             designation=(TextView)itemView.findViewById(R.id.employee_card_designation);
@@ -96,6 +108,7 @@ public class EmployeeFragment extends Fragment implements LabObserver {
 
         public void bind(Employee employee)
         {
+            mEmployee=employee;
             name.setText(employee.getName());
             site.setText(employee.getSiteString());
             designation.setText(employee.getDesignationString());
@@ -103,6 +116,18 @@ public class EmployeeFragment extends Fragment implements LabObserver {
             //// TODO: 14/6/16 get these strings somewhere flexible
             active.setText(employee.isActive()?"Active":"Not Active");
         }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        update();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        update();
     }
 
     @Override

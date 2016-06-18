@@ -1,5 +1,6 @@
 package com.codedleaf.sylveryte.myemployeeattendanceregister;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -8,6 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
+
+import java.util.UUID;
 
 /**
  * Created by sylveryte on 15/6/16.
@@ -20,6 +24,11 @@ public class EmployeeAdditionFragment extends Fragment {
     private EditText mAge;
     private EditText mMaleFemale;
     private Button mAddButton;
+    private Button mChooseDesignationButton;
+    private Button mChooseSiteButton;
+    private Employee mEmployee;
+    private TextView mDesignations;
+    private TextView mSites;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,29 +48,92 @@ public class EmployeeAdditionFragment extends Fragment {
         mAddress=(EditText)view.findViewById(R.id.employee_add_address);
         mAge=(EditText)view.findViewById(R.id.employee_add_age);
         mMaleFemale=(EditText)view.findViewById(R.id.employee_add_male_female);
+        mDesignations=(TextView)view.findViewById(R.id.employee_add_textview_designation);
+        mSites=(TextView)view.findViewById(R.id.employee_add_textview_site);
         mAddButton=(Button)view.findViewById(R.id.employee_add_add_button);
+        mChooseDesignationButton=(Button)view.findViewById(R.id.employee_choose_designation_button);
+        mChooseSiteButton=(Button)view.findViewById(R.id.employee_choose_site_button);
+
+
+        //choose
+        mChooseDesignationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=PickActivity.fetchIntent(getActivity(),PickActivity.FRAGMENT_CODE_PICK_DESIGNATION);
+                startActivityForResult(intent,PickActivity.FRAGMENT_CODE_PICK_DESIGNATION);
+            }
+        });
+
+        mChooseSiteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=PickActivity.fetchIntent(getActivity(),PickActivity.FRAGMENT_CODE_PICK_SITE);
+                startActivityForResult(intent,PickActivity.FRAGMENT_CODE_PICK_SITE);
+            }
+        });
 
         mAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-               Employee employee=new Employee();
-                employee.setActive(true);
-                employee.setName(mName.getText().toString());
-                employee.setAge(Integer.parseInt(mAge.getText().toString()));
-                employee.setAdress(mAddress.getText().toString());
-                employee.setMale(mMaleFemale.getText().toString().compareToIgnoreCase("male")==0);
-
-                EmployeeLab.getInstanceOf().addEmployee(employee);
-
+                mEmployee.setActive(true);
+                mEmployee.setName(mName.getText().toString());
+                mEmployee.setAge(Integer.parseInt(mAge.getText().toString()));
+                mEmployee.setAdress(mAddress.getText().toString());
+                mEmployee.setMale(mMaleFemale.getText().toString().compareToIgnoreCase("male")==0);
+                getActivity().finish();
             }
         });
 
+        update();
         return view;
     }
 
-    public static EmployeeAdditionFragment createInstance()
+    public void update()
     {
-        return new EmployeeAdditionFragment();
+        mName.setText(mEmployee.getName());
+        mAddress.setText(mEmployee.getAdress());
+        mMaleFemale.setText(mEmployee.getMaleFemaleString());
+        mSites.setText(mEmployee.getSiteString());
+        mDesignations.setText(mEmployee.getDesignationString());
+        mAge.setText(mEmployee.getAgeString());
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(data==null)
+            return;
+
+        UUID uuid=(UUID)data.getSerializableExtra(PickActivity.RESULT_DATA_STRING_PICK_GENRAL);
+
+        if(requestCode==PickActivity.FRAGMENT_CODE_PICK_DESIGNATION)
+        {
+            mEmployee.addDesignation(uuid);
+
+            Designation designation=DesignationLab.getInstanceOf().getDesigantionById(uuid);
+            String s=designation.getTitle();
+            s=mEmployee.getDesignationString();
+
+            mDesignations.setText(mEmployee.getDesignationString());
+        }
+        else if (requestCode==PickActivity.FRAGMENT_CODE_PICK_SITE)
+        {
+            mEmployee.addSite(uuid);
+            mSites.setText(mEmployee.getSiteString());
+        }
+
+    }
+
+    public void setEmployee(Employee employee) {
+        mEmployee = employee;
+    }
+
+    public static EmployeeAdditionFragment createInstance(Employee employee)
+    {
+        EmployeeAdditionFragment employeeAdditionFragment=new EmployeeAdditionFragment();
+        employeeAdditionFragment.setEmployee(employee);
+        return employeeAdditionFragment;
     }
 }

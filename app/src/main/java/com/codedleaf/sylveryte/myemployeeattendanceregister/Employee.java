@@ -32,31 +32,40 @@ public class Employee implements Pickable{
         mSites=new ArrayList<>();
     }
 
-    public void addDesignation(Designation designation)
+    public void addDesignation(UUID desigantionid)
     {
-        mDesignations.add(designation.getDesignationId());
-        //Add into the table code her
-        // TODO: 12/6/16 table insert code here
-        //use update for remove and this too
+        mDesignations.add(desigantionid);
+
     }
     public String getDesignationString()
     {
+
+        //// TODO: 18/6/16 clean this shit we should not need these two (site String) methods
+
         if(!mDesignations.isEmpty())
         {
             DesignationLab designationLab=DesignationLab.getInstanceOf();
-            String desgnations=designationLab.getDesignationNameById(mSites.get(0));
-            for (int i=1;i<mDesignations.size();i++)
+            Designation designation=designationLab.getDesigantionById(mDesignations.get(0));
+            if (designation==null)
             {
-                desgnations=","+designationLab.getDesignationNameById(mDesignations.get(i));
+                return "no Designation Assigned";
+            }
+            String desgnations=designation.getTitle();
+            if (mDesignations.size()>1)
+            {
+                for (int i=1;i<mDesignations.size();i++)
+                {
+                    desgnations+=","+designationLab.getDesigantionById(mDesignations.get(i)).getTitle();
+                }
             }
             return desgnations;
         }
         return "no Designation Assigned";
     }
 
-    public void addSite(Site site)
+    public void addSite(UUID siteid)
     {
-        mSites.add(site.getSiteId());
+        mSites.add(siteid);
         //Add into the table code her
         // TODO: 14/6/16 table insert code here
         //use update for remove and this too
@@ -66,10 +75,19 @@ public class Employee implements Pickable{
         if(!mSites.isEmpty())
         {
             SitesLab sitesLab=SitesLab.getInstanceOf();
-            String sites=sitesLab.getSiteNameById(mSites.get(0));
-            for (int i=1;i<mSites.size();i++)
+            Site site=sitesLab.getSiteById(mSites.get(0));
+
+            if (site==null)
             {
-                sites=","+SitesLab.getInstanceOf().getSiteNameById(mSites.get(i));
+                return "No sites Assigned";
+            }
+            String sites=site.getTitle();
+            if (mSites.size()>1)
+            {
+                for (int i=1;i<mSites.size();i++)
+                {
+                    sites+=","+sitesLab.getSiteById(mSites.get(i)).getTitle();
+                }
             }
             return sites;
         }
@@ -93,7 +111,7 @@ public class Employee implements Pickable{
 
     public void removeDesignation(Designation designation )
     {
-        mDesignations.remove(designation.getDesignationId());
+        mDesignations.remove(designation.getId());
 
         // TODO: 12/6/16 table deletion code here
 
@@ -117,6 +135,10 @@ public class Employee implements Pickable{
 
     public int getAge() {
         return mAge;
+    }
+    public String getAgeString()
+    {
+        return mAge+"";
     }
 
     public void setAge(int age) {
@@ -155,8 +177,8 @@ public class Employee implements Pickable{
         mIsActive = isActive;
     }
 
-    public UUID getEployeeId() {
+    @Override
+    public UUID getId() {
         return mEployeeId;
     }
-
 }

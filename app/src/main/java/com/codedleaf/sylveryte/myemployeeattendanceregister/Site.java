@@ -57,8 +57,8 @@ public class Site implements Pickable {
         mFinishedDate = finishedDate;
     }
 
-    public UUID getSiteId() {
+    @Override
+    public UUID getId() {
         return mSiteId;
     }
-
 }

@@ -51,17 +51,16 @@ public class SitesLab implements LabObeservable {
         alertAllObservers();
     }
 
-    public String getSiteNameById(UUID uuid)
+    public Site getSiteById(UUID uuid)
     {
-        for (Site site: mSites)
+        for(Site site:mSites)
         {
-            if (site.getSiteId().equals(uuid))
-            {
-                return site.getTitle();
-            }
+            if (site.getId().equals(uuid))
+                return site;
         }
-        return "No sites Assigned";
+        return null;
     }
+
 
     public List<Site> getSites() {
         return mSites;

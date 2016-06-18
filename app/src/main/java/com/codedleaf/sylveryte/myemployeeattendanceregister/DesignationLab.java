@@ -60,14 +60,13 @@ public class DesignationLab implements LabObeservable {
         return sDesignationLab;
     }
 
-    public String getDesignationNameById(UUID uuid) {
+    public Designation getDesigantionById(UUID uuid)
+    {
         for (Designation designation: mDesignations)
         {
-            if (designation.getDesignationId().equals(uuid))
-            {
-                return designation.getTitle();
-            }
+            if (designation.getId().equals(uuid))
+                return designation;
         }
-        return "No Designation Assigned";
+        return null;
     }
 }

@@ -33,7 +33,8 @@ public class Designation implements Pickable {
     }
 
 
-    public UUID getDesignationId() {
+    @Override
+    public UUID getId() {
         return mDesignationId;
     }
 }

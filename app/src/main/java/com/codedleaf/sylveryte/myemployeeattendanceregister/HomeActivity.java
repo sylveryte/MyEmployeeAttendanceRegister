@@ -21,7 +21,6 @@ import java.util.List;
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    FragmentManager mFragmentManager;
     private static final String FRAGMENT_CODE = "codedleafbro";
     private int mSelectedId;
 

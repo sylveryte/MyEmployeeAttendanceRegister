@@ -1,5 +1,6 @@
 package com.codedleaf.sylveryte.myemployeeattendanceregister;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.List;
-import java.util.zip.Inflater;
 
 /**
  * Created by sylveryte on 17/6/16.
@@ -53,9 +53,19 @@ public class DesignationFragment extends Fragment implements LabObserver {
 
         private TextView title;
         private TextView description;
+        private Designation mDesignation;
 
-        public DesignationHolder(View itemView) {
+        public DesignationHolder(final View itemView) {
             super(itemView);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent=AdditionActivity.fetchIntent(getActivity(),AdditionActivity.FRAGMENT_CODE_EDIT_DESIGNATION);
+                    intent.putExtra(AdditionActivity.FRAGMENT_STRING_EDIT_DESIGNATION,mDesignation.getId());
+                    startActivity(intent);
+                }
+            });
 
             title=(TextView)itemView.findViewById(R.id.designation_card_title);
             description=(TextView)itemView.findViewById(R.id.designation_card_description);
@@ -63,6 +73,7 @@ public class DesignationFragment extends Fragment implements LabObserver {
 
         public void bind(Designation designation)
         {
+            mDesignation=designation;
             title.setText(designation.getTitle());
             description.setText(designation.getDescription());
         }
@@ -98,6 +109,13 @@ public class DesignationFragment extends Fragment implements LabObserver {
         public int getItemCount() {
             return mDesignations.size();
         }
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        update();
     }
 
     @Override

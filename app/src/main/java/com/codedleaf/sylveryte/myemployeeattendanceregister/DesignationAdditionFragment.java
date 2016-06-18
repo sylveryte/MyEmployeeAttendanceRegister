@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import java.util.UUID;
+
 /**
  * Created by sylveryte on 17/6/16.
  */
@@ -18,6 +20,7 @@ public class DesignationAdditionFragment extends Fragment {
     private EditText mEditText_siteName;
     private EditText mEditText_description;
     private Button mAddButton;
+    private Designation mDesignation;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,21 +43,33 @@ public class DesignationAdditionFragment extends Fragment {
             public void onClick(View v) {
 
                 //// TODO: 12/6/16 clean all this
-                Designation d=new Designation();
-                d.setTitle(mEditText_siteName.getText().toString());
-                d.setDescription(mEditText_description.getText().toString());
-                DesignationLab.getInstanceOf().addDesignation(d);
+                mDesignation.setTitle(mEditText_siteName.getText().toString());
+                mDesignation.setDescription(mEditText_description.getText().toString());
+                getActivity().finish();
 
             }
         });
 
+        update();
         return v;
 
     }
 
-    public static DesignationAdditionFragment createInstance()
+    public void update()
     {
-        return new DesignationAdditionFragment();
+        mEditText_siteName.setText(mDesignation.getTitle());
+        mEditText_description.setText(mDesignation.getDescription());
+    }
+
+    public void setDesignation(Designation designation) {
+        mDesignation = designation;
+    }
+
+    public static DesignationAdditionFragment createInstance(Designation designation)
+    {
+        DesignationAdditionFragment designationAdditionFragment=new DesignationAdditionFragment();
+        designationAdditionFragment.setDesignation(designation);
+        return designationAdditionFragment;
     }
 
 }

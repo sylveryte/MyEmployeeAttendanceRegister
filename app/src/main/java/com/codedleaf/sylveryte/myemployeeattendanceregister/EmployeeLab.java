@@ -2,6 +2,7 @@ package com.codedleaf.sylveryte.myemployeeattendanceregister;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by sylveryte on 14/6/16.
@@ -26,10 +27,7 @@ public class EmployeeLab implements LabObeservable {
             employee.setName("Rext "+i*234);
             employee.setAge(i+12*i);
             employee.setActive(i % 2 == 0);
-            Designation designation=new Designation();
-            designation.setTitle(i*324+"slave");
-            employee.addDesignation(designation);
-            employee.addSite(SitesLab.getInstanceOf().getSites().get(i));
+            employee.addSite(SitesLab.getInstanceOf().getSites().get(i).getId());
             addEmployee(employee);
         }
 
@@ -53,6 +51,16 @@ public class EmployeeLab implements LabObeservable {
     public List<Employee> getEmployees()
     {
         return mEmployees;
+    }
+
+    public Employee getEmployeeById(UUID uuid)
+    {
+        for (Employee employee:mEmployees)
+        {
+            if (employee.getId().equals(uuid))
+                return employee;
+        }
+        return null;
     }
 
     public void addListener(LabObserver labObserver)

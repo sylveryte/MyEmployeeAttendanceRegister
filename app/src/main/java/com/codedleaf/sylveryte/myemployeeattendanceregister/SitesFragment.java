@@ -1,5 +1,6 @@
 package com.codedleaf.sylveryte.myemployeeattendanceregister;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -78,9 +79,19 @@ public class SitesFragment extends Fragment implements LabObserver {
     {
         private TextView title;
         private TextView description;
+        private Site mSite;
 
         public SiteHolder(View itemView) {
             super(itemView);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent=AdditionActivity.fetchIntent(getActivity(),AdditionActivity.FRAGMENT_CODE_EDIT_SITE);
+                    intent.putExtra(AdditionActivity.FRAGMENT_STRING_EDIT_SITE,mSite.getId());
+                    startActivity(intent);
+                }
+            });
 
             title=(TextView)itemView.findViewById(R.id.site_card_title);
             description=(TextView)itemView.findViewById(R.id.site_card_description);
@@ -89,19 +100,29 @@ public class SitesFragment extends Fragment implements LabObserver {
 
         public void bind(Site site)
         {
+            mSite=site;
             title.setText(site.getTitle());
             description.setText(site.getDescription());
         }
 
     }
 
-    private void updateView() {
-        mSiteAdapter.notifyDataSetChanged();
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        update();
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        update();
     }
 
     @Override
     public void update() {
-        updateView();
+        mSiteAdapter.notifyDataSetChanged();
     }
 
     public static Fragment newInstance()
