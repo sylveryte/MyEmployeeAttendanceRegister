@@ -6,6 +6,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +41,9 @@ public class EmployeeFragment extends Fragment implements LabObserver {
         View view=inflater.inflate(R.layout.recycler_fragment,container,false);
 
         mRecyclerView =(RecyclerView)view.findViewById(R.id.fragment_recycler_view);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+
+        mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(1,StaggeredGridLayoutManager.VERTICAL));
         mEmployeeAdapter=new EmployeeAdapter(mLab.getEmployees());
         mRecyclerView.setAdapter(mEmployeeAdapter);
 
