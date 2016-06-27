@@ -1,9 +1,11 @@
 package com.codedleaf.sylveryte.myemployeeattendanceregister;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.DisplayMetrics;
@@ -95,9 +97,46 @@ public class SitesFragment extends Fragment implements LabObserver {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent=AdditionActivity.fetchIntent(getActivity(),AdditionActivity.FRAGMENT_CODE_EDIT_SITE);
-                    intent.putExtra(AdditionActivity.FRAGMENT_STRING_EDIT_SITE,mSite.getId());
-                    startActivity(intent);
+
+                    CharSequence choices[] = new CharSequence[] {"Take Attendance", "Edit"};
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle("Choose");
+                    builder.setItems(choices, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            int df;
+                            df=which;
+
+
+                            switch (which)
+                            {
+                                case 1: {
+
+                                    Intent intent = AdditionActivity.fetchIntent(getActivity(), AdditionActivity.FRAGMENT_CODE_EDIT_SITE);
+                                    intent.putExtra(AdditionActivity.FRAGMENT_STRING_EDIT_SITE, mSite.getId());
+                                    startActivity(intent);
+
+                                    break;
+                                }
+                                case 0: {
+
+                                    Intent intent1 = AttendanceActivity.fetchIntent(getActivity(), AttendanceActivity.FRAGMENT_CODE_SITE);
+                                    intent1.putExtra(AttendanceActivity.siteAttendance, mSite.getId());
+                                    startActivity(intent1);
+
+                                    break;
+                                }
+                            }
+                        }
+                    });
+                    builder.show();
+
+
+
+
+
                 }
             });
 

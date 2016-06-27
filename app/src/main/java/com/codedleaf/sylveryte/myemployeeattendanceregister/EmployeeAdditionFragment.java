@@ -143,11 +143,6 @@ public class EmployeeAdditionFragment extends Fragment {
         if(requestCode==PickActivity.FRAGMENT_CODE_PICK_DESIGNATION)
         {
             mEmployee.addDesignation(uuid);
-
-            Designation designation=DesignationLab.getInstanceOf().getDesigantionById(uuid);
-            String s=designation.getTitle();
-            s=mEmployee.getDesignationString();
-
             mDesignations.setText(mEmployee.getDesignationString());
         }
         else if (requestCode==PickActivity.FRAGMENT_CODE_PICK_SITE)

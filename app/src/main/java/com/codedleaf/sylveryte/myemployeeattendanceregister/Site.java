@@ -23,6 +23,8 @@ public class Site implements Pickable {
         mEmployeesInvolved=new ArrayList<>();
         mBeginDate = new Date();
         mSiteId = UUID.randomUUID();
+
+
     }
 
     public String getTitle() {
@@ -55,6 +57,15 @@ public class Site implements Pickable {
 
     public void setFinishedDate(Date finishedDate) {
         mFinishedDate = finishedDate;
+    }
+
+    public void addEmployee(UUID uuid)
+    {
+        mEmployeesInvolved.add(uuid);
+    }
+
+    public List<UUID> getEmployeesInvolved() {
+        return mEmployeesInvolved;
     }
 
     @Override

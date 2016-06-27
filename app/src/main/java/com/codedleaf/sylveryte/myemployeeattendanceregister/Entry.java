@@ -23,8 +23,10 @@ public class Entry {
     String mNote;
 
 
-    public Entry()
+    public Entry(UUID employeeId)
     {
+        mEmployeeId=employeeId;
+
         mDate=new Date();
         mRemark=PRESENT;
     }
@@ -57,8 +59,9 @@ public class Entry {
         return mEmployeeId;
     }
 
-    public void setEmployeeId(UUID employeeId) {
-        mEmployeeId = employeeId;
+    public String getEmployeeInfo()
+    {
+        return EmployeeLab.getInstanceOf().getEmployeeById(mEmployeeId).getTitle();
     }
 
     public String getNote() {

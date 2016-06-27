@@ -61,6 +61,26 @@ public class SitesLab implements LabObeservable {
         return null;
     }
 
+    public List<Employee> getCurrentEmployeesInSiteBySiteId(UUID siteId)
+    {
+        List<Employee> employees=new ArrayList<>();
+        List<UUID> employeeIds=getSiteById(siteId).getEmployeesInvolved();
+        EmployeeLab employeeLab=EmployeeLab.getInstanceOf();
+
+        for (UUID uuid:employeeIds)
+        {
+            Employee employee=employeeLab.getEmployeeById(uuid);
+            employees.add(employee);
+        }
+        return employees;
+    }
+
+    public void addEmployeeInSite(UUID siteId,UUID employeeId)
+    {
+        Site site=getSiteById(siteId);
+        site.addEmployee(employeeId);
+    }
+
 
     public List<Site> getSites() {
         return mSites;

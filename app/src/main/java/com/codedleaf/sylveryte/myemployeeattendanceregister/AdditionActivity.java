@@ -45,7 +45,8 @@ public class AdditionActivity extends SingleFragmentActivity {
         mEmployeeLab=EmployeeLab.getInstanceOf();
 
         Intent intent=getIntent();
-        switch (intent.getIntExtra(FRAGMENT_CODE,FRAGMENT_CODE_ADD_SITE))
+        int i=intent.getIntExtra(FRAGMENT_CODE,FRAGMENT_CODE_ADD_SITE);
+        switch (i)
         {
             case FRAGMENT_CODE_ADD_SITE:
             {
@@ -81,7 +82,8 @@ public class AdditionActivity extends SingleFragmentActivity {
             case FRAGMENT_CODE_EDIT_SITE:
             {
                 UUID uuid=(UUID)intent.getSerializableExtra(FRAGMENT_STRING_EDIT_SITE);
-                return SiteAdditionFragment.createInstance(mSitesLab.getSiteById(uuid));
+                Site site=mSitesLab.getSiteById(uuid);
+                return SiteAdditionFragment.createInstance(site);
             }
         }
 
