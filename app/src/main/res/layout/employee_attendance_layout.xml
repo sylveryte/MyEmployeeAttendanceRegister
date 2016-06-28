@@ -1,15 +1,27 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-                                    android:layout_width="wrap_content"
+                                    android:layout_width="match_parent"
                                     xmlns:app="http://schemas.android.com/apk/res-auto"
-                                    app:cardElevation="10dp"
+                                    app:cardElevation="4dp"
+                                    app:cardBackgroundColor="@color/attendancePresent"
+                                    android:id="@+id/employee_attendance_card"
                                     android:layout_height="wrap_content">
     <LinearLayout
         android:layout_width="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:padding="10dp"
         android:layout_height="wrap_content">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Shinichi"
             android:id="@+id/employee_attendance_name"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="present"
+            android:id="@+id/employee_attendance_remark"/>
     </LinearLayout>
 
     </android.support.v7.widget.CardView>

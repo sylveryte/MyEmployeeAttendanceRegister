@@ -64,6 +64,19 @@ public class Entry {
         return EmployeeLab.getInstanceOf().getEmployeeById(mEmployeeId).getTitle();
     }
 
+    public String  getRemarkString()
+    {
+        switch (getRemark())
+        {
+            case PRESENT: return "Present";
+            case LATE: return "Late";
+            case HALF_TIME: return "Half-Time";
+            case OVER_TIME: return "Over-Time";
+            case ABSENT: return "Absent";
+        }
+        return "Don't know";
+    }
+
     public String getNote() {
         return mNote;
     }

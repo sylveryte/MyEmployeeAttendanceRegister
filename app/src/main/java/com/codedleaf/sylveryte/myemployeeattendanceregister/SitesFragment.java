@@ -106,10 +106,6 @@ public class SitesFragment extends Fragment implements LabObserver {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
 
-                            int df;
-                            df=which;
-
-
                             switch (which)
                             {
                                 case 1: {
