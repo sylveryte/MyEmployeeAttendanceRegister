@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.telecom.TelecomManager;
 import android.view.LayoutInflater;
@@ -25,14 +26,13 @@ public class SiteAttendanceFragment extends Fragment {
     private Site mSite;
     private EntrySet mEntrySet;
     private RecyclerView mRecyclerView;
-    private EmployeeAttendanceAdpater mEmployeeAttendanceAdpater;
+    private EmployeeAttendanceAdapter mEmployeeAttendanceAdpater;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.recycler_fragment, container, false);
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.fragment_recycler_view);
+        View view = inflater.inflate(R.layout.recycler_fragment_attendance, container, false);
 
         UUID siteId=mSite.getId();
         Date date=new Date();
@@ -40,7 +40,16 @@ public class SiteAttendanceFragment extends Fragment {
         mEntrySet=EntryLab.getInstanceOf().getEntrySetBySiteIdAndDate(date,siteId);
         mSite=SitesLab.getInstanceOf().getSiteById(siteId);
 
-        mEmployeeAttendanceAdpater=new EmployeeAttendanceAdpater(mEntrySet.getEntries());
+        int ids=2;
+
+        List<Entry> entries=mEntrySet.getEntries();
+        int di=entries.size();
+
+        mEmployeeAttendanceAdpater=new EmployeeAttendanceAdapter(entries);
+
+        int i=entries.size();
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.fragment_recycler_view_attendance);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL,true));
         mRecyclerView.setAdapter(mEmployeeAttendanceAdpater);
 
         return view;
@@ -89,11 +98,11 @@ public class SiteAttendanceFragment extends Fragment {
     }
 
 
-    private class EmployeeAttendanceAdpater extends RecyclerView.Adapter<EmployeeAttendanceHolder>
+    private class EmployeeAttendanceAdapter extends RecyclerView.Adapter<EmployeeAttendanceHolder>
     {
         List<Entry> mEntries;
 
-        public EmployeeAttendanceAdpater(List<Entry> entries)
+        public EmployeeAttendanceAdapter(List<Entry> entries)
         {
             mEntries=entries;
         }

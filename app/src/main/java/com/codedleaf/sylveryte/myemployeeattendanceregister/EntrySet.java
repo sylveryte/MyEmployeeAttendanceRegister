@@ -1,6 +1,5 @@
 package com.codedleaf.sylveryte.myemployeeattendanceregister;
 
-import java.io.DataOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -44,6 +43,16 @@ public class EntrySet {
     public UUID getSiteId() {
         return mSiteId;
     }
+
+    public List<Entry> getEntries2()
+    {
+        List<Entry> df=new ArrayList<>();
+        df.add(new Entry(UUID.randomUUID()));
+        df.add(new Entry(UUID.randomUUID()));
+        df.add(new Entry(UUID.randomUUID()));
+        return df;
+    }
+
 
     public List<Entry> getEntries() {
         initializeEntries();

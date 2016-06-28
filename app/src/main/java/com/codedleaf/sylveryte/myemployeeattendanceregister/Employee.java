@@ -69,6 +69,7 @@ public class Employee implements Pickable{
         //Add into the table code her
         // TODO: 14/6/16 table insert code here
         //use update for remove and this too
+        SitesLab.getInstanceOf().addEmployeeInSite(siteid,getId());
     }
     public String getSiteString()
     {

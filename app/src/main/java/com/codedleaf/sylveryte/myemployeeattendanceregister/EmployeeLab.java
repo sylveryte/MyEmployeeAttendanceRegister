@@ -27,7 +27,9 @@ public class EmployeeLab implements LabObeservable {
             employee.setName("Rext "+i*234);
             employee.setAge(i+12*i);
             employee.setActive(i % 2 == 0);
-            employee.addSite(SitesLab.getInstanceOf().getSites().get(i).getId());
+            Site site=SitesLab.getInstanceOf().getSites().get(i);
+            employee.addSite(site.getId());
+
             addEmployee(employee);
         }
 
