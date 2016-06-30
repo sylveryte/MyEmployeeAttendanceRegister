@@ -61,6 +61,11 @@ public class SitesLab implements LabObeservable {
         return null;
     }
 
+    public String getSiteStringById(UUID uuid)
+    {
+        return getSiteById(uuid).getTitle();
+    }
+
     public List<Employee> getCurrentEmployeesInSiteBySiteId(UUID siteId)
     {
         List<Employee> employees=new ArrayList<>();

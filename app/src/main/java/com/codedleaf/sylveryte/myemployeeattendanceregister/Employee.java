@@ -2,6 +2,7 @@ package com.codedleaf.sylveryte.myemployeeattendanceregister;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -11,16 +12,16 @@ public class Employee implements Pickable{
 
 
 
-    Boolean mIsMale;
-    String mName;
-    int mAge;
-    double mSalary;
-    String mAdress;
-    String mNote;
-    List<UUID> mDesignations;
-    List<UUID> mSites;
-    Boolean mIsActive;
-    UUID mEployeeId;
+    private Boolean mIsMale;
+    private String mName;
+    private int mAge;
+    private double mSalary;
+    private String mAdress;
+    private String mNote;
+    private List<UUID> mDesignations;
+    private List<UUID> mSites;
+    private Boolean mIsActive;
+    private UUID mEployeeId;
 
     public Employee()
     {
@@ -33,9 +34,26 @@ public class Employee implements Pickable{
 
     public void addDesignation(UUID desigantionid)
     {
+        if (mDesignations.contains(desigantionid))
+            return;
         mDesignations.add(desigantionid);
 
     }
+
+    public List<UUID> getDesignations()
+    {
+        return mDesignations;
+    }
+
+    public void removeDesignationById(UUID uuid)
+    {
+        mDesignations.remove(uuid);
+    }
+    public void removeSiteByid(UUID uuid)
+    {
+        mSites.remove(uuid);
+    }
+
     public String getDesignationString()
     {
 
@@ -62,14 +80,24 @@ public class Employee implements Pickable{
         return "no Designation Assigned";
     }
 
+
+
     public void addSite(UUID siteid)
     {
+        if(mSites.contains(siteid))
+            return;
         mSites.add(siteid);
         //Add into the table code her
         // TODO: 14/6/16 table insert code here
         //use update for remove and this too
         SitesLab.getInstanceOf().addEmployeeInSite(siteid,getId());
     }
+
+    public List<UUID> getSites()
+    {
+        return mSites;
+    }
+
     public String getSiteString()
     {
         if(!mSites.isEmpty())
@@ -101,7 +129,7 @@ public class Employee implements Pickable{
 
     @Override
     public String getDescription() {
-        return getMaleFemaleString()+" "+getAge()+ " "+getDesignationString();
+        return getMaleFemaleString()+" "+getAge();
     }
 
     public  String getMaleFemaleString()

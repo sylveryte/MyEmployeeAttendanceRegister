@@ -2,6 +2,7 @@
                                     android:layout_width="match_parent"
                                     xmlns:app="http://schemas.android.com/apk/res-auto"
                                     app:cardElevation="4dp"
+                                    android:layout_margin="5dp"
                                     android:id="@+id/employee_attendance_card"
                                     android:layout_height="wrap_content">
     <LinearLayout
