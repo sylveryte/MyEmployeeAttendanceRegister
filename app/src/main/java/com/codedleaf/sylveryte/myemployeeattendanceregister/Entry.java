@@ -1,6 +1,8 @@
 package com.codedleaf.sylveryte.myemployeeattendanceregister;
 
-import java.util.Date;
+
+import org.joda.time.LocalDate;
+
 import java.util.UUID;
 
 /**
@@ -16,7 +18,7 @@ public class Entry {
     public static final int ABSENT=74;
 
 
-    Date mDate;
+    LocalDate mDate;
     int mRemark;
     UUID mSiteId;
     UUID mEmployeeId;
@@ -27,15 +29,15 @@ public class Entry {
     {
         mEmployeeId=employeeId;
 
-        mDate=new Date();
+        mDate=new LocalDate();
         mRemark=PRESENT;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return mDate;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         mDate = date;
     }
 

@@ -1,7 +1,8 @@
 package com.codedleaf.sylveryte.myemployeeattendanceregister;
 
+import org.joda.time.LocalDate;
+
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -11,13 +12,14 @@ import java.util.UUID;
 public class EntrySet {
 
     private UUID mSiteId;
-    private Date mDate;
+    private LocalDate mDate;
     private List<Entry> mEntries;
 
     public EntrySet(UUID siteId)
     {
         mSiteId=siteId;
-        mDate=new Date();
+        mDate=new LocalDate();
+        initializeEntries();
     }
 
     private void initializeEntries()
@@ -32,11 +34,11 @@ public class EntrySet {
         }
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return mDate;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         mDate = date;
     }
 
@@ -44,19 +46,8 @@ public class EntrySet {
         return mSiteId;
     }
 
-    public List<Entry> getEntries2()
-    {
-        List<Entry> df=new ArrayList<>();
-        df.add(new Entry(UUID.randomUUID()));
-        df.add(new Entry(UUID.randomUUID()));
-        df.add(new Entry(UUID.randomUUID()));
-        return df;
-    }
-
 
     public List<Entry> getEntries() {
-        initializeEntries();
-
         return mEntries;
     }
 }

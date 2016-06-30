@@ -1,7 +1,8 @@
 package com.codedleaf.sylveryte.myemployeeattendanceregister;
 
+import org.joda.time.LocalDate;
+
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,14 +15,14 @@ public class Site implements Pickable {
     String mTitle;
     String mDescription;
     List<UUID> mEmployeesInvolved;
-    Date mBeginDate;
-    Date mFinishedDate;
+    LocalDate mBeginDate;
+    LocalDate mFinishedDate;
     UUID mSiteId;
 
     public Site()
     {
         mEmployeesInvolved=new ArrayList<>();
-        mBeginDate = new Date();
+        mBeginDate = new LocalDate();
         mSiteId = UUID.randomUUID();
 
 
@@ -43,19 +44,19 @@ public class Site implements Pickable {
         mDescription = description;
     }
 
-    public Date getBeginDate() {
+    public LocalDate getBeginDate() {
         return mBeginDate;
     }
 
-    public void setBeginDate(Date beginDate) {
+    public void setBeginDate(LocalDate beginDate) {
         mBeginDate = beginDate;
     }
 
-    public Date getFinishedDate() {
+    public LocalDate getFinishedDate() {
         return mFinishedDate;
     }
 
-    public void setFinishedDate(Date finishedDate) {
+    public void setFinishedDate(LocalDate finishedDate) {
         mFinishedDate = finishedDate;
     }
 

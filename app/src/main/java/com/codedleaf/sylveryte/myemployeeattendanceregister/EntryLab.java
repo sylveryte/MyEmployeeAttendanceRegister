@@ -1,9 +1,8 @@
 package com.codedleaf.sylveryte.myemployeeattendanceregister;
 
-import android.widget.Toast;
+import org.joda.time.LocalDate;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,19 +30,30 @@ public class EntryLab implements LabObeservable {
         return sEntryLab;
     }
 
-    public EntrySet getEntrySetBySiteIdAndDate(Date date, UUID siteId)
+    public EntrySet getEntrySetBySiteIdAndDate(LocalDate date, UUID siteId)
     {
+        EntrySet entrySetToReturn = null;
+        boolean same=false;
         for (EntrySet entrySet:mEntrySets)
         {
-            if (entrySet.getDate().compareTo(date)!=0&&entrySet.getSiteId().equals(siteId))
+
+            same = entrySet.getDate().equals(date)&&entrySet.getSiteId().equals(siteId);
+            if (same)
             {
-                return entrySet;
+                entrySetToReturn=entrySet;
+                break;
             }
         }
-        EntrySet entrySet=new EntrySet(siteId);
-        entrySet.setDate(date);
-        mEntrySets.add(entrySet);
-        return entrySet;
+
+        if (!same)
+        {
+            EntrySet entrySetNew=new EntrySet(siteId);
+            entrySetNew.setDate(date);
+            addEntrySet(entrySetNew);
+            entrySetToReturn=entrySetNew;
+        }
+
+        return entrySetToReturn;
     }
 
     public void addEntrySet(EntrySet entrySet)

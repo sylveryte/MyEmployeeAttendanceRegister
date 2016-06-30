@@ -1,25 +1,23 @@
 package com.codedleaf.sylveryte.myemployeeattendanceregister;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.telecom.TelecomManager;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.Date;
+
+import org.joda.time.LocalDate;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -40,7 +38,7 @@ public class SiteAttendanceFragment extends Fragment {
         View view = inflater.inflate(R.layout.recycler_fragment_attendance, container, false);
 
         UUID siteId=mSite.getId();
-        Date date=new Date();
+        LocalDate date=new LocalDate();
 
         mEntrySet=EntryLab.getInstanceOf().getEntrySetBySiteIdAndDate(date,siteId);
         mSite=SitesLab.getInstanceOf().getSiteById(siteId);
@@ -126,7 +124,7 @@ public class SiteAttendanceFragment extends Fragment {
         {
             mEntry=entry;
             mTextViewName.setText(entry.getEmployeeInfo());
-            setColorOfCardAndState(mEntry.getRemark());
+            setColorOfCardAndState(mEntry.getRemark()%10);
             setRemark();
         }
     }
@@ -146,7 +144,9 @@ public class SiteAttendanceFragment extends Fragment {
             LayoutInflater layoutInflater=getActivity().getLayoutInflater();
             View view=layoutInflater.inflate(R.layout.employee_attendance_layout,parent,false);
 
-            return new EmployeeAttendanceHolder(view);
+            EmployeeAttendanceHolder holder=new EmployeeAttendanceHolder(view);
+
+            return holder;
         }
 
         @Override
