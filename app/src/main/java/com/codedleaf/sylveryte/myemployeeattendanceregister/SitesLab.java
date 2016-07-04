@@ -23,14 +23,14 @@ public class SitesLab implements LabObeservable {
         mLabObservers=new ArrayList<>();
 
 
-        //// TODO: 12/6/16 get rid of this fake db
-        for (int i=1;i<5;i++)
-        {
-            Site site=new Site();
-            site.setTitle("Site "+i*763);
-            site.setDescription("codedleaf bc!");
-            mSites.add(site);
-        }
+//        //// TODO: 12/6/16 get rid of this fake db
+//        for (int i=1;i<5;i++)
+//        {
+//            Site site=new Site();
+//            site.setTitle("Site "+i*763);
+//            site.setDescription("codedleaf bc!");
+//            mSites.add(site);
+//        }
 
     }
 
@@ -48,6 +48,12 @@ public class SitesLab implements LabObeservable {
     public void addSite(Site site)
     {
         mSites.add(site);
+        alertAllObservers();
+    }
+    public void deleteSite(Site site)
+    {
+        site.delete();
+        mSites.remove(site);
         alertAllObservers();
     }
 
@@ -79,13 +85,6 @@ public class SitesLab implements LabObeservable {
         }
         return employees;
     }
-
-    public void addEmployeeInSite(UUID siteId,UUID employeeId)
-    {
-        Site site=getSiteById(siteId);
-        site.addEmployee(employeeId);
-    }
-
 
     public List<Site> getSites() {
         return mSites;

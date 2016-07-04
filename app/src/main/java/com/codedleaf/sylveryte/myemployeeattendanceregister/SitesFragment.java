@@ -98,16 +98,23 @@ public class SitesFragment extends Fragment implements LabObserver {
                 @Override
                 public void onClick(View v) {
 
-                    CharSequence choices[] = new CharSequence[] {"Take Attendance", "Edit"};
+                    CharSequence choices[] = new CharSequence[] {"Take Attendance", "Edit","Delete"};
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                    builder.setTitle("Choose");
+                    builder.setTitle(mSite.getTitle());
                     builder.setItems(choices, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
 
                             switch (which)
                             {
+                                case 2:
+                                {
+                                    mSitesLab.deleteSite(mSite);
+                                    update();
+                                    break;
+                                }
+
                                 case 1: {
 
                                     Intent intent = AdditionActivity.fetchIntent(getActivity(), AdditionActivity.FRAGMENT_CODE_EDIT_SITE);

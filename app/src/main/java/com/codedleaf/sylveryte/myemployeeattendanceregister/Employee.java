@@ -2,7 +2,6 @@ package com.codedleaf.sylveryte.myemployeeattendanceregister;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -12,16 +11,21 @@ public class Employee implements Pickable{
 
 
 
-    private Boolean mIsMale;
-    private String mName;
     private int mAge;
     private double mSalary;
+
+    private String mName;
+
     private String mAdress;
     private String mNote;
+
+    private Boolean mIsMale;
+    private Boolean mIsActive;
+
+    private UUID mEployeeId;
+
     private List<UUID> mDesignations;
     private List<UUID> mSites;
-    private Boolean mIsActive;
-    private UUID mEployeeId;
 
     public Employee()
     {
@@ -32,27 +36,12 @@ public class Employee implements Pickable{
         mSites=new ArrayList<>();
     }
 
-    public void addDesignation(UUID desigantionid)
-    {
-        if (mDesignations.contains(desigantionid))
-            return;
-        mDesignations.add(desigantionid);
-
-    }
 
     public List<UUID> getDesignations()
     {
         return mDesignations;
     }
 
-    public void removeDesignationById(UUID uuid)
-    {
-        mDesignations.remove(uuid);
-    }
-    public void removeSiteByid(UUID uuid)
-    {
-        mSites.remove(uuid);
-    }
 
     public String getDesignationString()
     {
@@ -82,16 +71,6 @@ public class Employee implements Pickable{
 
 
 
-    public void addSite(UUID siteid)
-    {
-        if(mSites.contains(siteid))
-            return;
-        mSites.add(siteid);
-        //Add into the table code her
-        // TODO: 14/6/16 table insert code here
-        //use update for remove and this too
-        SitesLab.getInstanceOf().addEmployeeInSite(siteid,getId());
-    }
 
     public List<UUID> getSites()
     {
@@ -137,13 +116,7 @@ public class Employee implements Pickable{
         return isMale()?"Male":"Female";
     }
 
-    public void removeDesignation(Designation designation )
-    {
-        mDesignations.remove(designation.getId());
 
-        // TODO: 12/6/16 table deletion code here
-
-    }
 
     public Boolean isMale() {
         return mIsMale;
@@ -209,4 +182,72 @@ public class Employee implements Pickable{
     public UUID getId() {
         return mEployeeId;
     }
+
+
+
+
+
+
+    public void delete()
+    {
+        DesignationLab designationLab=DesignationLab.getInstanceOf();
+        SitesLab sitesLab=SitesLab.getInstanceOf();
+
+        //remove from desgs
+        for (UUID uuid:mDesignations)
+        {
+            Designation designation=designationLab.getDesigantionById(uuid);
+            if (designation!=null)
+            {
+                designation.removeEmployeeInvolvedById(uuid);
+            }
+        }
+
+        //remove from sitee
+        for (UUID uuid:mSites)
+        {
+            Site site=sitesLab.getSiteById(uuid);
+            if(site!=null)
+            {
+                site.removeEmployeeById(uuid);
+            }
+        }
+
+        EntryLab.getInstanceOf().cleanseEntriesOfEmployeeId(mEployeeId);
+    }
+
+    public void addSiteById(UUID siteid)
+    {
+        if(mSites.contains(siteid))
+            return;
+        mSites.add(siteid);
+
+        Site site=SitesLab.getInstanceOf().getSiteById(siteid);
+        site.addEmployeeById(mEployeeId);
+    }
+
+
+    public void removeSiteByid(UUID uuid)
+    {
+        if (!mSites.contains(uuid))
+            return;
+        mSites.remove(uuid);
+    }
+
+    public void addDesignationById(UUID desigantionid)
+    {
+        if (mDesignations.contains(desigantionid))
+            return;
+        mDesignations.add(desigantionid);
+
+        Designation designation=DesignationLab.getInstanceOf().getDesigantionById(desigantionid);
+        designation.addEmployeeInvolvedById(mEployeeId);
+    }
+    public void removeDesignationById(UUID uuid)
+    {
+        if (!mDesignations.contains(uuid))
+            return;
+        mDesignations.remove(uuid);
+    }
+
 }

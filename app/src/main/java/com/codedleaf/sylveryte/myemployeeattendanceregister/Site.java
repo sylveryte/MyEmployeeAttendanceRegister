@@ -12,12 +12,15 @@ import java.util.UUID;
 public class Site implements Pickable {
 
 
-    String mTitle;
-    String mDescription;
-    List<UUID> mEmployeesInvolved;
-    LocalDate mBeginDate;
-    LocalDate mFinishedDate;
-    UUID mSiteId;
+    private String mTitle;
+    private String mDescription;
+
+    private LocalDate mBeginDate;
+    private LocalDate mFinishedDate;
+
+    private UUID mSiteId;
+
+    private List<UUID> mEmployeesInvolved;
 
     public Site()
     {
@@ -31,6 +34,8 @@ public class Site implements Pickable {
     public String getTitle() {
         return mTitle;
     }
+
+
 
     public void setTitle(String title) {
         mTitle = title;
@@ -60,17 +65,55 @@ public class Site implements Pickable {
         mFinishedDate = finishedDate;
     }
 
-    public void addEmployee(UUID uuid)
-    {
-        mEmployeesInvolved.add(uuid);
-    }
-
     public List<UUID> getEmployeesInvolved() {
         return mEmployeesInvolved;
     }
 
+
     @Override
     public UUID getId() {
         return mSiteId;
+    }
+
+
+
+
+
+
+
+
+
+
+    public void delete()
+    {
+        EmployeeLab lab=EmployeeLab.getInstanceOf();
+        for (UUID uuid:mEmployeesInvolved)
+        {
+            Employee employee=lab.getEmployeeById(uuid);
+            if (employee!=null)
+            {
+                employee.removeSiteByid(mSiteId);
+            }
+        }
+
+        EntryLab.getInstanceOf().cleanseEntriesOfSiteId(mSiteId);
+
+    }
+
+    public void addEmployeeById(UUID empId)
+    {
+        if (mEmployeesInvolved.contains(empId))
+            return;
+        mEmployeesInvolved.add(empId);
+
+        Employee employee=EmployeeLab.getInstanceOf().getEmployeeById(empId);
+        employee.addSiteById(mSiteId);
+    }
+
+    public void removeEmployeeById(UUID uuid)
+    {
+        if (!mEmployeesInvolved.contains(uuid))
+            return;
+        mEmployeesInvolved.remove(uuid);
     }
 }

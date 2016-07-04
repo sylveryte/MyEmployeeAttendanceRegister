@@ -61,7 +61,28 @@ public class EntryLab implements LabObeservable {
         mEntrySets.add(entrySet);
     }
 
+    public void cleanseEntriesOfEmployeeId(UUID empId)
+    {
+        for (EntrySet entrySet:mEntrySets)
+        {
+            entrySet.cleanseEntriesOfEmployee(empId);
+        }
 
+        //// TODO: 5/7/16 db codes
+    }
+
+    public void cleanseEntriesOfSiteId(UUID siteId)
+    {
+        for (EntrySet entrySet:mEntrySets)
+        {
+            if (entrySet.getSiteId().equals(siteId))
+            {
+                mEntrySets.remove(entrySet);
+            }
+        }
+
+        //// TODO: 5/7/16 db codes
+    }
 
     @Override
     public void addListener(LabObserver labObserver) {

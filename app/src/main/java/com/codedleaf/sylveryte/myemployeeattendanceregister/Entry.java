@@ -18,11 +18,16 @@ public class Entry {
     public static final int ABSENT=74;
 
 
-    LocalDate mDate;
-    int mRemark;
-    UUID mSiteId;
-    UUID mEmployeeId;
-    String mNote;
+
+    private LocalDate mDate;
+
+    private int mRemark;
+
+    private UUID mSiteId;
+    private UUID mEmployeeId;
+
+
+    private String mNote;
 
 
     public Entry(UUID employeeId)
@@ -58,6 +63,7 @@ public class Entry {
     }
 
     public UUID getEmployeeId() {
+
         return mEmployeeId;
     }
 

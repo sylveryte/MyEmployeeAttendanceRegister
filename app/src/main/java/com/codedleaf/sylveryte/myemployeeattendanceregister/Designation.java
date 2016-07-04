@@ -1,5 +1,7 @@
 package com.codedleaf.sylveryte.myemployeeattendanceregister;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -7,14 +9,19 @@ import java.util.UUID;
  */
 public class Designation implements Pickable {
 
-    String mTitle;
-    String mDescription;
-    UUID mDesignationId;
+    private String mTitle;
+    private String mDescription;
+
+    private UUID mDesignationId;
+
+    private List<UUID> mEmployees;
 
     public Designation()
     {
         mDesignationId = UUID.randomUUID();
+        mEmployees=new ArrayList<>();
     }
+
 
     public String getTitle() {
         return mTitle;
@@ -32,6 +39,41 @@ public class Designation implements Pickable {
         mDescription = description;
     }
 
+
+
+
+
+
+
+    public void delete()
+    {
+        EmployeeLab lab=EmployeeLab.getInstanceOf();
+        for (UUID uuid:mEmployees)
+        {
+            Employee employee=lab.getEmployeeById(uuid);
+            if (employee!=null)
+            {
+                employee.removeDesignationById(mDesignationId);
+            }
+        }
+    }
+
+    public void addEmployeeInvolvedById(UUID uuid)
+    {
+        if (mEmployees.contains(uuid))
+            return;
+        mEmployees.add(uuid);
+
+        Employee employee=EmployeeLab.getInstanceOf().getEmployeeById(uuid);
+        employee.removeDesignationById(mDesignationId);
+    }
+
+    public void removeEmployeeInvolvedById(UUID uuid)
+    {
+        if (!mEmployees.contains(uuid))
+            return;
+        mEmployees.remove(uuid);
+    }
 
     @Override
     public UUID getId() {

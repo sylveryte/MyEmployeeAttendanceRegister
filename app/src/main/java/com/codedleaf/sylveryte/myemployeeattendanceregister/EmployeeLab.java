@@ -21,22 +21,22 @@ public class EmployeeLab implements LabObeservable {
         mLabObservers=new ArrayList<>();
 
         //// TODO: 14/6/16 clean up
-        for (int i=0; i<4;i++)
-        {
-            Employee employee=new Employee();
-            employee.setName("Rext "+i*234);
-            employee.setAge(i+12*i);
-            employee.setActive(i % 2 == 0);
-
-
-            List<Site> sites=SitesLab.getInstanceOf().getSites();
-            for (Site sitee:sites)
-            {
-                employee.addSite(sitee.getId());
-            }
-
-            addEmployee(employee);
-        }
+//        for (int i=0; i<4;i++)
+//        {
+//            Employee employee=new Employee();
+//            employee.setName("Rext "+i*234);
+//            employee.setAge(i+12*i);
+//            employee.setActive(i % 2 == 0);
+//
+//
+//            List<Site> sites=SitesLab.getInstanceOf().getSites();
+//            for (Site sitee:sites)
+//            {
+//                employee.addSiteById(sitee.getId());
+//            }
+//
+//            addEmployee(employee);
+//        }
 
     }
 
@@ -51,7 +51,15 @@ public class EmployeeLab implements LabObeservable {
 
     public void addEmployee(Employee employee)
     {
+        if (mEmployees.contains(employee))
+            return;
         mEmployees.add(employee);
+        alertAllObservers();
+    }
+    public void deleteEmployee(Employee employee)
+    {
+        employee.delete();
+        mEmployees.remove(employee);
         alertAllObservers();
     }
 

@@ -23,6 +23,8 @@ public class SiteAdditionFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
     }
 
     @Nullable
@@ -47,6 +49,7 @@ public class SiteAdditionFragment extends Fragment {
             }
         });
 
+
         update();
         return v;
     }
@@ -59,6 +62,7 @@ public class SiteAdditionFragment extends Fragment {
 
     public void setSite(Site site) {
         mSite = site;
+
     }
 
     public static SiteAdditionFragment createInstance(Site site)

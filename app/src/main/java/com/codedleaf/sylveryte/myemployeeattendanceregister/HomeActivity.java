@@ -138,14 +138,19 @@ public class HomeActivity extends AppCompatActivity
         mSelectedId=id;
 
         if (id == R.id.nav_attendance) {
+//            setTitle(R.string.attendances);
 
         } else if (id == R.id.nav_sites) {
+            setTitle(R.string.sites);
             startFragment(SitesFragment.newInstance());
         } else if (id == R.id.nav_employees) {
+            setTitle(R.string.employees);
             startFragment(EmployeeFragment.newInstance());
         } else if (id == R.id.nav_designation) {
+            setTitle(R.string.designations);
             startFragment(DesignationFragment.newInstance());
         } else if (id == R.id.nav_stats) {
+//            setTitle(R.string.stats);
 
         } else if (id == R.id.nav_share) {
 

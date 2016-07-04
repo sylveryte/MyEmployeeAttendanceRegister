@@ -2,7 +2,6 @@ package com.codedleaf.sylveryte.myemployeeattendanceregister;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -49,7 +48,7 @@ public class EmployeeAdditionFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable final Bundle savedInstanceState) {
 
         View view=inflater.inflate(R.layout.employee_addition_fragment,container,false);
 
@@ -70,6 +69,7 @@ public class EmployeeAdditionFragment extends Fragment {
         mChooseDesignationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                saveData();
                 Intent intent=PickActivity.fetchIntent(getActivity(),PickActivity.FRAGMENT_CODE_PICK_DESIGNATION);
                 startActivityForResult(intent,PickActivity.FRAGMENT_CODE_PICK_DESIGNATION);
             }
@@ -78,6 +78,7 @@ public class EmployeeAdditionFragment extends Fragment {
         mChooseSiteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                saveData();
                 Intent intent=PickActivity.fetchIntent(getActivity(),PickActivity.FRAGMENT_CODE_PICK_SITE);
                 startActivityForResult(intent,PickActivity.FRAGMENT_CODE_PICK_SITE);
             }
@@ -87,10 +88,7 @@ public class EmployeeAdditionFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                mEmployee.setActive(true);
-                mEmployee.setName(mName.getText().toString());
-                mEmployee.setAge(Integer.parseInt(mAge.getText().toString()));
-                mEmployee.setAdress(mAddress.getText().toString());
+                saveData();
                 getActivity().finish();
             }
         });
@@ -112,8 +110,16 @@ public class EmployeeAdditionFragment extends Fragment {
             }
         });
 
+
         update();
         return view;
+    }
+
+    private void saveData() {
+        mEmployee.setActive(true);
+        mEmployee.setName(mName.getText().toString());
+        mEmployee.setAge(Integer.parseInt(mAge.getText().toString()));
+        mEmployee.setAdress(mAddress.getText().toString());
     }
 
     public void update()
@@ -227,12 +233,12 @@ public class EmployeeAdditionFragment extends Fragment {
 
         if(requestCode==PickActivity.FRAGMENT_CODE_PICK_DESIGNATION)
         {
-            mEmployee.addDesignation(uuid);
+            mEmployee.addDesignationById(uuid);
             update();
         }
         else if (requestCode==PickActivity.FRAGMENT_CODE_PICK_SITE)
         {
-            mEmployee.addSite(uuid);
+            mEmployee.addSiteById(uuid);
             update();
         }
 

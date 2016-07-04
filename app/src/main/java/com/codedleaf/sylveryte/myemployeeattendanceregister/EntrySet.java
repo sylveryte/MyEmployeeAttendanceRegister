@@ -19,13 +19,12 @@ public class EntrySet {
     {
         mSiteId=siteId;
         mDate=new LocalDate();
+        mEntries=new ArrayList<>();
         initializeEntries();
     }
 
     private void initializeEntries()
     {
-        mEntries=new ArrayList<>();
-
         List<Employee> employees=SitesLab.getInstanceOf().getCurrentEmployeesInSiteBySiteId(mSiteId);
         for (Employee employee: employees)
         {
@@ -46,6 +45,16 @@ public class EntrySet {
         return mSiteId;
     }
 
+    public void cleanseEntriesOfEmployee(UUID empId)
+    {
+        for (Entry entry: mEntries)
+        {
+            if (entry.getEmployeeId().equals(empId))
+            {
+                mEntries.remove(entry);
+            }
+        }
+    }
 
     public List<Entry> getEntries() {
         return mEntries;

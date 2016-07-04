@@ -8,6 +8,8 @@
     <string name="sub_title">Attendance Register</string>
     <string name="title">Employee Register</string>
     <string name="sites">Sites</string>
+    <string name="attendances">Attendances</string>
+    <string name="designations">Designations</string>
     <string name="employees">Employees</string>
     <string name="stats">Stats</string>
     <string name="attendance">Attendance</string>

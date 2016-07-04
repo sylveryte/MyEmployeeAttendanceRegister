@@ -20,13 +20,13 @@ public class DesignationLab implements LabObeservable {
         mLabObservers=new ArrayList<>();
 
         //// TODO: 15/6/16 clean up this fake designations
-        for (int i=0;i<5;i++)
-        {
-            Designation designation=new Designation();
-            designation.setTitle("desfg "+i*232);
-            designation.setDescription("kya bas kya");
-            addDesignation(designation);
-        }
+//        for (int i=0;i<5;i++)
+//        {
+//            Designation designation=new Designation();
+//            designation.setTitle("desfg "+i*232);
+//            designation.setDescription("kya bas kya");
+//            addDesignation(designation);
+//        }
     }
 
     public void addDesignation(Designation designation)
@@ -35,6 +35,13 @@ public class DesignationLab implements LabObeservable {
         alertAllObservers();
     }
 
+    public void deleteDesignation(Designation designation)
+    {
+        designation.delete();
+
+        mDesignations.remove(designation);
+        alertAllObservers();
+    }
 
     public List<Designation> getDesignations() {
         return mDesignations;
