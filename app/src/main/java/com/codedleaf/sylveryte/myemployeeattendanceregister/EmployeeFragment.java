@@ -28,7 +28,7 @@ public class EmployeeFragment extends Fragment implements LabObserver {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mLab=EmployeeLab.getInstanceOf();
+        mLab=EmployeeLab.getInstanceOf(getActivity());
         mLab.addListener(this);
 
     }

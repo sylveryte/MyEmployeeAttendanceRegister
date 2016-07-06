@@ -1,5 +1,8 @@
 package com.codedleaf.sylveryte.myemployeeattendanceregister;
 
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -14,19 +17,16 @@ public class DesignationLab implements LabObeservable {
     private static DesignationLab sDesignationLab;
     private List<LabObserver> mLabObservers;
 
-    private DesignationLab()
+    private Context mContext;
+    private SQLiteDatabase mDatabase;
+
+    private DesignationLab(Context context)
     {
+        mContext=context.getApplicationContext();
+        mDatabase=AttendanceBaseHelper.getDatabaseWritable(mContext);
+
         mDesignations=new ArrayList<>();
         mLabObservers=new ArrayList<>();
-
-        //// TODO: 15/6/16 clean up this fake designations
-//        for (int i=0;i<5;i++)
-//        {
-//            Designation designation=new Designation();
-//            designation.setTitle("desfg "+i*232);
-//            designation.setDescription("kya bas kya");
-//            addDesignation(designation);
-//        }
     }
 
     public void addDesignation(Designation designation)
@@ -58,11 +58,11 @@ public class DesignationLab implements LabObeservable {
             labObserver.update();
     }
 
-    public static DesignationLab getInstanceOf()
+    public static DesignationLab getInstanceOf(Context context)
     {
         if (sDesignationLab==null)
         {
-            sDesignationLab=new DesignationLab();
+            sDesignationLab=new DesignationLab(context);
         }
         return sDesignationLab;
     }

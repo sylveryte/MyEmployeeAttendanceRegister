@@ -1,5 +1,7 @@
 package com.codedleaf.sylveryte.myemployeeattendanceregister;
 
+import android.content.Context;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -16,8 +18,12 @@ public class Designation implements Pickable {
 
     private List<UUID> mEmployees;
 
-    public Designation()
+    private Context mContext;
+
+    public Designation(Context context)
     {
+        mContext=context;
+
         mDesignationId = UUID.randomUUID();
         mEmployees=new ArrayList<>();
     }
@@ -39,15 +45,9 @@ public class Designation implements Pickable {
         mDescription = description;
     }
 
-
-
-
-
-
-
     public void delete()
     {
-        EmployeeLab lab=EmployeeLab.getInstanceOf();
+        EmployeeLab lab=EmployeeLab.getInstanceOf(mContext);
         for (UUID uuid:mEmployees)
         {
             Employee employee=lab.getEmployeeById(uuid);
@@ -64,7 +64,7 @@ public class Designation implements Pickable {
             return;
         mEmployees.add(uuid);
 
-        Employee employee=EmployeeLab.getInstanceOf().getEmployeeById(uuid);
+        Employee employee=EmployeeLab.getInstanceOf(mContext).getEmployeeById(uuid);
         employee.removeDesignationById(mDesignationId);
     }
 

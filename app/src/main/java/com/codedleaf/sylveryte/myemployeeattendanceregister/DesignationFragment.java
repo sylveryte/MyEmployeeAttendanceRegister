@@ -29,7 +29,7 @@ public class DesignationFragment extends Fragment implements LabObserver {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mLab=DesignationLab.getInstanceOf();
+        mLab=DesignationLab.getInstanceOf(getActivity());
         mLab.addListener(this);
 
     }

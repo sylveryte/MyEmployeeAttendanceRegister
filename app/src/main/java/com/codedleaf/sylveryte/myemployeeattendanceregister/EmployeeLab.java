@@ -1,5 +1,8 @@
 package com.codedleaf.sylveryte.myemployeeattendanceregister;
 
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -14,37 +17,25 @@ public class EmployeeLab implements LabObeservable {
     private List<Employee> mEmployees;
     private List<LabObserver> mLabObservers;
 
-    private EmployeeLab()
+    private Context mContext;
+    private SQLiteDatabase mDatabase;
+
+    private EmployeeLab(Context context)
     {
+
+        mContext=context.getApplicationContext();
+        mDatabase=AttendanceBaseHelper.getDatabaseWritable(mContext);
 
         mEmployees=new ArrayList<>();
         mLabObservers=new ArrayList<>();
 
-        //// TODO: 14/6/16 clean up
-//        for (int i=0; i<4;i++)
-//        {
-//            Employee employee=new Employee();
-//            employee.setName("Rext "+i*234);
-//            employee.setAge(i+12*i);
-//            employee.setActive(i % 2 == 0);
-//
-//
-//            List<Site> sites=SitesLab.getInstanceOf().getSites();
-//            for (Site sitee:sites)
-//            {
-//                employee.addSiteById(sitee.getId());
-//            }
-//
-//            addEmployee(employee);
-//        }
-
     }
 
-    public static EmployeeLab getInstanceOf()
+    public static EmployeeLab getInstanceOf(Context context)
     {
         if (sEmployeeLab==null)
         {
-            sEmployeeLab=new EmployeeLab();
+            sEmployeeLab=new EmployeeLab(context);
         }
         return sEmployeeLab;
     }

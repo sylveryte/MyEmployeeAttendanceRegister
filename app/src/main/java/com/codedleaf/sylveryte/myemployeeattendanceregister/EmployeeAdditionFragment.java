@@ -28,13 +28,17 @@ public class EmployeeAdditionFragment extends Fragment {
     private EditText mName;
     private EditText mAddress;
     private EditText mAge;
+
     private RadioGroup mRadioGroupMaleFemale;
     private RadioButton mRadioButtonMale;
     private RadioButton mRadioButtonFemale;
+
     private Button mAddButton;
     private Button mChooseDesignationButton;
     private Button mChooseSiteButton;
+
     private Employee mEmployee;
+
     private LinearLayout mDesignations;
     private LinearLayout mSites;
 
@@ -119,13 +123,13 @@ public class EmployeeAdditionFragment extends Fragment {
         mEmployee.setActive(true);
         mEmployee.setName(mName.getText().toString());
         mEmployee.setAge(Integer.parseInt(mAge.getText().toString()));
-        mEmployee.setAdress(mAddress.getText().toString());
+        mEmployee.setAddress(mAddress.getText().toString());
     }
 
     public void update()
     {
         mName.setText(mEmployee.getName());
-        mAddress.setText(mEmployee.getAdress());
+        mAddress.setText(mEmployee.getAddress());
 
         if(mEmployee.isMale())
         {
@@ -177,7 +181,7 @@ public class EmployeeAdditionFragment extends Fragment {
         public SimpleDesignationView(LinearLayout linearLayout, LayoutInflater layoutInflater, UUID uuid)
         {
             mLinearLayout=linearLayout;
-            mDesignationLab=DesignationLab.getInstanceOf();
+            mDesignationLab=DesignationLab.getInstanceOf(getActivity());
             mUUID=uuid;
             mView=layoutInflater.inflate(R.layout.simple_tex_with_close_card,null);
             TextView textView=(TextView)mView.findViewById(R.id.simple_with_close_text);
@@ -204,7 +208,7 @@ public class EmployeeAdditionFragment extends Fragment {
         public SimpleSiteView(LinearLayout linearLayout, LayoutInflater layoutInflater, UUID uuid)
         {
             mLinearLayout=linearLayout;
-            mSitesLab=SitesLab.getInstanceOf();
+            mSitesLab=SitesLab.getInstanceOf(getActivity());
             mUUID=uuid;
             mView=layoutInflater.inflate(R.layout.simple_tex_with_close_card,null);
             TextView textView=(TextView)mView.findViewById(R.id.simple_with_close_text);

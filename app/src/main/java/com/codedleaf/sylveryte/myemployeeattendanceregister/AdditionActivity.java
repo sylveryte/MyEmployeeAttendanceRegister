@@ -2,6 +2,7 @@ package com.codedleaf.sylveryte.myemployeeattendanceregister;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 import java.util.UUID;
@@ -26,6 +27,8 @@ public class AdditionActivity extends SingleFragmentActivity {
     private DesignationLab mDesignationLab;
     private EmployeeLab mEmployeeLab;
 
+    private Context mContext;
+
     public static Intent fetchIntent(Context context, int fragCode)
     {
         Intent i=new Intent(context,AdditionActivity.class);
@@ -33,14 +36,23 @@ public class AdditionActivity extends SingleFragmentActivity {
         return i;
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        mContext=getApplicationContext();
+    }
 
     @Override
     protected Fragment createFragment() {
 
 
-        mDesignationLab=DesignationLab.getInstanceOf();
-        mSitesLab=SitesLab.getInstanceOf();
-        mEmployeeLab=EmployeeLab.getInstanceOf();
+        if (mContext==null)
+            mContext=getApplicationContext();
+
+        mDesignationLab=DesignationLab.getInstanceOf(mContext);
+        mSitesLab=SitesLab.getInstanceOf(mContext);
+        mEmployeeLab=EmployeeLab.getInstanceOf(mContext);
 
         Intent intent=getIntent();
         int i=intent.getIntExtra(FRAGMENT_CODE,FRAGMENT_CODE_ADD_SITE);
@@ -51,19 +63,19 @@ public class AdditionActivity extends SingleFragmentActivity {
 
                 ////// TODO: 18/6/16  remove wala nikal dena lab se agar addition cancel hota hai toh
 
-                Site site=new Site();
+                Site site=new Site(mContext);
                 mSitesLab.addSite(site);
                 return SiteAdditionFragment.createInstance(site);
             }
             case FRAGMENT_CODE_ADD_EMPLOYEE:
             {
-                Employee employee=new Employee();
+                Employee employee=new Employee(mContext);
                 mEmployeeLab.addEmployee(employee);
                 return EmployeeAdditionFragment.createInstance(employee);
             }
             case FRAGMENT_CODE_ADD_DESIGNATION:
             {
-                Designation designation=new Designation();
+                Designation designation=new Designation(mContext);
                 mDesignationLab.addDesignation(designation);
                 return DesignationAdditionFragment.createInstance(designation);
             }
@@ -85,7 +97,7 @@ public class AdditionActivity extends SingleFragmentActivity {
             }
         }
 
-        Site site=new Site();
+        Site site=new Site(mContext);
         return SiteAdditionFragment.createInstance(site);
     }
 }

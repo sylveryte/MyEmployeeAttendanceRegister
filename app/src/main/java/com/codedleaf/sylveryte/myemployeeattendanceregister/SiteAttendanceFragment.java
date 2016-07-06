@@ -1,5 +1,7 @@
 package com.codedleaf.sylveryte.myemployeeattendanceregister;
 
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -30,6 +32,13 @@ public class SiteAttendanceFragment extends Fragment {
     private EntrySet mEntrySet;
     private RecyclerView mRecyclerView;
     private EmployeeAttendanceAdapter mEmployeeAttendanceAdpater;
+    private Context mContext;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mContext=getActivity();
+    }
 
     @Nullable
     @Override
@@ -40,8 +49,8 @@ public class SiteAttendanceFragment extends Fragment {
         UUID siteId=mSite.getId();
         LocalDate date=new LocalDate();
 
-        mEntrySet=EntryLab.getInstanceOf().getEntrySetBySiteIdAndDate(date,siteId);
-        mSite=SitesLab.getInstanceOf().getSiteById(siteId);
+        mEntrySet=EntryLab.getInstanceOf(mContext).getEntrySetBySiteIdAndDate(date,siteId);
+        mSite=SitesLab.getInstanceOf(mContext).getSiteById(siteId);
 
         mEmployeeAttendanceAdpater=new EmployeeAttendanceAdapter(mEntrySet.getEntries());
         mRecyclerView = (RecyclerView) view.findViewById(R.id.fragment_recycler_view_attendance);
@@ -123,7 +132,7 @@ public class SiteAttendanceFragment extends Fragment {
         private void bind(Entry entry)
         {
             mEntry=entry;
-            mTextViewName.setText(entry.getEmployeeInfo());
+            mTextViewName.setText(entry.getEmployeeInfo(mContext));
             setColorOfCardAndState(mEntry.getRemark()%10);
             setRemark();
         }

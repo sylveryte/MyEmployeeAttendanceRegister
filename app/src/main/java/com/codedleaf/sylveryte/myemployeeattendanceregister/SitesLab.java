@@ -1,5 +1,8 @@
 package com.codedleaf.sylveryte.myemployeeattendanceregister;
 
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -15,30 +18,26 @@ public class SitesLab implements LabObeservable {
     private List<Site> mSites;
     private List<LabObserver> mLabObservers;
 
+    private Context mContext;
+    private SQLiteDatabase mDatabase;
 
 
-    private SitesLab()
+
+    private SitesLab(Context context)
     {
+        mContext=context.getApplicationContext();
+        mDatabase=AttendanceBaseHelper.getDatabaseWritable(mContext);
+
         mSites=new ArrayList<>();
         mLabObservers=new ArrayList<>();
 
-
-//        //// TODO: 12/6/16 get rid of this fake db
-//        for (int i=1;i<5;i++)
-//        {
-//            Site site=new Site();
-//            site.setTitle("Site "+i*763);
-//            site.setDescription("codedleaf bc!");
-//            mSites.add(site);
-//        }
-
     }
 
-    public static SitesLab getInstanceOf()
+    public static SitesLab getInstanceOf(Context context)
     {
         if(sLab==null)
         {
-            sLab=new SitesLab();
+            sLab=new SitesLab(context);
 
         }
 
@@ -76,7 +75,7 @@ public class SitesLab implements LabObeservable {
     {
         List<Employee> employees=new ArrayList<>();
         List<UUID> employeeIds=getSiteById(siteId).getEmployeesInvolved();
-        EmployeeLab employeeLab=EmployeeLab.getInstanceOf();
+        EmployeeLab employeeLab=EmployeeLab.getInstanceOf(mContext);
 
         for (UUID uuid:employeeIds)
         {

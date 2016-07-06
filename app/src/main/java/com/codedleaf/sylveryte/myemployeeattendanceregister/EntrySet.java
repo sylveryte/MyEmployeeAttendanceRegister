@@ -1,5 +1,7 @@
 package com.codedleaf.sylveryte.myemployeeattendanceregister;
 
+import android.content.Context;
+
 import org.joda.time.LocalDate;
 
 import java.util.ArrayList;
@@ -15,20 +17,20 @@ public class EntrySet {
     private LocalDate mDate;
     private List<Entry> mEntries;
 
-    public EntrySet(UUID siteId)
+    public EntrySet(UUID siteId, Context context)
     {
         mSiteId=siteId;
         mDate=new LocalDate();
         mEntries=new ArrayList<>();
-        initializeEntries();
+        initializeEntries(context);
     }
 
-    private void initializeEntries()
+    private void initializeEntries(Context context)
     {
-        List<Employee> employees=SitesLab.getInstanceOf().getCurrentEmployeesInSiteBySiteId(mSiteId);
+        List<Employee> employees=SitesLab.getInstanceOf(context).getCurrentEmployeesInSiteBySiteId(mSiteId);
         for (Employee employee: employees)
         {
-            Entry entry=new Entry(employee.getId());
+            Entry entry=new Entry(employee.getId(),mSiteId);
             mEntries.add(entry);
         }
     }

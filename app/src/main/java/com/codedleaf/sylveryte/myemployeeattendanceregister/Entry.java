@@ -1,6 +1,8 @@
 package com.codedleaf.sylveryte.myemployeeattendanceregister;
 
 
+import android.content.Context;
+
 import org.joda.time.LocalDate;
 
 import java.util.UUID;
@@ -18,7 +20,6 @@ public class Entry {
     public static final int ABSENT=74;
 
 
-
     private LocalDate mDate;
 
     private int mRemark;
@@ -30,9 +31,11 @@ public class Entry {
     private String mNote;
 
 
-    public Entry(UUID employeeId)
+    public Entry(UUID employeeId,UUID siteId)
     {
         mEmployeeId=employeeId;
+
+        mSiteId=siteId;
 
         mDate=new LocalDate();
         mRemark=PRESENT;
@@ -40,10 +43,6 @@ public class Entry {
 
     public LocalDate getDate() {
         return mDate;
-    }
-
-    public void setDate(LocalDate date) {
-        mDate = date;
     }
 
     public int getRemark() {
@@ -62,14 +61,18 @@ public class Entry {
         mSiteId = siteId;
     }
 
+    public void setEmployeeId(UUID employeeId) {
+        mEmployeeId = employeeId;
+    }
+
     public UUID getEmployeeId() {
 
         return mEmployeeId;
     }
 
-    public String getEmployeeInfo()
+    public String getEmployeeInfo(Context context)
     {
-        return EmployeeLab.getInstanceOf().getEmployeeById(mEmployeeId).getTitle();
+        return EmployeeLab.getInstanceOf(context).getEmployeeById(mEmployeeId).getTitle();
     }
 
     public String  getRemarkString()

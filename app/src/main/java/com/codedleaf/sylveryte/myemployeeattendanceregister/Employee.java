@@ -1,5 +1,7 @@
 package com.codedleaf.sylveryte.myemployeeattendanceregister;
 
+import android.content.Context;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -12,26 +14,29 @@ public class Employee implements Pickable{
 
 
     private int mAge;
-    private double mSalary;
 
     private String mName;
 
-    private String mAdress;
+    private String mAddress;
     private String mNote;
 
     private Boolean mIsMale;
     private Boolean mIsActive;
 
-    private UUID mEployeeId;
+    private UUID mEmployeeId;
 
     private List<UUID> mDesignations;
     private List<UUID> mSites;
 
-    public Employee()
+    private Context mContext;
+
+    public Employee(Context context)
     {
+        mContext=context;
+
         mIsMale=true;
         mIsActive =true;
-        mEployeeId=UUID.randomUUID();
+        mEmployeeId =UUID.randomUUID();
         mDesignations =new ArrayList<>();
         mSites=new ArrayList<>();
     }
@@ -50,7 +55,7 @@ public class Employee implements Pickable{
 
         if(!mDesignations.isEmpty())
         {
-            DesignationLab designationLab=DesignationLab.getInstanceOf();
+            DesignationLab designationLab=DesignationLab.getInstanceOf(mContext);
             Designation designation=designationLab.getDesigantionById(mDesignations.get(0));
             if (designation==null)
             {
@@ -81,7 +86,7 @@ public class Employee implements Pickable{
     {
         if(!mSites.isEmpty())
         {
-            SitesLab sitesLab=SitesLab.getInstanceOf();
+            SitesLab sitesLab=SitesLab.getInstanceOf(mContext);
             Site site=sitesLab.getSiteById(mSites.get(0));
 
             if (site==null)
@@ -146,20 +151,12 @@ public class Employee implements Pickable{
         mAge = age;
     }
 
-    public double getSalary() {
-        return mSalary;
+    public String getAddress() {
+        return mAddress;
     }
 
-    public void setSalary(double salary) {
-        mSalary = salary;
-    }
-
-    public String getAdress() {
-        return mAdress;
-    }
-
-    public void setAdress(String adress) {
-        mAdress = adress;
+    public void setAddress(String address) {
+        mAddress = address;
     }
 
     public String getNote() {
@@ -180,7 +177,7 @@ public class Employee implements Pickable{
 
     @Override
     public UUID getId() {
-        return mEployeeId;
+        return mEmployeeId;
     }
 
 
@@ -190,8 +187,8 @@ public class Employee implements Pickable{
 
     public void delete()
     {
-        DesignationLab designationLab=DesignationLab.getInstanceOf();
-        SitesLab sitesLab=SitesLab.getInstanceOf();
+        DesignationLab designationLab=DesignationLab.getInstanceOf(mContext);
+        SitesLab sitesLab=SitesLab.getInstanceOf(mContext);
 
         //remove from desgs
         for (UUID uuid:mDesignations)
@@ -213,7 +210,7 @@ public class Employee implements Pickable{
             }
         }
 
-        EntryLab.getInstanceOf().cleanseEntriesOfEmployeeId(mEployeeId);
+        EntryLab.getInstanceOf(mContext).cleanseEntriesOfEmployeeId(mEmployeeId);
     }
 
     public void addSiteById(UUID siteid)
@@ -222,8 +219,8 @@ public class Employee implements Pickable{
             return;
         mSites.add(siteid);
 
-        Site site=SitesLab.getInstanceOf().getSiteById(siteid);
-        site.addEmployeeById(mEployeeId);
+        Site site=SitesLab.getInstanceOf(mContext).getSiteById(siteid);
+        site.addEmployeeById(mEmployeeId);
     }
 
 
@@ -240,8 +237,8 @@ public class Employee implements Pickable{
             return;
         mDesignations.add(desigantionid);
 
-        Designation designation=DesignationLab.getInstanceOf().getDesigantionById(desigantionid);
-        designation.addEmployeeInvolvedById(mEployeeId);
+        Designation designation=DesignationLab.getInstanceOf(mContext).getDesigantionById(desigantionid);
+        designation.addEmployeeInvolvedById(mEmployeeId);
     }
     public void removeDesignationById(UUID uuid)
     {

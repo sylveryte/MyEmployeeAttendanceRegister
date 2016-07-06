@@ -2,6 +2,7 @@ package com.codedleaf.sylveryte.myemployeeattendanceregister;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 import java.util.List;
@@ -21,6 +22,13 @@ public class PickActivity extends SingleFragmentActivity {
 
     public static final String RESULT_DATA_STRING_PICK_GENRAL="codedleaf.result.returned.uuid";
 
+    private Context mContext;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mContext=getApplicationContext();
+    }
 
     public static Intent fetchIntent(Context context, int fragCode)
     {
@@ -41,22 +49,22 @@ public class PickActivity extends SingleFragmentActivity {
         {
             case FRAGMENT_CODE_PICK_SITE:
             {
-                list=SitesLab.getInstanceOf().getSites();
+                list=SitesLab.getInstanceOf(mContext).getSites();
                 break;
             }
             case FRAGMENT_CODE_PICK_EMPLOYEE:
             {
-                list=EmployeeLab.getInstanceOf().getEmployees();
+                list=EmployeeLab.getInstanceOf(mContext).getEmployees();
                 break;
             }
             case FRAGMENT_CODE_PICK_DESIGNATION:
             {
-                list=DesignationLab.getInstanceOf().getDesignations();
+                list=DesignationLab.getInstanceOf(mContext).getDesignations();
                 break;
             }
             default:
             {
-                list=SitesLab.getInstanceOf().getSites();
+                list=SitesLab.getInstanceOf(mContext).getSites();
                 break;
             }
         }

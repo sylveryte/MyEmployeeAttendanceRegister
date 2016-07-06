@@ -31,7 +31,7 @@ public class SitesFragment extends Fragment implements LabObserver {
 
         super.onCreate(savedInstanceState);
 
-        mSitesLab=SitesLab.getInstanceOf();
+        mSitesLab=SitesLab.getInstanceOf(getActivity());
         mSitesLab.addListener(this);
 
     }

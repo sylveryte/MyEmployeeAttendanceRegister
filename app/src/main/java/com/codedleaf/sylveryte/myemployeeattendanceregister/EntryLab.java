@@ -1,5 +1,8 @@
 package com.codedleaf.sylveryte.myemployeeattendanceregister;
 
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+
 import org.joda.time.LocalDate;
 
 import java.util.ArrayList;
@@ -15,17 +18,23 @@ public class EntryLab implements LabObeservable {
     private List<LabObserver> mLabObservers;
     private List<EntrySet> mEntrySets;
 
-    private EntryLab()
+    private Context mContext;
+    private SQLiteDatabase mDatabase;
+
+    private EntryLab(Context context)
     {
+        mContext=context.getApplicationContext();
+        mDatabase=AttendanceBaseHelper.getDatabaseWritable(mContext);
+
         mLabObservers=new ArrayList<>();
         mEntrySets=new ArrayList<>();
     }
 
-    public static EntryLab getInstanceOf()
+    public static EntryLab getInstanceOf(Context context)
     {
         if (sEntryLab==null)
         {
-            sEntryLab=new EntryLab();
+            sEntryLab=new EntryLab(context);
         }
         return sEntryLab;
     }
@@ -47,7 +56,7 @@ public class EntryLab implements LabObeservable {
 
         if (!same)
         {
-            EntrySet entrySetNew=new EntrySet(siteId);
+            EntrySet entrySetNew=new EntrySet(siteId,mContext);
             entrySetNew.setDate(date);
             addEntrySet(entrySetNew);
             entrySetToReturn=entrySetNew;

@@ -1,5 +1,7 @@
 package com.codedleaf.sylveryte.myemployeeattendanceregister;
 
+import android.content.Context;
+
 import org.joda.time.LocalDate;
 
 import java.util.ArrayList;
@@ -22,12 +24,15 @@ public class Site implements Pickable {
 
     private List<UUID> mEmployeesInvolved;
 
-    public Site()
+    private Context mContext;
+
+    public Site(Context context)
     {
+        mContext=context;
+
         mEmployeesInvolved=new ArrayList<>();
         mBeginDate = new LocalDate();
         mSiteId = UUID.randomUUID();
-
 
     }
 
@@ -86,7 +91,7 @@ public class Site implements Pickable {
 
     public void delete()
     {
-        EmployeeLab lab=EmployeeLab.getInstanceOf();
+        EmployeeLab lab=EmployeeLab.getInstanceOf(mContext);
         for (UUID uuid:mEmployeesInvolved)
         {
             Employee employee=lab.getEmployeeById(uuid);
@@ -96,7 +101,7 @@ public class Site implements Pickable {
             }
         }
 
-        EntryLab.getInstanceOf().cleanseEntriesOfSiteId(mSiteId);
+        EntryLab.getInstanceOf(mContext).cleanseEntriesOfSiteId(mSiteId);
 
     }
 
@@ -106,7 +111,7 @@ public class Site implements Pickable {
             return;
         mEmployeesInvolved.add(empId);
 
-        Employee employee=EmployeeLab.getInstanceOf().getEmployeeById(empId);
+        Employee employee=EmployeeLab.getInstanceOf(mContext).getEmployeeById(empId);
         employee.addSiteById(mSiteId);
     }
 
