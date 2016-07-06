@@ -67,6 +67,11 @@ public class EntryLab implements LabObeservable {
 
     public void addEntrySet(EntrySet entrySet)
     {
+        if (mEntrySets.contains(entrySet))
+        {
+            entrySet.update();
+            return;
+        }
         mEntrySets.add(entrySet);
     }
 

@@ -43,10 +43,19 @@ public class EmployeeLab implements LabObeservable {
     public void addEmployee(Employee employee)
     {
         if (mEmployees.contains(employee))
+        {
+            updateEmployee(employee);
             return;
+        }
         mEmployees.add(employee);
         alertAllObservers();
     }
+
+    public void updateEmployee(Employee employee)
+    {
+
+    }
+
     public void deleteEmployee(Employee employee)
     {
         employee.delete();

@@ -28,6 +28,13 @@ public class Designation implements Pickable {
         mEmployees=new ArrayList<>();
     }
 
+    public Designation(Context context,UUID designationId)
+    {
+        mContext=context;
+        mEmployees=new ArrayList<>();
+        mDesignationId=designationId;
+    }
+
 
     public String getTitle() {
         return mTitle;

@@ -1,16 +1,22 @@
 package com.codedleaf.sylveryte.myemployeeattendanceregister;
 
 import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.CursorWrapper;
+import android.database.sqlite.SQLiteDatabase;
 
 import com.codedleaf.sylveryte.myemployeeattendanceregister.AttendanceDbSchema.DesignationsTable;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.AttendanceDbSchema.EmployeesTable;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.AttendanceDbSchema.EntriesTable;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.AttendanceDbSchema.SitesTable;
 
+import java.util.UUID;
+
 /**
  * Created by sylveryte on 6/7/16.
  */
-public class AttendanceDbContentValueProvider {
+public class AttendanceDbToolsProvider {
 
     public static ContentValues getContentValues(Designation designation)
     {
@@ -21,6 +27,8 @@ public class AttendanceDbContentValueProvider {
 
         return values;
     }
+
+
 
 
     public static ContentValues getContentValues(Site site)

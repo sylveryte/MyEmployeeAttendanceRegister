@@ -58,6 +58,11 @@ public class EntrySet {
         }
     }
 
+    public void update()
+    {
+        //// TODO: 6/7/16 update db from here
+    }
+
     public List<Entry> getEntries() {
         return mEntries;
     }

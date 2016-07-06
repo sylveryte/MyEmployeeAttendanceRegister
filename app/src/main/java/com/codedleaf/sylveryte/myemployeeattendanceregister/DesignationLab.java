@@ -1,7 +1,12 @@
 package com.codedleaf.sylveryte.myemployeeattendanceregister;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
+import android.database.CursorWrapper;
 import android.database.sqlite.SQLiteDatabase;
+
+import com.codedleaf.sylveryte.myemployeeattendanceregister.AttendanceDbSchema.DesignationsTable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,15 +29,49 @@ public class DesignationLab implements LabObeservable {
     {
         mContext=context.getApplicationContext();
         mDatabase=AttendanceBaseHelper.getDatabaseWritable(mContext);
-
-        mDesignations=new ArrayList<>();
         mLabObservers=new ArrayList<>();
+        mDesignations=new ArrayList<>();
+    }
+
+
+    private void initializeDatabase()
+    {
+
+        DesignationCursorWrapper cursorWrapper=queryDesignations(null,null);
+        try
+        {
+            cursorWrapper.moveToFirst();
+            while (!cursorWrapper.isAfterLast())
+            {
+                addDesignation(cursorWrapper.getDesignation());
+                cursorWrapper.moveToNext();
+            }
+        }
+        finally
+        {
+            cursorWrapper.close();
+        }
     }
 
     public void addDesignation(Designation designation)
     {
+        if (mDesignations.contains(designation))
+        {
+            updateDesignation(designation);
+            return;
+        }
         mDesignations.add(designation);
         alertAllObservers();
+
+        ContentValues values= AttendanceDbToolsProvider.getContentValues(designation);
+        mDatabase.insert(DesignationsTable.NAME,null,values);
+    }
+
+    public void updateDesignation(Designation designation)
+    {
+        String designationIdString=designation.getId().toString();
+        ContentValues values= AttendanceDbToolsProvider.getContentValues(designation);
+        mDatabase.update(DesignationsTable.NAME,values,DesignationsTable.Cols.UID+"=?",new String[]{designationIdString});
     }
 
     public void deleteDesignation(Designation designation)
@@ -41,6 +80,9 @@ public class DesignationLab implements LabObeservable {
 
         mDesignations.remove(designation);
         alertAllObservers();
+
+        String designationIdString=designation.getId().toString();
+        mDatabase.delete(DesignationsTable.NAME,DesignationsTable.Cols.UID+"=?",new String[]{designationIdString});
     }
 
     public List<Designation> getDesignations() {
@@ -63,6 +105,7 @@ public class DesignationLab implements LabObeservable {
         if (sDesignationLab==null)
         {
             sDesignationLab=new DesignationLab(context);
+            sDesignationLab.initializeDatabase();
         }
         return sDesignationLab;
     }
@@ -80,5 +123,42 @@ public class DesignationLab implements LabObeservable {
                 return designation;
         }
         return null;
+    }
+
+    private DesignationCursorWrapper queryDesignations(String whereClause, String[] wherwArgs)
+    {
+        Cursor cursor=mDatabase.query(
+                DesignationsTable.NAME,
+                null, //columns null coz select all columns :)
+                whereClause,
+                wherwArgs,
+                null, //group by
+                null, //having
+                null //orderby
+        );
+
+        return new DesignationCursorWrapper(cursor);
+
+    }
+
+    private  class DesignationCursorWrapper extends CursorWrapper
+    {
+        public DesignationCursorWrapper(Cursor cursor)
+        {
+            super(cursor);
+        }
+
+        public Designation getDesignation()
+        {
+            String uuidString=getString(getColumnIndex(DesignationsTable.Cols.UID));
+            String description=getString(getColumnIndex(DesignationsTable.Cols.DESC));
+            String title=getString(getColumnIndex(DesignationsTable.Cols.TITLE));
+
+            Designation designation=new Designation(mContext, UUID.fromString(uuidString));
+            designation.setTitle(title);
+            designation.setDescription(description);
+
+            return designation;
+        }
     }
 }
