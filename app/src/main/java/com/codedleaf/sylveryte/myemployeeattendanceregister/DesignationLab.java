@@ -43,7 +43,7 @@ public class DesignationLab implements LabObeservable {
             cursorWrapper.moveToFirst();
             while (!cursorWrapper.isAfterLast())
             {
-                addDesignation(cursorWrapper.getDesignation());
+                mDesignations.add(cursorWrapper.getDesignation());
                 cursorWrapper.moveToNext();
             }
         }

@@ -72,7 +72,9 @@ public class Designation implements Pickable {
         mEmployees.add(uuid);
 
         Employee employee=EmployeeLab.getInstanceOf(mContext).getEmployeeById(uuid);
-        employee.removeDesignationById(mDesignationId);
+        if (employee==null)
+            return;
+        employee.addDesignationById(mDesignationId);
     }
 
     public void removeEmployeeInvolvedById(UUID uuid)

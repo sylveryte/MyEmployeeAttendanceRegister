@@ -29,7 +29,7 @@ public class SiteAdditionFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable final Bundle savedInstanceState) {
         View v=inflater.inflate(R.layout.site_addition_fragment,container,false);
 
         mEditText_siteName=(EditText)v.findViewById(R.id.editText_site_name);
@@ -41,9 +41,7 @@ public class SiteAdditionFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                //// TODO: 12/6/16 clean all this
-                mSite.setTitle(mEditText_siteName.getText().toString());
-                mSite.setDescription(mEditText_description.getText().toString());
+                saveUpdateData();
                 getActivity().finish();
 
             }
@@ -52,6 +50,14 @@ public class SiteAdditionFragment extends Fragment {
 
         update();
         return v;
+    }
+
+    public void saveUpdateData()
+    {
+        mSite.setTitle(mEditText_siteName.getText().toString());
+        mSite.setDescription(mEditText_description.getText().toString());
+
+        SitesLab.getInstanceOf(getActivity()).updateSite(mSite);
     }
 
     public void update()

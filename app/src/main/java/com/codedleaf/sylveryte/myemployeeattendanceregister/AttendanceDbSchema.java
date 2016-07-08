@@ -60,7 +60,7 @@ public class AttendanceDbSchema {
             public static final String ACTIVE="isactive";
 
             public static final String UID="uuid";
-            public static final String EMPLOYEEIDS="siteids";
+            public static final String SITEIDS="siteids";
             public static final String DESIGNATIONIDS="designationids";
         }
     }

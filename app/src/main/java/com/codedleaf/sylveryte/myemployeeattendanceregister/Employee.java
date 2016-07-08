@@ -41,12 +41,34 @@ public class Employee implements Pickable{
         mSites=new ArrayList<>();
     }
 
+    public Employee(Context context, UUID employeeId)
+    {
+        mContext=context;
+
+        mEmployeeId=employeeId;
+    }
 
     public List<UUID> getDesignations()
     {
         return mDesignations;
     }
 
+    public void setSites(List<UUID> sites) {
+        mSites=new ArrayList<>();
+        for (UUID uuid:sites)
+        {
+            addSiteById(uuid);
+        }
+    }
+
+    public void setDesignations(List<UUID> designations) {
+        mDesignations=new ArrayList<>();
+        for (UUID uuid:designations)
+        {
+            addDesignationById(uuid);
+        }
+
+    }
 
     public String getDesignationString()
     {
@@ -233,6 +255,7 @@ public class Employee implements Pickable{
 
     public void addDesignationById(UUID desigantionid)
     {
+
         if (mDesignations.contains(desigantionid))
             return;
         mDesignations.add(desigantionid);

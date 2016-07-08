@@ -124,6 +124,15 @@ public class EmployeeAdditionFragment extends Fragment {
         mEmployee.setName(mName.getText().toString());
         mEmployee.setAge(Integer.parseInt(mAge.getText().toString()));
         mEmployee.setAddress(mAddress.getText().toString());
+
+        saveUpdateDbData();
+    }
+
+    private void saveUpdateDbData()
+    {
+
+        EmployeeLab.getInstanceOf(getActivity()).updateEmployee(mEmployee);
+
     }
 
     public void update()

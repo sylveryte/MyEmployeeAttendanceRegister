@@ -64,7 +64,7 @@ public class AttendanceBaseHelper extends SQLiteOpenHelper {
                 EmployeesTable.Cols.ADDRESS+","+
                 EmployeesTable.Cols.ACTIVE+","+
                 EmployeesTable.Cols.AGE+","+
-                EmployeesTable.Cols.EMPLOYEEIDS+","+
+                EmployeesTable.Cols.SITEIDS+","+
                 EmployeesTable.Cols.GENDER+","+
                 EmployeesTable.Cols.DESIGNATIONIDS+","+
                 EmployeesTable.Cols.NOTE+

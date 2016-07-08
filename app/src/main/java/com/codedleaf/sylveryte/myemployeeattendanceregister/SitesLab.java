@@ -1,7 +1,12 @@
 package com.codedleaf.sylveryte.myemployeeattendanceregister;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
+import android.database.CursorWrapper;
 import android.database.sqlite.SQLiteDatabase;
+
+import com.codedleaf.sylveryte.myemployeeattendanceregister.AttendanceDbSchema.SitesTable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,11 +38,30 @@ public class SitesLab implements LabObeservable {
 
     }
 
+    private void initializeDatabase()
+    {
+        SiteCursorWrapper cursorWrapper=querySites(null,null);
+        try
+        {
+            cursorWrapper.moveToFirst();
+            while (!cursorWrapper.isAfterLast())
+            {
+                mSites.add(cursorWrapper.getSite());
+                cursorWrapper.moveToNext();
+            }
+        }
+        finally
+        {
+            cursorWrapper.close();
+        }
+    }
+
     public static SitesLab getInstanceOf(Context context)
     {
         if(sLab==null)
         {
             sLab=new SitesLab(context);
+            sLab.initializeDatabase();
 
         }
 
@@ -46,14 +70,30 @@ public class SitesLab implements LabObeservable {
 
     public void addSite(Site site)
     {
+        if (mSites.contains(site))
+            return;
+
         mSites.add(site);
         alertAllObservers();
+
+        ContentValues values= AttendanceDbToolsProvider.getContentValues(site);
+        mDatabase.insert(SitesTable.NAME,null,values);
     }
     public void deleteSite(Site site)
     {
         site.delete();
         mSites.remove(site);
         alertAllObservers();
+
+        String siteIdString=site.getId().toString();
+        mDatabase.delete(SitesTable.NAME, SitesTable.Cols.UID+"=?",new String[]{siteIdString});
+    }
+
+    public void updateSite(Site site)
+    {
+        String siteIdString=site.getId().toString();
+        ContentValues values= AttendanceDbToolsProvider.getContentValues(site);
+        mDatabase.update(SitesTable.NAME,values, SitesTable.Cols.UID+"=?",new String[]{siteIdString});
     }
 
     public Site getSiteById(UUID uuid)
@@ -98,5 +138,50 @@ public class SitesLab implements LabObeservable {
     {
         for (LabObserver labObserver :mLabObservers)
             labObserver.update();
+    }
+
+
+    //db
+
+    private SiteCursorWrapper querySites(String whereClause, String[] wherwArgs)
+    {
+        Cursor cursor=mDatabase.query(
+                SitesTable.NAME,
+                null, //columns null coz select all columns :)
+                whereClause,
+                wherwArgs,
+                null, //group by
+                null, //having
+                null //orderby
+        );
+
+        return new SiteCursorWrapper(cursor);
+
+    }
+
+    private  class SiteCursorWrapper extends CursorWrapper
+    {
+        public SiteCursorWrapper(Cursor cursor)
+        {
+            super(cursor);
+        }
+
+        public Site getSite()
+        {
+            String uuidString=getString(getColumnIndex(SitesTable.Cols.UID));
+            String description=getString(getColumnIndex(SitesTable.Cols.DESC));
+            String title=getString(getColumnIndex(SitesTable.Cols.TITLE));
+
+            String beginDate=getString(getColumnIndex(SitesTable.Cols.BEGINDATE));
+            String endDate=getString(getColumnIndex(SitesTable.Cols.ENDDATE));
+
+            Site site=new Site(mContext,UUID.fromString(uuidString));
+            site.setTitle(title);
+            site.setDescription(description);
+            site.setBeginDate(CodedleafTools.getLocalDateFromString(beginDate));
+            site.setFinishedDate(CodedleafTools.getLocalDateFromString(endDate));
+
+            return site;
+        }
     }
 }

@@ -60,15 +60,18 @@ public class AttendanceDbToolsProvider {
     {
         ContentValues values=new ContentValues();
         values.put(EmployeesTable.Cols.UID,employee.getId().toString());
-        //// TODO: 6/7/16 let's see if we can directly get boolean values
-        values.put(EmployeesTable.Cols.ACTIVE,employee.isActive());
-        values.put(EmployeesTable.Cols.GENDER,employee.isMale());
+
+
+        values.put(EmployeesTable.Cols.ACTIVE,CodedleafTools.getStringOfBoolean(employee.isActive()));
+        values.put(EmployeesTable.Cols.GENDER,CodedleafTools.getStringOfBoolean(employee.isMale()));
+
+
         values.put(EmployeesTable.Cols.AGE,employee.getAge());
         values.put(EmployeesTable.Cols.ADDRESS,employee.getAddress());
         values.put(EmployeesTable.Cols.NAME,employee.getName());
         values.put(EmployeesTable.Cols.NOTE,employee.getNote());
         values.put(EmployeesTable.Cols.DESIGNATIONIDS,CodedleafTools.getUUIDStringFromList(employee.getDesignations()));
-        values.put(EmployeesTable.Cols.EMPLOYEEIDS,CodedleafTools.getUUIDStringFromList(employee.getSites()));
+        values.put(EmployeesTable.Cols.SITEIDS,CodedleafTools.getUUIDStringFromList(employee.getSites()));
 
         return values;
     }

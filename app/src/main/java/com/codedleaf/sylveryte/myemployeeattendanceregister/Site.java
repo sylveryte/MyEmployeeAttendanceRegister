@@ -36,9 +36,19 @@ public class Site implements Pickable {
 
     }
 
+    public Site(Context context,UUID uuid)
+    {
+        mContext=context;
+        mSiteId=uuid;
+
+        mEmployeesInvolved=new ArrayList<>();
+        mBeginDate = new LocalDate();
+    }
+
     public String getTitle() {
         return mTitle;
     }
+
 
 
 
@@ -112,6 +122,9 @@ public class Site implements Pickable {
         mEmployeesInvolved.add(empId);
 
         Employee employee=EmployeeLab.getInstanceOf(mContext).getEmployeeById(empId);
+
+        if (employee==null)
+            return;
         employee.addSiteById(mSiteId);
     }
 
