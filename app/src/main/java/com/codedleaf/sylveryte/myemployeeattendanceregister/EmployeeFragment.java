@@ -31,6 +31,7 @@ public class EmployeeFragment extends Fragment implements LabObserver {
         mLab=EmployeeLab.getInstanceOf(getActivity());
         mLab.addListener(this);
 
+        getActivity().setTitle("Employees");
     }
 
 

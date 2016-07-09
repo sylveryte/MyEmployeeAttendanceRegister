@@ -34,6 +34,7 @@ public class SitesFragment extends Fragment implements LabObserver {
         mSitesLab=SitesLab.getInstanceOf(getActivity());
         mSitesLab.addListener(this);
 
+        getActivity().setTitle("Sites");
     }
 
     @Nullable

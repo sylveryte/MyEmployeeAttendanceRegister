@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 
 import java.util.UUID;
 
@@ -33,6 +34,15 @@ public class AttendanceActivity extends AppCompatActivity {
         setContentView(R.layout.activity_attendance);
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.attendance_fragment_container);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_attendance);
+        setSupportActionBar(toolbar);
+
+        if (toolbar!=null)
+        {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
 
         if (fragment == null) {
             fragment = createFragment();

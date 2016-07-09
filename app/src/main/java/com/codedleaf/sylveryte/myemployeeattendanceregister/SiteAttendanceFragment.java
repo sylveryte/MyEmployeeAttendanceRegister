@@ -37,6 +37,7 @@ public class SiteAttendanceFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext=getActivity();
+        getActivity().setTitle("Taking Attendance");
     }
 
     @Nullable

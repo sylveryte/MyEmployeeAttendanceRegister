@@ -1,5 +1,6 @@
 package com.codedleaf.sylveryte.myemployeeattendanceregister;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -25,6 +26,7 @@ public class HomeActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -39,15 +41,12 @@ public class HomeActivity extends AppCompatActivity
 
                 //which addition frag to start decided here
 
-                if (mSelectedId == R.id.nav_attendance) {
-
-                } else if (mSelectedId == R.id.nav_sites) {
+                if (mSelectedId == R.id.nav_sites) {
                         fragCode=AdditionActivity.FRAGMENT_CODE_ADD_SITE;
                 } else if (mSelectedId == R.id.nav_employees) {
                         fragCode=AdditionActivity.FRAGMENT_CODE_ADD_EMPLOYEE;
                 } else if (mSelectedId == R.id.nav_designation) {
                         fragCode=AdditionActivity.FRAGMENT_CODE_ADD_DESIGNATION;
-                } else if (mSelectedId == R.id.nav_stats) {
 
                 } else if (mSelectedId == R.id.nav_share) {
 
@@ -100,6 +99,8 @@ public class HomeActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent i=new Intent(this,DeleteMe.class);
+            startActivity(i);
             return true;
         }
 
@@ -137,20 +138,12 @@ public class HomeActivity extends AppCompatActivity
         int id = item.getItemId();
         mSelectedId=id;
 
-        if (id == R.id.nav_attendance) {
-//            setTitle(R.string.attendances);
-
-        } else if (id == R.id.nav_sites) {
-            setTitle(R.string.sites);
+        if (id == R.id.nav_sites) {
             startFragment(SitesFragment.newInstance());
         } else if (id == R.id.nav_employees) {
-            setTitle(R.string.employees);
             startFragment(EmployeeFragment.newInstance());
         } else if (id == R.id.nav_designation) {
-            setTitle(R.string.designations);
             startFragment(DesignationFragment.newInstance());
-        } else if (id == R.id.nav_stats) {
-//            setTitle(R.string.stats);
 
         } else if (id == R.id.nav_share) {
 

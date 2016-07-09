@@ -1,8 +1,10 @@
 package com.codedleaf.sylveryte.myemployeeattendanceregister;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +25,8 @@ public class DesignationAdditionFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        getActivity().setTitle("Edit Designation");
     }
 
     @Nullable
@@ -68,6 +72,20 @@ public class DesignationAdditionFragment extends Fragment {
 
     public void setDesignation(Designation designation) {
         mDesignation = designation;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mDesignation.getTitle()==null)
+            deleteMe();
+        else if (mDesignation.getTitle().trim().isEmpty())
+            deleteMe();
+    }
+
+    private void deleteMe()
+    {
+            DesignationLab.getInstanceOf(getActivity()).deleteDesignation(mDesignation);
     }
 
     public static DesignationAdditionFragment createInstance(Designation designation)

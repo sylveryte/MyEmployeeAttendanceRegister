@@ -73,7 +73,6 @@
                 android:ems="10"
                 android:id="@+id/employee_add_age"
                 android:layout_column="1"
-                android:autoText="false"
                 android:allowUndo="false"
                 android:inputType="numberSigned"/>
         </TableRow>
@@ -118,6 +117,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
+                android:layout_column="1"
                 android:id="@+id/employee_add_designation_linear_layout">
 
             </LinearLayout>
@@ -141,6 +141,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
+                android:layout_column="1"
                 android:id="@+id/employee_add_sites_linear_layout">
             </LinearLayout>
         </TableRow>

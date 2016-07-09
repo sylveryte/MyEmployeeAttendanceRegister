@@ -21,17 +21,29 @@
         <activity
             android:name=".AdditionActivity"
             android:label="@string/title_activity_addition"
+            android:parentActivityName=".HomeActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
             android:name=".PickActivity"
             android:label="PickActivity"
+            android:parentActivityName=".HomeActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
             android:name=".AttendanceActivity"
             android:label="AttendanceActivity"
+            android:parentActivityName=".HomeActivity"
             android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name=".DeleteMe"
+            android:label="@string/title_activity_delete_me"
+            android:parentActivityName=".HomeActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.codedleaf.sylveryte.myemployeeattendanceregister.HomeActivity"/>
         </activity>
     </application>
 

@@ -32,6 +32,8 @@ public class DesignationFragment extends Fragment implements LabObserver {
         mLab=DesignationLab.getInstanceOf(getActivity());
         mLab.addListener(this);
 
+        getActivity().setTitle("Designations");
+
     }
 
     @Nullable

@@ -84,20 +84,10 @@ public class Site implements Pickable {
         return mEmployeesInvolved;
     }
 
-
     @Override
     public UUID getId() {
         return mSiteId;
     }
-
-
-
-
-
-
-
-
-
 
     public void delete()
     {

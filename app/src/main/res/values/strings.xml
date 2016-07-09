@@ -15,6 +15,7 @@
     <string name="attendance">Attendance</string>
     <string name="title_activity_addition">AdditionActivity</string>
     <string name="designation">Designation</string>
-    <string name="description">description</string>
+    <string name="description">Description</string>
     <string name="Site">Site</string>
+    <string name="title_activity_delete_me">DeleteMe</string>
 </resources>

@@ -4,13 +4,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 
 import java.util.List;
 
 /**
  * Created by sylveryte on 17/6/16.
  */
-public class PickActivity extends SingleFragmentActivity {
+public class PickActivity extends AppCompatActivity {
 
 
     public static final String FRAGMENT_CODE="codedleaf.pick.fragment.code";
@@ -27,6 +30,31 @@ public class PickActivity extends SingleFragmentActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+        setContentView(R.layout.activity_addition);
+        FragmentManager fm = getSupportFragmentManager();
+        Fragment fragment = fm.findFragmentById(R.id.addition_fragment_container);
+
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.Additiontoolbar);
+
+        setSupportActionBar(toolbar);
+
+        if (toolbar!=null)
+        {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
+
+        if (fragment == null) {
+            fragment = createFragment();
+            fm.beginTransaction()
+                    .add(R.id.addition_fragment_container, fragment)
+                    .commit();
+        }
+
+
         mContext=getApplicationContext();
     }
 
@@ -37,7 +65,6 @@ public class PickActivity extends SingleFragmentActivity {
         return i;
     }
 
-    @Override
     protected Fragment createFragment() {
 
         List<? extends Pickable> list;
