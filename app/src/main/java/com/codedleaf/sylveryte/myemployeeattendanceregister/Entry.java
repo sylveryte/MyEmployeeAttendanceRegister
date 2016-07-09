@@ -41,6 +41,15 @@ public class Entry {
         mRemark=PRESENT;
     }
 
+    public Entry(UUID employeeId,UUID siteId,LocalDate date)
+    {
+        mEmployeeId=employeeId;
+
+        mSiteId=siteId;
+
+        mDate=date;
+    }
+
     public LocalDate getDate() {
         return mDate;
     }

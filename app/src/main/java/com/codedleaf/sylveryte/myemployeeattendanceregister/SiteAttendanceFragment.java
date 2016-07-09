@@ -1,6 +1,5 @@
 package com.codedleaf.sylveryte.myemployeeattendanceregister;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -49,8 +48,10 @@ public class SiteAttendanceFragment extends Fragment {
         UUID siteId=mSite.getId();
         LocalDate date=new LocalDate();
 
-        mEntrySet=EntryLab.getInstanceOf(mContext).getEntrySetBySiteIdAndDate(date,siteId);
+        mEntrySet=EntryLab.getInstanceOf(mContext).getEntrySet(date,siteId);
         mSite=SitesLab.getInstanceOf(mContext).getSiteById(siteId);
+
+        List<Entry> entries=mEntrySet.getEntries();
 
         mEmployeeAttendanceAdpater=new EmployeeAttendanceAdapter(mEntrySet.getEntries());
         mRecyclerView = (RecyclerView) view.findViewById(R.id.fragment_recycler_view_attendance);
@@ -169,7 +170,11 @@ public class SiteAttendanceFragment extends Fragment {
         }
     }
 
-
+    @Override
+    public void onPause() {
+        super.onPause();
+        EntryLab.getInstanceOf(getActivity()).updateEntrySet(mEntrySet);
+    }
 
     public void setSite(Site site) {
         mSite = site;

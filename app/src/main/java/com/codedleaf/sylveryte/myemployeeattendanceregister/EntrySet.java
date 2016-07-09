@@ -16,31 +16,40 @@ public class EntrySet {
     private UUID mSiteId;
     private LocalDate mDate;
     private List<Entry> mEntries;
+    private Context mContext;
 
-    public EntrySet(UUID siteId, Context context)
+    public EntrySet(UUID siteId, Context context,LocalDate date)
     {
+        mContext=context;
         mSiteId=siteId;
-        mDate=new LocalDate();
-        mEntries=new ArrayList<>();
-        initializeEntries(context);
+        mDate=date;
     }
 
-    private void initializeEntries(Context context)
+    public void startEntriesProcess()
     {
-        List<Employee> employees=SitesLab.getInstanceOf(context).getCurrentEmployeesInSiteBySiteId(mSiteId);
+        //must be called once :/
+
+        mEntries=EntryLab.getInstanceOf(mContext).getEntries(mDate,mSiteId);
+
+        if (mEntries==null)
+            initializeEntries();
+    }
+
+    private void initializeEntries()
+    {
+        mEntries=new ArrayList<>();
+        List<Employee> employees=SitesLab.getInstanceOf(mContext).getCurrentEmployeesInSiteBySiteId(mSiteId);
         for (Employee employee: employees)
         {
             Entry entry=new Entry(employee.getId(),mSiteId);
             mEntries.add(entry);
         }
+
+        EntryLab.getInstanceOf(mContext).adddEntrySetToDatabase(this);
     }
 
     public LocalDate getDate() {
         return mDate;
-    }
-
-    public void setDate(LocalDate date) {
-        mDate = date;
     }
 
     public UUID getSiteId() {
@@ -58,13 +67,14 @@ public class EntrySet {
         }
     }
 
-    public void update()
-    {
-        //// TODO: 6/7/16 update db from here
-    }
 
     public List<Entry> getEntries() {
+
+        if (mEntries==null)
+            mEntries=new ArrayList<>();
+
         return mEntries;
+
     }
 }
 
