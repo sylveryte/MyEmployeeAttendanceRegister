@@ -45,6 +45,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.codedleaf.sylveryte.myemployeeattendanceregister.HomeActivity"/>
         </activity>
+        <activity
+            android:name=".StatActivity"
+            android:label="@string/title_activity_stat"
+            android:parentActivityName=".HomeActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="HomeActivity"/>
+        </activity>
     </application>
 
 </manifest>

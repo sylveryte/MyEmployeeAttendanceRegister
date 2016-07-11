@@ -31,6 +31,8 @@ public class CodedleafTools {
     public static String getUUIDStringFromList(List<UUID> list)
     {
         String s="";
+        if (list==null)
+            return "";
         for (UUID uuid:list)
         {
             s+=uuid.toString()+":";

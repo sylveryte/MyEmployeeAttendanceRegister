@@ -51,11 +51,8 @@ public class AdditionActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.Additiontoolbar);
         setSupportActionBar(toolbar);
 
-        if (toolbar!=null)
-        {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
-
+//         causing to go to home activity to sites
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         if (fragment == null) {
             fragment = createFragment();

@@ -35,7 +35,6 @@ public class EmployeeAdditionFragment extends Fragment {
     private RadioButton mRadioButtonMale;
     private RadioButton mRadioButtonFemale;
 
-    private Button mAddButton;
     private Button mChooseDesignationButton;
     private Button mChooseSiteButton;
 
@@ -68,7 +67,6 @@ public class EmployeeAdditionFragment extends Fragment {
         mRadioGroupMaleFemale=(RadioGroup)view.findViewById(R.id.employee_add_radiobuttongroup_malefemale);
         mRadioButtonFemale=(RadioButton)view.findViewById(R.id.employee_add_radiobutton_female);
         mRadioButtonMale=(RadioButton)view.findViewById(R.id.employee_add_radiobutton_male);
-        mAddButton=(Button)view.findViewById(R.id.employee_add_add_button);
         mChooseDesignationButton=(Button)view.findViewById(R.id.employee_choose_designation_button);
         mChooseSiteButton=(Button)view.findViewById(R.id.employee_choose_site_button);
 
@@ -89,15 +87,6 @@ public class EmployeeAdditionFragment extends Fragment {
                 saveData();
                 Intent intent=PickActivity.fetchIntent(getActivity(),PickActivity.FRAGMENT_CODE_PICK_SITE);
                 startActivityForResult(intent,PickActivity.FRAGMENT_CODE_PICK_SITE);
-            }
-        });
-
-        mAddButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                saveData();
-                getActivity().finish();
             }
         });
 
@@ -238,6 +227,11 @@ public class EmployeeAdditionFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        saveData();
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

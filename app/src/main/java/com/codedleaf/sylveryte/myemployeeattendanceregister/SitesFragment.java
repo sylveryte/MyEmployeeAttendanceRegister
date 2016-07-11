@@ -99,7 +99,7 @@ public class SitesFragment extends Fragment implements LabObserver {
                 @Override
                 public void onClick(View v) {
 
-                    CharSequence choices[] = new CharSequence[] {"Take Attendance", "Edit","Delete"};
+                    CharSequence choices[] = new CharSequence[] {"Take Attendance", "Show Stats","Edit","Delete"};
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     builder.setTitle(mSite.getTitle());
@@ -109,14 +109,14 @@ public class SitesFragment extends Fragment implements LabObserver {
 
                             switch (which)
                             {
-                                case 2:
+                                case 3:
                                 {
                                     mSitesLab.deleteSite(mSite);
                                     update();
                                     break;
                                 }
 
-                                case 1: {
+                                case 2: {
 
                                     Intent intent = AdditionActivity.fetchIntent(getActivity(), AdditionActivity.FRAGMENT_CODE_EDIT_SITE);
                                     intent.putExtra(AdditionActivity.FRAGMENT_STRING_EDIT_SITE, mSite.getId());
@@ -131,6 +131,11 @@ public class SitesFragment extends Fragment implements LabObserver {
                                     startActivity(intent1);
 
                                     break;
+                                }
+                                case 1: {
+
+                                    Intent intent3=StatActivity.fetchIntent(getActivity(),StatActivity.FRAGMENT_CODE_STAT_SITE,mSite.getId());
+                                    startActivity(intent3);
                                 }
                             }
                         }
