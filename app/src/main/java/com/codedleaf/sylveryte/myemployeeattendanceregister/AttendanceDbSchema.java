@@ -41,6 +41,7 @@ public class AttendanceDbSchema {
             public static final String TITLE="title";
             public static final String DESC="description";
             public static final String UID="uuid";
+            public static final String ACTIVE="active";
             public static final String BEGINDATE="begindate";
             public static final String ENDDATE="enddate";
         }

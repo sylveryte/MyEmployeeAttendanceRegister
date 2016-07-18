@@ -18,6 +18,7 @@ public class Entry {
     public static final int HALF_TIME=72;
     public static final int OVER_TIME=73;
     public static final int ABSENT=74;
+    public static final int NOTSPECIFIED=75;
 
 
     private LocalDate mDate;
@@ -38,7 +39,7 @@ public class Entry {
         mSiteId=siteId;
 
         mDate=new LocalDate();
-        mRemark=PRESENT;
+        mRemark=NOTSPECIFIED;
     }
 
     public Entry(UUID employeeId,UUID siteId,LocalDate date)
@@ -66,14 +67,6 @@ public class Entry {
         return mSiteId;
     }
 
-    public void setSiteId(UUID siteId) {
-        mSiteId = siteId;
-    }
-
-    public void setEmployeeId(UUID employeeId) {
-        mEmployeeId = employeeId;
-    }
-
     public UUID getEmployeeId() {
 
         return mEmployeeId;
@@ -93,6 +86,7 @@ public class Entry {
             case HALF_TIME: return "Half-Time";
             case OVER_TIME: return "Over-Time";
             case ABSENT: return "Absent";
+            case NOTSPECIFIED: return "Not-Specified";
         }
         return "Don't know";
     }

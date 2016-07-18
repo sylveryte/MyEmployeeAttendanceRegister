@@ -171,12 +171,14 @@ public class SitesLab implements LabObeservable {
             String uuidString=getString(getColumnIndex(SitesTable.Cols.UID));
             String description=getString(getColumnIndex(SitesTable.Cols.DESC));
             String title=getString(getColumnIndex(SitesTable.Cols.TITLE));
+            String active=getString(getColumnIndex(SitesTable.Cols.ACTIVE));
 
             String beginDate=getString(getColumnIndex(SitesTable.Cols.BEGINDATE));
             String endDate=getString(getColumnIndex(SitesTable.Cols.ENDDATE));
 
             Site site=new Site(mContext,UUID.fromString(uuidString));
             site.setTitle(title);
+            site.setActive(CodedleafTools.getBooleanFromString(active));
             site.setDescription(description);
             site.setBeginDate(CodedleafTools.getLocalDateFromString(beginDate));
             site.setFinishedDate(CodedleafTools.getLocalDateFromString(endDate));

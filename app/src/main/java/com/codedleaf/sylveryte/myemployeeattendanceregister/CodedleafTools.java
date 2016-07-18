@@ -1,6 +1,7 @@
 package com.codedleaf.sylveryte.myemployeeattendanceregister;
 
 import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.DateTimeParser;
 
@@ -15,6 +16,7 @@ public class CodedleafTools {
 
 
     public static final String localDateFormatString="yyyy-MM-dd";
+    public static final String prettyLocalDateFormatString="E-dd-M-yyy";
 
     public static String getStringOfBoolean(boolean b)
     {
@@ -56,12 +58,23 @@ public class CodedleafTools {
         return uuidList;
     }
 
-    public static String getLocalDateInStringForm(LocalDate date)
+    public static String getStringFromLocalDate(LocalDate date)
     {
         if (date==null)
             return null;
 
         return date.toString(localDateFormatString);
+
+    }
+
+    public static String getPrettyStringFromLocalDate(LocalDate date)
+    {
+        if (date==null)
+            return "";
+
+        DateTimeFormatter format=DateTimeFormat.forPattern(prettyLocalDateFormatString);
+
+        return format.print(date);
 
     }
 

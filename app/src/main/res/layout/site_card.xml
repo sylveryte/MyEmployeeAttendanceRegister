@@ -5,6 +5,7 @@
     app:cardBackgroundColor="@color/colorSiteCard"
     android:layout_margin="5dp"
     android:layout_gravity="center"
+    android:id="@+id/site_card_card"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
 
@@ -29,6 +30,20 @@
             android:text="New Text"
             android:id="@+id/site_card_description"/>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:padding="1dp"
+            android:text="New Text"
+            android:id="@+id/site_card_beginDate"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:padding="1dp"
+            android:text="New Text"
+            android:id="@+id/site_card_finishedDate"/>
     </LinearLayout>
 
 

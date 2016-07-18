@@ -5,13 +5,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import org.joda.time.LocalDate;
 
 import java.util.List;
 
@@ -89,6 +93,7 @@ public class EmployeeFragment extends Fragment implements LabObserver {
         private TextView age;
         private TextView active;
         private Employee mEmployee;
+        private CardView mCardView;
 
         public EmployeeHolder(View itemView)
         {
@@ -98,7 +103,16 @@ public class EmployeeFragment extends Fragment implements LabObserver {
                 @Override
                 public void onClick(View v) {
 
-                    CharSequence choices[] = new CharSequence[] {"Show Current Assignments", "Edit","Delete"};
+                    CharSequence choices[] = new CharSequence[] {"Show Current Assignments","Edit","Active??","Delete"};
+
+                    if (mEmployee.isActive())
+                    {
+                        choices[2]="Deactivate";
+                    }
+                    else
+                    {
+                        choices[2]="Activate";
+                    }
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     builder.setTitle(mEmployee.getTitle());
@@ -108,12 +122,37 @@ public class EmployeeFragment extends Fragment implements LabObserver {
 
                             switch (which)
                             {
+                                case 3:
+                                {
+                                    new AlertDialog.Builder(getActivity())
+                                            .setTitle("Delete "+mEmployee.getTitle())
+                                            .setMessage("Are you sure you want to delete this employee?")
+                                            .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    // continue with delete
+                                                    mLab.deleteEmployee(mEmployee);
+                                                    update();
+                                                }
+                                            })
+                                            .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    // do nothing
+                                                }
+                                            })
+                                            .setIcon(android.R.drawable.ic_dialog_alert)
+                                            .show();
+
+                                    break;
+                                }
+
                                 case 2:
                                 {
-                                    mLab.deleteEmployee(mEmployee);
+                                    mEmployee.setActive(!mEmployee.isActive());
+                                    mLab.updateEmployee(mEmployee);
                                     update();
                                     break;
                                 }
+
 
                                 case 1: {
 
@@ -141,6 +180,7 @@ public class EmployeeFragment extends Fragment implements LabObserver {
             designation=(TextView)itemView.findViewById(R.id.employee_card_designation);
             age=(TextView)itemView.findViewById(R.id.employee_card_age);
             active=(TextView)itemView.findViewById(R.id.employee_card_active);
+            mCardView=(CardView)itemView.findViewById(R.id.employee_card_card);
 
         }
 
@@ -153,6 +193,10 @@ public class EmployeeFragment extends Fragment implements LabObserver {
             age.setText(String.format("%d", employee.getAge()));
             //// TODO: 14/6/16 get these strings somewhere flexible
             active.setText(employee.isActive()?"Active":"Not Active");
+            if (mEmployee.isActive())
+                mCardView.setCardBackgroundColor(ContextCompat.getColor(getActivity(),R.color.colorEmployeeCard));
+            else
+                mCardView.setCardBackgroundColor(ContextCompat.getColor(getActivity(),R.color.colorEmployeeCardDeactivated));
         }
     }
 

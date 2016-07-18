@@ -20,6 +20,8 @@ public class Site implements Pickable {
     private LocalDate mBeginDate;
     private LocalDate mFinishedDate;
 
+    private boolean mActive;
+
     private UUID mSiteId;
 
     private List<UUID> mEmployeesInvolved;
@@ -33,7 +35,7 @@ public class Site implements Pickable {
         mEmployeesInvolved=new ArrayList<>();
         mBeginDate = new LocalDate();
         mSiteId = UUID.randomUUID();
-
+        mActive=true;
     }
 
     public Site(Context context,UUID uuid)
@@ -49,8 +51,13 @@ public class Site implements Pickable {
         return mTitle;
     }
 
+    public boolean isActive() {
+        return mActive;
+    }
 
-
+    public void setActive(boolean active) {
+        mActive = active;
+    }
 
     public void setTitle(String title) {
         mTitle = title;

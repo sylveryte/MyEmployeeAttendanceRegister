@@ -78,8 +78,23 @@ public class DesignationFragment extends Fragment implements LabObserver {
                             {
                                 case 2:
                                 {
-                                    mLab.deleteDesignation(mDesignation);
-                                    update();
+                                    new AlertDialog.Builder(getActivity())
+                                            .setTitle("Delete "+mDesignation.getTitle())
+                                            .setMessage("Are you sure you want to delete this designation?")
+                                            .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    // continue with delete
+                                                    mLab.deleteDesignation(mDesignation);
+                                                    update();
+                                                }
+                                            })
+                                            .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    // do nothing
+                                                }
+                                            })
+                                            .setIcon(android.R.drawable.ic_dialog_alert)
+                                            .show();
                                     break;
                                 }
 

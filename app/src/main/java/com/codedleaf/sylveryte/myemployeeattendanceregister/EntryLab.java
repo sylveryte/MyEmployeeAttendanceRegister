@@ -115,7 +115,7 @@ public class EntryLab {
     {
         String empIdString=entry.getEmployeeId().toString();
         String siteIdString=entry.getSiteId().toString();
-        String dateString=CodedleafTools.getLocalDateInStringForm(entry.getDate());
+        String dateString=CodedleafTools.getStringFromLocalDate(entry.getDate());
 
         ContentValues values= AttendanceDbToolsProvider.getContentValues(entry);
         mDatabase.update(AttendanceDbSchema.EntriesTable.NAME,
@@ -137,7 +137,7 @@ public class EntryLab {
         List<Entry> entries=new ArrayList<>();
         int i=0;
 
-        EntryCursorWrapper cursorWrapper=queryEntries(CodedleafTools.getLocalDateInStringForm(date),siteId.toString());
+        EntryCursorWrapper cursorWrapper=queryEntries(CodedleafTools.getStringFromLocalDate(date),siteId.toString());
         try
         {
 

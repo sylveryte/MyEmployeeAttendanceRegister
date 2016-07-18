@@ -10,10 +10,13 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.text.InputType;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
@@ -89,7 +92,16 @@ public class SiteAttendanceFragment extends Fragment {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    CharSequence choices[] = new CharSequence[] {"Present", "Late", "Halftime", "Overtime","Absent"};
+                    CharSequence choices[] = new CharSequence[] {"Present", "Late", "Halftime", "Overtime","Absent","Not Specified","Edit Note"};
+
+                    if (mEntry.getNote()==null) {
+                        choices[6] = "Add Note";
+                    }
+                    else if (mEntry.getNote().trim().isEmpty())
+                    {
+                        choices[6] = "Add Note";
+                    }
+
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     builder.setTitle("Set status");
@@ -122,6 +134,43 @@ public class SiteAttendanceFragment extends Fragment {
                 case 4: mEntry.setRemark(Entry.ABSENT);
                     mCardView.setCardBackgroundColor(ContextCompat.getColor(getActivity(),R.color.attendanceAbsent));
                     break;
+                case 5: mEntry.setRemark(Entry.NOTSPECIFIED);
+                    mCardView.setCardBackgroundColor(ContextCompat.getColor(getActivity(),R.color.attendanceNotSpecified));
+                    break;
+                case 6:
+                {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle("Enter Note");
+
+                    // Set up the input
+                    final EditText input = new EditText(getActivity());
+                    // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+
+                    LinearLayout layout=new LinearLayout(getActivity());
+                    layout.setPadding(35,15,35,15);
+                    layout.addView(input);
+                    input.setInputType(InputType.TYPE_CLASS_TEXT);
+
+                    input.setText(mEntry.getNote());
+
+                    builder.setView(layout);
+
+                    // Set up the buttons
+                    builder.setPositiveButton("Set", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            mEntry.setNote(input.getText().toString());
+                        }
+                    });
+                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+
+                    builder.show();
+                }
             }
             setRemark();
         }

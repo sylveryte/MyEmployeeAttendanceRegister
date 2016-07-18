@@ -41,6 +41,8 @@ public class EntrySet {
         List<Employee> employees=SitesLab.getInstanceOf(mContext).getCurrentEmployeesInSiteBySiteId(mSiteId);
         for (Employee employee: employees)
         {
+            if (!employee.isActive())
+                continue;
             Entry entry=new Entry(employee.getId(),mSiteId);
             mEntries.add(entry);
         }

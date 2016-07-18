@@ -52,6 +52,7 @@ public class AttendanceBaseHelper extends SQLiteOpenHelper {
                 SitesTable.Cols.UID+","+
                 SitesTable.Cols.TITLE+","+
                 SitesTable.Cols.DESC+","+
+                SitesTable.Cols.ACTIVE+","+
                 SitesTable.Cols.BEGINDATE+","+
                 SitesTable.Cols.ENDDATE+
                 ")"

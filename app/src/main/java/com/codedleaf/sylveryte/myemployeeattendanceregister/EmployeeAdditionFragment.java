@@ -29,6 +29,7 @@ public class EmployeeAdditionFragment extends Fragment {
 
     private EditText mName;
     private EditText mAddress;
+    private EditText mNote;
     private EditText mAge;
 
     private RadioGroup mRadioGroupMaleFemale;
@@ -61,6 +62,7 @@ public class EmployeeAdditionFragment extends Fragment {
 
         mName=(EditText)view.findViewById(R.id.employee_add_name);
         mAddress=(EditText)view.findViewById(R.id.employee_add_address);
+        mNote=(EditText)view.findViewById(R.id.employee_add_note);
         mAge=(EditText)view.findViewById(R.id.employee_add_age);
         mDesignations=(LinearLayout) view.findViewById(R.id.employee_add_designation_linear_layout);
         mSites=(LinearLayout)view.findViewById(R.id.employee_add_sites_linear_layout);
@@ -117,6 +119,7 @@ public class EmployeeAdditionFragment extends Fragment {
         mEmployee.setName(mName.getText().toString());
         mEmployee.setAge(Integer.parseInt(mAge.getText().toString()));
         mEmployee.setAddress(mAddress.getText().toString());
+        mEmployee.setNote(mNote.getText().toString());
 
         saveUpdateDbData();
     }
@@ -132,6 +135,7 @@ public class EmployeeAdditionFragment extends Fragment {
     {
         mName.setText(mEmployee.getName());
         mAddress.setText(mEmployee.getAddress());
+        mNote.setText(mEmployee.getNote());
 
         if(mEmployee.isMale())
         {
