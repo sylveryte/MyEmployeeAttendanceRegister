@@ -199,9 +199,7 @@ public class SiteAttendanceFragment extends Fragment {
             LayoutInflater layoutInflater=getActivity().getLayoutInflater();
             View view=layoutInflater.inflate(R.layout.employee_attendance_layout,parent,false);
 
-            EmployeeAttendanceHolder holder=new EmployeeAttendanceHolder(view);
-
-            return holder;
+            return new EmployeeAttendanceHolder(view);
         }
 
         @Override

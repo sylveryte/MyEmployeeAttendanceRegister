@@ -8,8 +8,10 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,6 +22,7 @@ public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String FRAGMENT_CODE = "codedleafbro";
+    private static final String DIALOG_FRAGMENT_CODE = "codedleafbrodialog";
     private static final int REQUEST_CODE=1;
 
     @Override
@@ -40,7 +43,20 @@ public class HomeActivity extends AppCompatActivity
             addSite.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    startActivityForResult(AdditionActivity.fetchIntent(HomeActivity.this,AdditionActivity.FRAGMENT_CODE_ADD_SITE),REQUEST_CODE);
+
+                    FragmentManager fm=getSupportFragmentManager();
+                    SiteAdditionDialogFragment dialogFragment=new SiteAdditionDialogFragment();
+                    dialogFragment.show(fm,DIALOG_FRAGMENT_CODE);
+
+                    /*AlertDialog.Builder builder=new AlertDialog.Builder(getApplicationContext());
+                    builder.setTitle("Add Site");
+
+                    LayoutInflater inflater=getParent().getLayoutInflater();
+                    View view=inflater.inflate(R.layout.site_addition_fragment,null);
+                    builder.setView(view);
+
+                    builder.show();*/
+//                    startActivityForResult(AdditionActivity.fetchIntent(HomeActivity.this,AdditionActivity.FRAGMENT_CODE_ADD_SITE),REQUEST_CODE);
                 }
             });
         }
@@ -119,26 +135,26 @@ public class HomeActivity extends AppCompatActivity
     }
 
     private void startFragment(Fragment fragment) {
-        FragmentManager fm = getSupportFragmentManager();
+       // FragmentManager fm = getSupportFragmentManager();
+
+        //clean two
+        getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        getSupportFragmentManager().beginTransaction().replace(R.id.home_fragment_container, fragment).addToBackStack(null).commit();
 
         //clean up any fragments blah blah
-        List<Fragment> frags=fm.getFragments();
-        if(frags!=null)
-        {
+//        List<Fragment> frags=fm.getFragments();
+//        if(frags!=null)
+//        {
+//
+//            for (Fragment frag:frags)
+//            {
+//                fm.beginTransaction().remove(frag).commit();
+//            }
+//        }
 
-            for (Fragment frag:frags)
-            {
-                //did remove tostring after tag
-                if(frag.getTag().equals(FRAGMENT_CODE))
-                {
-                    fm.beginTransaction().remove(frag).commit();
-                }
-            }
-        }
-
-        fm.beginTransaction()
-                .add(R.id.home_fragment_container, fragment,FRAGMENT_CODE)
-                .commit();
+//        fm.beginTransaction()
+//                .add(R.id.home_fragment_container, fragment,FRAGMENT_CODE)
+//                .commit();
     }
 
 
