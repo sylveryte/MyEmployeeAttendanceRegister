@@ -26,21 +26,17 @@ public class Site implements Pickable {
 
     private List<UUID> mEmployeesInvolved;
 
-    private Context mContext;
 
-    public Site(Context context)
+    public Site()
     {
-        mContext=context;
-
         mEmployeesInvolved=new ArrayList<>();
         mBeginDate = new LocalDate();
         mSiteId = UUID.randomUUID();
         mActive=true;
     }
 
-    public Site(Context context,UUID uuid)
+    public Site(UUID uuid)
     {
-        mContext=context;
         mSiteId=uuid;
 
         mEmployeesInvolved=new ArrayList<>();
@@ -96,9 +92,9 @@ public class Site implements Pickable {
         return mSiteId;
     }
 
-    public void delete()
+    public void delete(Context context)
     {
-        EmployeeLab lab=EmployeeLab.getInstanceOf(mContext);
+        EmployeeLab lab=EmployeeLab.getInstanceOf(context);
         for (UUID uuid:mEmployeesInvolved)
         {
             Employee employee=lab.getEmployeeById(uuid);
@@ -108,21 +104,21 @@ public class Site implements Pickable {
             }
         }
 
-        EntryLab.getInstanceOf(mContext).cleanseEntriesOfSiteId(mSiteId);
+        EntryLab.getInstanceOf(context).cleanseEntriesOfSiteId(mSiteId);
 
     }
 
-    public void addEmployeeById(UUID empId)
+    public void addEmployeeById(UUID empId,Context context)
     {
         if (mEmployeesInvolved.contains(empId))
             return;
         mEmployeesInvolved.add(empId);
 
-        Employee employee=EmployeeLab.getInstanceOf(mContext).getEmployeeById(empId);
+        Employee employee=EmployeeLab.getInstanceOf(context).getEmployeeById(empId);
 
         if (employee==null)
             return;
-        employee.addSiteById(mSiteId);
+        employee.addSiteById(mSiteId,context);
     }
 
     public void removeEmployeeById(UUID uuid)

@@ -22,19 +22,18 @@ public class DesignationLab implements LabObeservable {
     private static DesignationLab sDesignationLab;
     private List<LabObserver> mLabObservers;
 
-    private Context mContext;
     private SQLiteDatabase mDatabase;
 
     private DesignationLab(Context context)
     {
-        mContext=context.getApplicationContext();
-        mDatabase=AttendanceBaseHelper.getDatabaseWritable(mContext);
+
+        mDatabase=AttendanceBaseHelper.getDatabaseWritable(context);
         mLabObservers=new ArrayList<>();
         mDesignations=new ArrayList<>();
     }
 
 
-    private void initializeDatabase()
+    private void initializeDatabase(Context context)
     {
 
         DesignationCursorWrapper cursorWrapper=queryDesignations(null,null);
@@ -74,9 +73,9 @@ public class DesignationLab implements LabObeservable {
         mDatabase.update(DesignationsTable.NAME,values,DesignationsTable.Cols.UID+"=?",new String[]{designationIdString});
     }
 
-    public void deleteDesignation(Designation designation)
+    public void deleteDesignation(Designation designation,Context context)
     {
-        designation.delete();
+        designation.delete(context);
 
         mDesignations.remove(designation);
         alertAllObservers();
@@ -105,7 +104,7 @@ public class DesignationLab implements LabObeservable {
         if (sDesignationLab==null)
         {
             sDesignationLab=new DesignationLab(context);
-            sDesignationLab.initializeDatabase();
+            sDesignationLab.initializeDatabase(context);
         }
         return sDesignationLab;
     }
@@ -154,7 +153,7 @@ public class DesignationLab implements LabObeservable {
             String description=getString(getColumnIndex(DesignationsTable.Cols.DESC));
             String title=getString(getColumnIndex(DesignationsTable.Cols.TITLE));
 
-            Designation designation=new Designation(mContext, UUID.fromString(uuidString));
+            Designation designation=new Designation(UUID.fromString(uuidString));
             designation.setTitle(title);
             designation.setDescription(description);
 

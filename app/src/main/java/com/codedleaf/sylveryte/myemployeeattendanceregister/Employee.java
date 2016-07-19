@@ -28,11 +28,9 @@ public class Employee implements Pickable{
     private List<UUID> mDesignations;
     private List<UUID> mSites;
 
-    private Context mContext;
 
-    public Employee(Context context)
+    public Employee()
     {
-        mContext=context;
 
         mIsMale=true;
         mIsActive =true;
@@ -41,10 +39,8 @@ public class Employee implements Pickable{
         mSites=new ArrayList<>();
     }
 
-    public Employee(Context context, UUID employeeId)
+    public Employee(UUID employeeId)
     {
-        mContext=context;
-
         mEmployeeId=employeeId;
     }
 
@@ -53,31 +49,31 @@ public class Employee implements Pickable{
         return mDesignations;
     }
 
-    public void setSites(List<UUID> sites) {
+    public void setSites(List<UUID> sites,Context context) {
         mSites=new ArrayList<>();
         for (UUID uuid:sites)
         {
-            addSiteById(uuid);
+            addSiteById(uuid,context);
         }
     }
 
-    public void setDesignations(List<UUID> designations) {
+    public void setDesignations(List<UUID> designations,Context context) {
         mDesignations=new ArrayList<>();
         for (UUID uuid:designations)
         {
-            addDesignationById(uuid);
+            addDesignationById(uuid,context);
         }
 
     }
 
-    public String getDesignationString()
+    public String getDesignationString(Context context)
     {
 
         //// TODO: 18/6/16 clean this shit we should not need these two (site String) methods
 
         if(!mDesignations.isEmpty())
         {
-            DesignationLab designationLab=DesignationLab.getInstanceOf(mContext);
+            DesignationLab designationLab=DesignationLab.getInstanceOf(context);
             Designation designation=designationLab.getDesigantionById(mDesignations.get(0));
             if (designation==null)
             {
@@ -104,11 +100,11 @@ public class Employee implements Pickable{
         return mSites;
     }
 
-    public String getSiteString()
+    public String getSiteString(Context context)
     {
         if(!mSites.isEmpty())
         {
-            SitesLab sitesLab=SitesLab.getInstanceOf(mContext);
+            SitesLab sitesLab=SitesLab.getInstanceOf(context);
             Site site=sitesLab.getSiteById(mSites.get(0));
 
             if (site==null)
@@ -207,10 +203,10 @@ public class Employee implements Pickable{
 
 
 
-    public void delete()
+    public void delete(Context context)
     {
-        DesignationLab designationLab=DesignationLab.getInstanceOf(mContext);
-        SitesLab sitesLab=SitesLab.getInstanceOf(mContext);
+        DesignationLab designationLab=DesignationLab.getInstanceOf(context);
+        SitesLab sitesLab=SitesLab.getInstanceOf(context);
 
         //remove from desgs
         for (UUID uuid:mDesignations)
@@ -232,17 +228,17 @@ public class Employee implements Pickable{
             }
         }
 
-        EntryLab.getInstanceOf(mContext).cleanseEntriesOfEmployeeId(mEmployeeId);
+        EntryLab.getInstanceOf(context).cleanseEntriesOfEmployeeId(mEmployeeId);
     }
 
-    public void addSiteById(UUID siteid)
+    public void addSiteById(UUID siteid,Context context)
     {
         if(mSites.contains(siteid))
             return;
         mSites.add(siteid);
 
-        Site site=SitesLab.getInstanceOf(mContext).getSiteById(siteid);
-        site.addEmployeeById(mEmployeeId);
+        Site site=SitesLab.getInstanceOf(context).getSiteById(siteid);
+        site.addEmployeeById(mEmployeeId,context);
     }
 
 
@@ -253,15 +249,15 @@ public class Employee implements Pickable{
         mSites.remove(uuid);
     }
 
-    public void addDesignationById(UUID desigantionid)
+    public void addDesignationById(UUID desigantionid,Context context)
     {
 
         if (mDesignations.contains(desigantionid))
             return;
         mDesignations.add(desigantionid);
 
-        Designation designation=DesignationLab.getInstanceOf(mContext).getDesigantionById(desigantionid);
-        designation.addEmployeeInvolvedById(mEmployeeId);
+        Designation designation=DesignationLab.getInstanceOf(context).getDesigantionById(desigantionid);
+        designation.addEmployeeInvolvedById(mEmployeeId,context);
     }
     public void removeDesignationById(UUID uuid)
     {

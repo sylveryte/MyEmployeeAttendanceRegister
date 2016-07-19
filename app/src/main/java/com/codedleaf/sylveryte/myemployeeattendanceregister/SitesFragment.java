@@ -140,7 +140,7 @@ public class SitesFragment extends Fragment implements LabObserver {
                                             .setPositiveButton("YES", new DialogInterface.OnClickListener() {
                                                 public void onClick(DialogInterface dialog, int which) {
                                                     // continue with delete
-                                                    mSitesLab.deleteSite(mSite);
+                                                    mSitesLab.deleteSite(mSite,getActivity());
                                                     update();
                                                 }
                                             })

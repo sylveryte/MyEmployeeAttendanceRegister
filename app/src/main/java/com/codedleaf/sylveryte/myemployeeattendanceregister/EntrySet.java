@@ -16,29 +16,28 @@ public class EntrySet {
     private UUID mSiteId;
     private LocalDate mDate;
     private List<Entry> mEntries;
-    private Context mContext;
 
-    public EntrySet(UUID siteId, Context context,LocalDate date)
+
+    public EntrySet(UUID siteId,LocalDate date)
     {
-        mContext=context;
         mSiteId=siteId;
         mDate=date;
     }
 
-    public void startEntriesProcess()
+    public void startEntriesProcess(Context context)
     {
         //must be called once :/
 
-        mEntries=EntryLab.getInstanceOf(mContext).getEntries(mDate,mSiteId);
+        mEntries=EntryLab.getInstanceOf(context).getEntries(mDate,mSiteId);
 
         if (mEntries==null)
-            initializeEntries();
+            initializeEntries(context);
     }
 
-    private void initializeEntries()
+    private void initializeEntries(Context context)
     {
         mEntries=new ArrayList<>();
-        List<Employee> employees=SitesLab.getInstanceOf(mContext).getCurrentEmployeesInSiteBySiteId(mSiteId);
+        List<Employee> employees=SitesLab.getInstanceOf(context).getCurrentEmployeesInSiteBySiteId(mSiteId,context);
         for (Employee employee: employees)
         {
             if (!employee.isActive())
@@ -47,7 +46,7 @@ public class EntrySet {
             mEntries.add(entry);
         }
 
-        EntryLab.getInstanceOf(mContext).adddEntrySetToDatabase(this);
+        EntryLab.getInstanceOf(context).adddEntrySetToDatabase(this);
     }
 
     public LocalDate getDate() {

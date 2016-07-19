@@ -13,7 +13,7 @@ import java.util.UUID;
 /**
  * Created by sylveryte on 27/6/16.
  */
-public class AttendanceActivity extends AppCompatActivity {
+public class AttendanceActivity extends SingleFragmentActivity {
 
     public static final String siteAttendance = "IAMBATMAN";
     private static final String FRAGMENT_CODE = "codedleaf.attendance.fragment.code";
@@ -29,29 +29,7 @@ public class AttendanceActivity extends AppCompatActivity {
     }
 
 
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_attendance);
-        FragmentManager fm = getSupportFragmentManager();
-        Fragment fragment = fm.findFragmentById(R.id.attendance_fragment_container);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_attendance);
-        setSupportActionBar(toolbar);
-
-        if (toolbar!=null)
-        {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
-
-
-        if (fragment == null) {
-            fragment = createFragment();
-            fm.beginTransaction()
-                    .add(R.id.attendance_fragment_container, fragment)
-                    .commit();
-        }
-    }
-
+    @Override
     protected Fragment createFragment() {
 
         Intent intent = getIntent();

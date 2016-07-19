@@ -23,15 +23,14 @@ public class SitesLab implements LabObeservable {
     private List<Site> mSites;
     private List<LabObserver> mLabObservers;
 
-    private Context mContext;
     private SQLiteDatabase mDatabase;
 
 
 
     private SitesLab(Context context)
     {
-        mContext=context.getApplicationContext();
-        mDatabase=AttendanceBaseHelper.getDatabaseWritable(mContext);
+
+        mDatabase=AttendanceBaseHelper.getDatabaseWritable(context);
 
         mSites=new ArrayList<>();
         mLabObservers=new ArrayList<>();
@@ -79,9 +78,9 @@ public class SitesLab implements LabObeservable {
         ContentValues values= AttendanceDbToolsProvider.getContentValues(site);
         mDatabase.insert(SitesTable.NAME,null,values);
     }
-    public void deleteSite(Site site)
+    public void deleteSite(Site site,Context context)
     {
-        site.delete();
+        site.delete(context);
         mSites.remove(site);
         alertAllObservers();
 
@@ -111,11 +110,11 @@ public class SitesLab implements LabObeservable {
         return getSiteById(uuid).getTitle();
     }
 
-    public List<Employee> getCurrentEmployeesInSiteBySiteId(UUID siteId)
+    public List<Employee> getCurrentEmployeesInSiteBySiteId(UUID siteId,Context context)
     {
         List<Employee> employees=new ArrayList<>();
         List<UUID> employeeIds=getSiteById(siteId).getEmployeesInvolved();
-        EmployeeLab employeeLab=EmployeeLab.getInstanceOf(mContext);
+        EmployeeLab employeeLab=EmployeeLab.getInstanceOf(context);
 
         for (UUID uuid:employeeIds)
         {
@@ -176,7 +175,7 @@ public class SitesLab implements LabObeservable {
             String beginDate=getString(getColumnIndex(SitesTable.Cols.BEGINDATE));
             String endDate=getString(getColumnIndex(SitesTable.Cols.ENDDATE));
 
-            Site site=new Site(mContext,UUID.fromString(uuidString));
+            Site site=new Site(UUID.fromString(uuidString));
             site.setTitle(title);
             site.setActive(CodedleafTools.getBooleanFromString(active));
             site.setDescription(description);

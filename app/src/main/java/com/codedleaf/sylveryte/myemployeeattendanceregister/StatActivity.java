@@ -13,7 +13,7 @@ import android.view.View;
 
 import java.util.UUID;
 
-public class StatActivity extends AppCompatActivity {
+public class StatActivity extends SingleFragmentActivity {
 
 
     private static final String FRAGMENT_CODE = "stat_vagaira_ka";
@@ -23,50 +23,13 @@ public class StatActivity extends AppCompatActivity {
     public static final int FRAGMENT_CODE_STAT_EMPLOYEE = 31;
     public static final int FRAGMENT_CODE_STAT_DESIGNATION = 32;
 
-    private Context mContext;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_stat);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        if (fab!=null)
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        FragmentManager fm = getSupportFragmentManager();
-        Fragment fragment = fm.findFragmentById(R.id.stat_fragment_container);
-
-        if (fragment == null) {
-            fragment = createFragment();
-            fm.beginTransaction()
-                    .add(R.id.stat_fragment_container, fragment)
-                    .commit();
-        }
-
-
-        mContext=getApplicationContext();
-    }
-
     protected Fragment createFragment() {
 
-
-        if (mContext==null)
-            mContext=getApplicationContext();
-
-        DesignationLab designationLab = DesignationLab.getInstanceOf(mContext);
-        SitesLab sitesLab = SitesLab.getInstanceOf(mContext);
-        EmployeeLab employeeLab = EmployeeLab.getInstanceOf(mContext);
+        DesignationLab designationLab = DesignationLab.getInstanceOf(this);
+        SitesLab sitesLab = SitesLab.getInstanceOf(this);
+        EmployeeLab employeeLab = EmployeeLab.getInstanceOf(this);
 
         Intent intent=getIntent();
         int i=intent.getIntExtra(FRAGMENT_CODE,FRAGMENT_CODE_STAT_SITE);

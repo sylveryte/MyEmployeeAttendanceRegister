@@ -23,21 +23,19 @@ public class EmployeeLab implements LabObeservable {
     private List<Employee> mEmployees;
     private List<LabObserver> mLabObservers;
 
-    private Context mContext;
+
     private SQLiteDatabase mDatabase;
 
     private EmployeeLab(Context context)
     {
-
-        mContext=context.getApplicationContext();
-        mDatabase=AttendanceBaseHelper.getDatabaseWritable(mContext);
+        mDatabase=AttendanceBaseHelper.getDatabaseWritable(context);
 
         mEmployees=new ArrayList<>();
         mLabObservers=new ArrayList<>();
 
     }
 
-    private void initializeDatabase()
+    private void initializeDatabase(Context context)
     {
         EmployeeCursorWrapper cursorWrapper=querySites(null,null);
         try
@@ -45,7 +43,7 @@ public class EmployeeLab implements LabObeservable {
             cursorWrapper.moveToFirst();
             while (!cursorWrapper.isAfterLast())
             {
-                mEmployees.add(cursorWrapper.getEmployee());
+                mEmployees.add(cursorWrapper.getEmployee(context));
                 cursorWrapper.moveToNext();
             }
         }
@@ -61,7 +59,7 @@ public class EmployeeLab implements LabObeservable {
         if (sEmployeeLab==null)
         {
             sEmployeeLab=new EmployeeLab(context);
-            sEmployeeLab.initializeDatabase();
+            sEmployeeLab.initializeDatabase(context);
         }
         return sEmployeeLab;
     }
@@ -87,9 +85,9 @@ public class EmployeeLab implements LabObeservable {
         mDatabase.update(AttendanceDbSchema.EmployeesTable.NAME,values, AttendanceDbSchema.EmployeesTable.Cols.UID+"=?",new String[]{empIdString});
     }
 
-    public void deleteEmployee(Employee employee)
+    public void deleteEmployee(Employee employee,Context context)
     {
-        employee.delete();
+        employee.delete(context);
         mEmployees.remove(employee);
         alertAllObservers();
 
@@ -150,7 +148,7 @@ public class EmployeeLab implements LabObeservable {
             super(cursor);
         }
 
-        public Employee getEmployee()
+        public Employee getEmployee(Context context)
         {
             String uuidString=getString(getColumnIndex(EmployeesTable.Cols.UID));
             String name=getString(getColumnIndex(EmployeesTable.Cols.NAME));
@@ -165,7 +163,7 @@ public class EmployeeLab implements LabObeservable {
             String designations=getString(getColumnIndex(EmployeesTable.Cols.DESIGNATIONIDS));
             String sites=getString(getColumnIndex(EmployeesTable.Cols.SITEIDS));
 
-            Employee employee=new Employee(mContext,UUID.fromString(uuidString));
+            Employee employee=new Employee(UUID.fromString(uuidString));
 
             employee.setName(name);
             employee.setActive(CodedleafTools.getBooleanFromString(isActive));
@@ -173,8 +171,8 @@ public class EmployeeLab implements LabObeservable {
             employee.setAddress(address);
             employee.setAge(age);
             employee.setNote(noteString);
-            employee.setDesignations(CodedleafTools.getUUIDListFromString(designations));
-            employee.setSites(CodedleafTools.getUUIDListFromString(sites));
+            employee.setDesignations(CodedleafTools.getUUIDListFromString(designations),context);
+            employee.setSites(CodedleafTools.getUUIDListFromString(sites),context);
 
             return employee;
         }

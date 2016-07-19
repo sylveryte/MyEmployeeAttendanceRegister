@@ -11,7 +11,7 @@ import android.support.v7.widget.Toolbar;
 import java.util.UUID;
 
 
-public class AdditionActivity extends AppCompatActivity {
+public class AdditionActivity extends SingleFragmentActivity {
 
 
     public static final String FRAGMENT_CODE="codedleaf.addition.fragment.code";
@@ -30,7 +30,7 @@ public class AdditionActivity extends AppCompatActivity {
     private DesignationLab mDesignationLab;
     private EmployeeLab mEmployeeLab;
 
-    private Context mContext;
+
 
     public static Intent fetchIntent(Context context, int fragCode)
     {
@@ -39,41 +39,14 @@ public class AdditionActivity extends AppCompatActivity {
         return i;
     }
 
+
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.activity_addition);
-        FragmentManager fm = getSupportFragmentManager();
-        Fragment fragment = fm.findFragmentById(R.id.addition_fragment_container);
-
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.Additiontoolbar);
-        setSupportActionBar(toolbar);
-
-//         causing to go to home activity to sites
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        if (fragment == null) {
-            fragment = createFragment();
-            fm.beginTransaction()
-                    .add(R.id.addition_fragment_container, fragment)
-                    .commit();
-        }
-
-
-        mContext=getApplicationContext();
-    }
-
     protected Fragment createFragment() {
 
 
-        if (mContext==null)
-            mContext=getApplicationContext();
-
-        mDesignationLab=DesignationLab.getInstanceOf(mContext);
-        mSitesLab=SitesLab.getInstanceOf(mContext);
-        mEmployeeLab=EmployeeLab.getInstanceOf(mContext);
+        mDesignationLab=DesignationLab.getInstanceOf(getApplicationContext());
+        mSitesLab=SitesLab.getInstanceOf(getApplicationContext());
+        mEmployeeLab=EmployeeLab.getInstanceOf(getApplicationContext());
 
         Intent intent=getIntent();
         int i=intent.getIntExtra(FRAGMENT_CODE,FRAGMENT_CODE_ADD_SITE);
@@ -84,19 +57,19 @@ public class AdditionActivity extends AppCompatActivity {
 
                 ////// TODO: 18/6/16  remove wala nikal dena lab se agar addition cancel hota hai toh
 
-                Site site=new Site(mContext);
+                Site site=new Site();
                 mSitesLab.addSite(site);
                 return SiteAdditionFragment.createInstance(site);
             }
             case FRAGMENT_CODE_ADD_EMPLOYEE:
             {
-                Employee employee=new Employee(mContext);
+                Employee employee=new Employee();
                 mEmployeeLab.addEmployee(employee);
                 return EmployeeAdditionFragment.createInstance(employee);
             }
             case FRAGMENT_CODE_ADD_DESIGNATION:
             {
-                Designation designation=new Designation(mContext);
+                Designation designation=new Designation();
                 mDesignationLab.addDesignation(designation);
                 return DesignationAdditionFragment.createInstance(designation);
             }
@@ -118,7 +91,7 @@ public class AdditionActivity extends AppCompatActivity {
             }
         }
 
-        Site site=new Site(mContext);
+        Site site=new Site();
         return SiteAdditionFragment.createInstance(site);
     }
 }

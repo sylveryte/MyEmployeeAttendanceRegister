@@ -18,19 +18,14 @@ public class Designation implements Pickable {
 
     private List<UUID> mEmployees;
 
-    private Context mContext;
-
-    public Designation(Context context)
+    public Designation()
     {
-        mContext=context;
-
         mDesignationId = UUID.randomUUID();
         mEmployees=new ArrayList<>();
     }
 
-    public Designation(Context context,UUID designationId)
+    public Designation(UUID designationId)
     {
-        mContext=context;
         mEmployees=new ArrayList<>();
         mDesignationId=designationId;
     }
@@ -52,9 +47,9 @@ public class Designation implements Pickable {
         mDescription = description;
     }
 
-    public void delete()
+    public void delete(Context context)
     {
-        EmployeeLab lab=EmployeeLab.getInstanceOf(mContext);
+        EmployeeLab lab=EmployeeLab.getInstanceOf(context);
         for (UUID uuid:mEmployees)
         {
             Employee employee=lab.getEmployeeById(uuid);
@@ -65,16 +60,16 @@ public class Designation implements Pickable {
         }
     }
 
-    public void addEmployeeInvolvedById(UUID uuid)
+    public void addEmployeeInvolvedById(UUID uuid,Context context)
     {
         if (mEmployees.contains(uuid))
             return;
         mEmployees.add(uuid);
 
-        Employee employee=EmployeeLab.getInstanceOf(mContext).getEmployeeById(uuid);
+        Employee employee=EmployeeLab.getInstanceOf(context).getEmployeeById(uuid);
         if (employee==null)
             return;
-        employee.addDesignationById(mDesignationId);
+        employee.addDesignationById(mDesignationId,context);
     }
 
     public void removeEmployeeInvolvedById(UUID uuid)

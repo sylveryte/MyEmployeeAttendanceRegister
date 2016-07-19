@@ -84,7 +84,7 @@ public class DesignationFragment extends Fragment implements LabObserver {
                                             .setPositiveButton("YES", new DialogInterface.OnClickListener() {
                                                 public void onClick(DialogInterface dialog, int which) {
                                                     // continue with delete
-                                                    mLab.deleteDesignation(mDesignation);
+                                                    mLab.deleteDesignation(mDesignation,getActivity());
                                                     update();
                                                 }
                                             })

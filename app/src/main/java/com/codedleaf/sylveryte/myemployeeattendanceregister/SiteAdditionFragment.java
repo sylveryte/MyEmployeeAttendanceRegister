@@ -96,7 +96,7 @@ public class SiteAdditionFragment extends Fragment {
         AlertDialog alert = builder.create();
         alert.show();*/
 
-        SitesLab.getInstanceOf(getActivity()).deleteSite(mSite);
+        SitesLab.getInstanceOf(getActivity()).deleteSite(mSite,getActivity());
 
 
     }

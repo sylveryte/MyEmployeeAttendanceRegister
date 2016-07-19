@@ -18,6 +18,7 @@ import android.widget.TextView;
 import org.joda.time.LocalDate;
 
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by sylveryte on 14/6/16.
@@ -130,7 +131,7 @@ public class EmployeeFragment extends Fragment implements LabObserver {
                                             .setPositiveButton("YES", new DialogInterface.OnClickListener() {
                                                 public void onClick(DialogInterface dialog, int which) {
                                                     // continue with delete
-                                                    mLab.deleteEmployee(mEmployee);
+                                                    mLab.deleteEmployee(mEmployee,getActivity());
                                                     update();
                                                 }
                                             })
@@ -188,9 +189,9 @@ public class EmployeeFragment extends Fragment implements LabObserver {
         {
             mEmployee=employee;
             name.setText(employee.getName());
-            site.setText(employee.getSiteString());
-            designation.setText(employee.getDesignationString());
-            age.setText(String.format("%d", employee.getAge()));
+            site.setText(employee.getSiteString(getActivity()));
+            designation.setText(employee.getDesignationString(getActivity()));
+            age.setText(String.format(Locale.ENGLISH,"%d", employee.getAge()));
             //// TODO: 14/6/16 get these strings somewhere flexible
             active.setText(employee.isActive()?"Active":"Not Active");
             if (mEmployee.isActive())

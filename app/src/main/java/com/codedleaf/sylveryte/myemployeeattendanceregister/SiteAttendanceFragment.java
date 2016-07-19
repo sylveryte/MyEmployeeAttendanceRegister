@@ -1,6 +1,5 @@
 package com.codedleaf.sylveryte.myemployeeattendanceregister;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -19,7 +18,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-
 import org.joda.time.LocalDate;
 
 import java.util.List;
@@ -34,12 +32,10 @@ public class SiteAttendanceFragment extends Fragment {
     private EntrySet mEntrySet;
     private RecyclerView mRecyclerView;
     private EmployeeAttendanceAdapter mEmployeeAttendanceAdpater;
-    private Context mContext;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mContext=getActivity();
         getActivity().setTitle("Taking Attendance");
     }
 
@@ -47,21 +43,20 @@ public class SiteAttendanceFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.recycler_fragment_attendance, container, false);
+        View view = inflater.inflate(R.layout.recycler_fragment, container, false);
 
         UUID siteId=mSite.getId();
         LocalDate date=new LocalDate();
 
-        mEntrySet=EntryLab.getInstanceOf(mContext).getEntrySet(date,siteId);
-        mSite=SitesLab.getInstanceOf(mContext).getSiteById(siteId);
-
-        List<Entry> entries=mEntrySet.getEntries();
+        mEntrySet=EntryLab.getInstanceOf(getActivity()).getEntrySet(date,siteId,getActivity());
+        mSite=SitesLab.getInstanceOf(getActivity()).getSiteById(siteId);
 
         mEmployeeAttendanceAdpater=new EmployeeAttendanceAdapter(mEntrySet.getEntries());
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.fragment_recycler_view_attendance);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.fragment_recycler_view);
 
 
 //        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL,false));
+
         //for automatic
         //// TODO: 22/6/16  looks suspicious
         DisplayMetrics metrics=new DisplayMetrics();
@@ -183,7 +178,7 @@ public class SiteAttendanceFragment extends Fragment {
         private void bind(Entry entry)
         {
             mEntry=entry;
-            mTextViewName.setText(entry.getEmployeeInfo(mContext));
+            mTextViewName.setText(entry.getEmployeeInfo(getActivity()));
             setColorOfCardAndState(mEntry.getRemark()%10);
             setRemark();
         }
@@ -218,6 +213,11 @@ public class SiteAttendanceFragment extends Fragment {
         public int getItemCount() {
             return mEntries.size();
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
     }
 
     @Override

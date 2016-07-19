@@ -2,7 +2,6 @@ package com.codedleaf.sylveryte.myemployeeattendanceregister;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -21,7 +20,7 @@ public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String FRAGMENT_CODE = "codedleafbro";
-    private int mSelectedId;
+    private static final int REQUEST_CODE=1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,65 +36,48 @@ public class HomeActivity extends AppCompatActivity
         com.getbase.floatingactionbutton.FloatingActionButton addEmployee=(com.getbase.floatingactionbutton.FloatingActionButton)findViewById(R.id.floating_add_employee);
 
 
-        addSite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivityForResult(AdditionActivity.fetchIntent(HomeActivity.this,AdditionActivity.FRAGMENT_CODE_ADD_SITE),01);
-            }
-        });
-
-        addDesignation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivityForResult(AdditionActivity.fetchIntent(HomeActivity.this,AdditionActivity.FRAGMENT_CODE_ADD_DESIGNATION),01);
-            }
-        });
-
-        addEmployee.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivityForResult(AdditionActivity.fetchIntent(HomeActivity.this,AdditionActivity.FRAGMENT_CODE_ADD_EMPLOYEE),01);
-            }
-        });
-
-
-
-       /* assert fab != null;
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int fragCode=AdditionActivity.FRAGMENT_CODE_ADD_SITE;
-
-                //which addition frag to start decided here
-
-                if (mSelectedId == R.id.nav_sites) {
-                        fragCode=AdditionActivity.FRAGMENT_CODE_ADD_SITE;
-                } else if (mSelectedId == R.id.nav_employees) {
-                        fragCode=AdditionActivity.FRAGMENT_CODE_ADD_EMPLOYEE;
-                } else if (mSelectedId == R.id.nav_designation) {
-                        fragCode=AdditionActivity.FRAGMENT_CODE_ADD_DESIGNATION;
-
-                } else if (mSelectedId == R.id.nav_share) {
-
-                } else if (mSelectedId == R.id.nav_send) {
-
+        if (addSite != null) {
+            addSite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivityForResult(AdditionActivity.fetchIntent(HomeActivity.this,AdditionActivity.FRAGMENT_CODE_ADD_SITE),REQUEST_CODE);
                 }
-                startActivityForResult(AdditionActivity.fetchIntent(HomeActivity.this,fragCode),01);
-            }
-        });*/
+            });
+        }
+
+        if (addDesignation != null) {
+            addDesignation.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivityForResult(AdditionActivity.fetchIntent(HomeActivity.this,AdditionActivity.FRAGMENT_CODE_ADD_DESIGNATION),REQUEST_CODE);
+                }
+            });
+        }
+
+        if (addEmployee != null) {
+            addEmployee.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivityForResult(AdditionActivity.fetchIntent(HomeActivity.this,AdditionActivity.FRAGMENT_CODE_ADD_EMPLOYEE),REQUEST_CODE);
+                }
+            });
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+        if (drawer != null) {
+            drawer.setDrawerListener(toggle);
+        }
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        if (navigationView != null) {
+            navigationView.setNavigationItemSelectedListener(this);
+        }
 
 
-
-       startFragment(SitesFragment.newInstance());
+        startFragment(SitesFragment.newInstance());
 
 
     }
@@ -103,10 +85,12 @@ public class HomeActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
+        if (drawer != null) {
+            if (drawer.isDrawerOpen(GravityCompat.START)) {
+                drawer.closeDrawer(GravityCompat.START);
+            } else {
+                super.onBackPressed();
+            }
         }
     }
 
@@ -163,7 +147,6 @@ public class HomeActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        mSelectedId=id;
 
         if (id == R.id.nav_sites) {
             startFragment(SitesFragment.newInstance());
@@ -179,7 +162,9 @@ public class HomeActivity extends AppCompatActivity
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        if (drawer != null) {
+            drawer.closeDrawer(GravityCompat.START);
+        }
         return true;
     }
 }

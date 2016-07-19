@@ -248,12 +248,12 @@ public class EmployeeAdditionFragment extends Fragment {
 
         if(requestCode==PickActivity.FRAGMENT_CODE_PICK_DESIGNATION)
         {
-            mEmployee.addDesignationById(uuid);
+            mEmployee.addDesignationById(uuid,getActivity());
             update();
         }
         else if (requestCode==PickActivity.FRAGMENT_CODE_PICK_SITE)
         {
-            mEmployee.addSiteById(uuid);
+            mEmployee.addSiteById(uuid,getActivity());
             update();
         }
 
@@ -272,7 +272,7 @@ public class EmployeeAdditionFragment extends Fragment {
     private void deleteMe()
     {
 
-        EmployeeLab.getInstanceOf(getActivity()).deleteEmployee(mEmployee);
+        EmployeeLab.getInstanceOf(getActivity()).deleteEmployee(mEmployee,getActivity());
     }
 
     public void setEmployee(Employee employee) {

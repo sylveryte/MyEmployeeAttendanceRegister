@@ -85,7 +85,7 @@ public class DesignationAdditionFragment extends Fragment {
 
     private void deleteMe()
     {
-            DesignationLab.getInstanceOf(getActivity()).deleteDesignation(mDesignation);
+            DesignationLab.getInstanceOf(getActivity()).deleteDesignation(mDesignation,getActivity());
     }
 
     public static DesignationAdditionFragment createInstance(Designation designation)

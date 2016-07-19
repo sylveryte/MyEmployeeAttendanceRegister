@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Created by sylveryte on 17/6/16.
  */
-public class PickActivity extends AppCompatActivity {
+public class PickActivity extends SingleFragmentActivity {
 
 
     public static final String FRAGMENT_CODE="codedleaf.pick.fragment.code";
@@ -25,38 +25,6 @@ public class PickActivity extends AppCompatActivity {
 
     public static final String RESULT_DATA_STRING_PICK_GENRAL="codedleaf.result.returned.uuid";
 
-    private Context mContext;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-
-        setContentView(R.layout.activity_addition);
-        FragmentManager fm = getSupportFragmentManager();
-        Fragment fragment = fm.findFragmentById(R.id.addition_fragment_container);
-
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.Additiontoolbar);
-
-        setSupportActionBar(toolbar);
-
-        if (toolbar!=null)
-        {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
-
-
-        if (fragment == null) {
-            fragment = createFragment();
-            fm.beginTransaction()
-                    .add(R.id.addition_fragment_container, fragment)
-                    .commit();
-        }
-
-
-        mContext=getApplicationContext();
-    }
 
     public static Intent fetchIntent(Context context, int fragCode)
     {
@@ -65,6 +33,7 @@ public class PickActivity extends AppCompatActivity {
         return i;
     }
 
+    @Override
     protected Fragment createFragment() {
 
         List<? extends Pickable> list;
@@ -76,22 +45,22 @@ public class PickActivity extends AppCompatActivity {
         {
             case FRAGMENT_CODE_PICK_SITE:
             {
-                list=SitesLab.getInstanceOf(mContext).getSites();
+                list=SitesLab.getInstanceOf(this).getSites();
                 break;
             }
             case FRAGMENT_CODE_PICK_EMPLOYEE:
             {
-                list=EmployeeLab.getInstanceOf(mContext).getEmployees();
+                list=EmployeeLab.getInstanceOf(this).getEmployees();
                 break;
             }
             case FRAGMENT_CODE_PICK_DESIGNATION:
             {
-                list=DesignationLab.getInstanceOf(mContext).getDesignations();
+                list=DesignationLab.getInstanceOf(this).getDesignations();
                 break;
             }
             default:
             {
-                list=SitesLab.getInstanceOf(mContext).getSites();
+                list=SitesLab.getInstanceOf(this).getSites();
                 break;
             }
         }

@@ -19,13 +19,11 @@ public class EntryLab {
 
     private static EntryLab sEntryLab;
 
-    private Context mContext;
     private SQLiteDatabase mDatabase;
 
     private EntryLab(Context context)
     {
-        mContext=context.getApplicationContext();
-        mDatabase=AttendanceBaseHelper.getDatabaseWritable(mContext);
+        mDatabase=AttendanceBaseHelper.getDatabaseWritable(context);
 
     }
 
@@ -38,10 +36,10 @@ public class EntryLab {
         return sEntryLab;
     }
 
-    public EntrySet getEntrySet(LocalDate date, UUID siteId)
+    public EntrySet getEntrySet(LocalDate date, UUID siteId,Context context)
     {
-        EntrySet entrySetToReturn = new EntrySet(siteId,mContext,date);
-        entrySetToReturn.startEntriesProcess();
+        EntrySet entrySetToReturn = new EntrySet(siteId,date);
+        entrySetToReturn.startEntriesProcess(context);
         return entrySetToReturn;
     }
 
