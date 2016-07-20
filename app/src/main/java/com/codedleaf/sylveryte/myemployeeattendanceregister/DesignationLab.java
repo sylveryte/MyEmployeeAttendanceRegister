@@ -68,6 +68,7 @@ public class DesignationLab implements LabObeservable {
 
     public void updateDesignation(Designation designation)
     {
+        alertAllObservers();
         String designationIdString=designation.getId().toString();
         ContentValues values= AttendanceDbToolsProvider.getContentValues(designation);
         mDatabase.update(DesignationsTable.NAME,values,DesignationsTable.Cols.UID+"=?",new String[]{designationIdString});

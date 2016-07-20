@@ -32,8 +32,6 @@ public class DesignationFragment extends Fragment implements LabObserver {
         mLab=DesignationLab.getInstanceOf(getActivity());
         mLab.addListener(this);
 
-        getActivity().setTitle("Designations");
-
     }
 
     @Nullable
@@ -54,6 +52,8 @@ public class DesignationFragment extends Fragment implements LabObserver {
     private class DesignationHolder extends RecyclerView.ViewHolder
     {
 
+
+        private static final String DIALOG_FRAGMENT_CODE = "editdialogdesig";
 
         private TextView title;
         private TextView description;
@@ -100,9 +100,8 @@ public class DesignationFragment extends Fragment implements LabObserver {
 
                                 case 1: {
 
-                                    Intent intent=AdditionActivity.fetchIntent(getActivity(),AdditionActivity.FRAGMENT_CODE_EDIT_DESIGNATION);
-                                    intent.putExtra(AdditionActivity.FRAGMENT_STRING_EDIT_DESIGNATION,mDesignation.getId());
-                                    startActivity(intent);
+                                    DesignationAdditionDialogFragment.getDialogFrag(mDesignation.getId())
+                                            .show(getActivity().getSupportFragmentManager(),DIALOG_FRAGMENT_CODE);
 
                                     break;
                                 }

@@ -79,7 +79,7 @@ public class EmployeeLab implements LabObeservable {
 
     public void updateEmployee(Employee employee)
     {
-
+        alertAllObservers();
         String empIdString=employee.getId().toString();
         ContentValues values= AttendanceDbToolsProvider.getContentValues(employee);
         mDatabase.update(AttendanceDbSchema.EmployeesTable.NAME,values, AttendanceDbSchema.EmployeesTable.Cols.UID+"=?",new String[]{empIdString});

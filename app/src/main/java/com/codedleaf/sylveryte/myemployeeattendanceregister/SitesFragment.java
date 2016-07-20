@@ -37,8 +37,6 @@ public class SitesFragment extends Fragment implements LabObserver {
 
         mSitesLab=SitesLab.getInstanceOf(getActivity());
         mSitesLab.addListener(this);
-
-        getActivity().setTitle("Sites");
     }
 
     @Nullable
@@ -92,6 +90,8 @@ public class SitesFragment extends Fragment implements LabObserver {
 
     private class SiteHolder extends RecyclerView.ViewHolder
     {
+        private static final String DIALOG_FRAGMENT_CODE = "editdialogsite";
+
         private TextView title;
         private TextView description;
         private TextView begindate;
@@ -173,10 +173,7 @@ public class SitesFragment extends Fragment implements LabObserver {
 
                                 case 3: {
 
-                                    Intent intent = AdditionActivity.fetchIntent(getActivity(), AdditionActivity.FRAGMENT_CODE_EDIT_SITE);
-                                    intent.putExtra(AdditionActivity.FRAGMENT_STRING_EDIT_SITE, mSite.getId());
-                                    startActivity(intent);
-
+                                    SiteAdditionDialogFragment.getSiteFrag(mSite.getId()).show(getActivity().getSupportFragmentManager(),DIALOG_FRAGMENT_CODE);
                                     break;
                                 }
                                 case 0: {

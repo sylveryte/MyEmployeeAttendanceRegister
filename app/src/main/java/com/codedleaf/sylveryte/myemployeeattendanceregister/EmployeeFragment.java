@@ -35,8 +35,6 @@ public class EmployeeFragment extends Fragment implements LabObserver {
 
         mLab=EmployeeLab.getInstanceOf(getActivity());
         mLab.addListener(this);
-
-        getActivity().setTitle("Employees");
     }
 
 
@@ -87,6 +85,7 @@ public class EmployeeFragment extends Fragment implements LabObserver {
     private class EmployeeHolder extends RecyclerView.ViewHolder
     {
 
+        private static final String DIALOG_FRAGMENT_CODE = "editdialogemp";
 
         private TextView name;
         private TextView site;
@@ -156,10 +155,8 @@ public class EmployeeFragment extends Fragment implements LabObserver {
 
 
                                 case 1: {
-
-                                    Intent intent=AdditionActivity.fetchIntent(getActivity(),AdditionActivity.FRAGMENT_CODE_EDIT_EMPLOYEE);
-                                    intent.putExtra(AdditionActivity.FRAGMENT_STRING_EDIT_EMPLOYEE,mEmployee.getId());
-                                    startActivity(intent);
+                                    EmployeeAdditionDialogFragment.getDialogFrag(mEmployee.getId())
+                                            .show(getActivity().getSupportFragmentManager(),DIALOG_FRAGMENT_CODE);
 
                                     break;
                                 }

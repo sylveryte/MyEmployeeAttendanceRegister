@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.InputType;
@@ -28,6 +29,8 @@ import java.util.UUID;
  */
 public class SiteAttendanceFragment extends Fragment {
 
+    private static final String ARGS_CODE="siteattendanceargs";
+
     private Site mSite;
     private EntrySet mEntrySet;
     private RecyclerView mRecyclerView;
@@ -45,7 +48,7 @@ public class SiteAttendanceFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.recycler_fragment, container, false);
 
-        UUID siteId=mSite.getId();
+        UUID siteId=(UUID)getArguments().getSerializable(ARGS_CODE);
         LocalDate date=new LocalDate();
 
         mEntrySet=EntryLab.getInstanceOf(getActivity()).getEntrySet(date,siteId,getActivity());
@@ -55,15 +58,16 @@ public class SiteAttendanceFragment extends Fragment {
         mRecyclerView = (RecyclerView) view.findViewById(R.id.fragment_recycler_view);
 
 
-//        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL,false));
-
+/*
         //for automatic
         //// TODO: 22/6/16  looks suspicious
         DisplayMetrics metrics=new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
         int cardWidth=(int)metrics.xdpi;
         int spans=(int)Math.floor(mRecyclerView.getContext().getResources().getDisplayMetrics().widthPixels/(float)cardWidth);
-        mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(spans,StaggeredGridLayoutManager.VERTICAL));
+        mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(spans,StaggeredGridLayoutManager.VERTICAL));*/
+
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL,false));
 
         mRecyclerView.setAdapter(mEmployeeAttendanceAdpater);
 
@@ -224,15 +228,14 @@ public class SiteAttendanceFragment extends Fragment {
         EntryLab.getInstanceOf(getActivity()).updateEntrySet(mEntrySet);
     }
 
-    public void setSite(Site site) {
-        mSite = site;
-    }
-
-
     public static SiteAttendanceFragment createInstance(Site site)
     {
         SiteAttendanceFragment siteAttendanceFragment=new SiteAttendanceFragment();
-        siteAttendanceFragment.setSite(site);
+
+        Bundle args=new Bundle();
+        args.putSerializable(ARGS_CODE,site.getId());
+        siteAttendanceFragment.setArguments(args);
+
         return siteAttendanceFragment;
     }
 }

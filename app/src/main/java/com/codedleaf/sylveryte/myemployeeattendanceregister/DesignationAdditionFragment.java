@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import java.util.UUID;
+
 /**
  * Created by sylveryte on 17/6/16.
  */
@@ -21,6 +23,8 @@ public class DesignationAdditionFragment extends Fragment {
     private EditText mEditText_description;
     private Button mAddButton;
     private Designation mDesignation;
+
+    private static String ARGS_CODE="desargcode";
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -35,6 +39,9 @@ public class DesignationAdditionFragment extends Fragment {
 
         View v=inflater.inflate(R.layout.designation_additioin_fragment,container,false);
 
+        //reccover data
+        UUID uuid=(UUID)getArguments().getSerializable(ARGS_CODE);
+        mDesignation=DesignationLab.getInstanceOf(getActivity()).getDesigantionById(uuid);
 
         mEditText_designationName =(EditText)v.findViewById(R.id.editText_designation_name);
         mEditText_description=(EditText)v.findViewById(R.id.editText_designation_description);
@@ -56,6 +63,7 @@ public class DesignationAdditionFragment extends Fragment {
 
     }
 
+
     public void saveUpdateData()
     {
         mDesignation.setTitle(mEditText_designationName.getText().toString());
@@ -70,28 +78,15 @@ public class DesignationAdditionFragment extends Fragment {
         mEditText_description.setText(mDesignation.getDescription());
     }
 
-    public void setDesignation(Designation designation) {
-        mDesignation = designation;
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (mDesignation.getTitle()==null)
-            deleteMe();
-        else if (mDesignation.getTitle().trim().isEmpty())
-            deleteMe();
-    }
-
-    private void deleteMe()
-    {
-            DesignationLab.getInstanceOf(getActivity()).deleteDesignation(mDesignation,getActivity());
-    }
 
     public static DesignationAdditionFragment createInstance(Designation designation)
     {
         DesignationAdditionFragment designationAdditionFragment=new DesignationAdditionFragment();
-        designationAdditionFragment.setDesignation(designation);
+
+        Bundle args=new Bundle();
+        args.putSerializable(ARGS_CODE,designation.getId());
+        designationAdditionFragment.setArguments(args);
+
         return designationAdditionFragment;
     }
 

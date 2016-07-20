@@ -1,14 +1,13 @@
 package com.codedleaf.sylveryte.myemployeeattendanceregister;
 
-import android.content.DialogInterface;
-import android.content.Intent;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
+import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -17,15 +16,17 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 /**
- * Created by sylveryte on 15/6/16.
+ * Created by sylveryte on 20/7/16.
  */
-public class EmployeeAdditionFragment extends Fragment {
+public class EmployeeAdditionDialogFragment extends DialogFragment {
 
+    private static final String ARGS_CODE="empargscode";
+    private static final String MY_SITE_CALLER_CODE="emp_call_site";
+    private static final String MY_DESIGNATION_CALLER_CODE="emp_call_designation";
 
     private EditText mName;
     private EditText mAddress;
@@ -39,26 +40,18 @@ public class EmployeeAdditionFragment extends Fragment {
     private Button mChooseDesignationButton;
     private Button mChooseSiteButton;
 
+    private ImageButton mDone;
+
     private Employee mEmployee;
 
     private LinearLayout mDesignations;
     private LinearLayout mSites;
 
-    private List<UUID> already;
-
+    @NonNull
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        already=new ArrayList<>();
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        getActivity().setTitle("Edit Employee");
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable final Bundle savedInstanceState) {
-
-        View view=inflater.inflate(R.layout.employee_addition_fragment,container,false);
+        View view= LayoutInflater.from(getActivity()).inflate(R.layout.employee_addition_fragment,null,false);
 
         mName=(EditText)view.findViewById(R.id.employee_add_name);
         mAddress=(EditText)view.findViewById(R.id.employee_add_address);
@@ -71,24 +64,30 @@ public class EmployeeAdditionFragment extends Fragment {
         mRadioButtonMale=(RadioButton)view.findViewById(R.id.employee_add_radiobutton_male);
         mChooseDesignationButton=(Button)view.findViewById(R.id.employee_choose_designation_button);
         mChooseSiteButton=(Button)view.findViewById(R.id.employee_choose_site_button);
+        mDone=(ImageButton)view.findViewById(R.id.emp_addition_done);
 
-
+        mDone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveEmployee(mEmployee);
+                getDialog().dismiss();
+            }
+        });
         //choose
         mChooseDesignationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                saveData();
-                Intent intent=PickActivity.fetchIntent(getActivity(),PickActivity.FRAGMENT_CODE_PICK_DESIGNATION);
-                startActivityForResult(intent,PickActivity.FRAGMENT_CODE_PICK_DESIGNATION);
+                new PickDialogFragment().getInstance(MY_DESIGNATION_CALLER_CODE,PickDialogFragment.DESIGNATION)
+                    .show(getActivity().getSupportFragmentManager(),MY_DESIGNATION_CALLER_CODE);
             }
         });
 
         mChooseSiteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                saveData();
-                Intent intent=PickActivity.fetchIntent(getActivity(),PickActivity.FRAGMENT_CODE_PICK_SITE);
-                startActivityForResult(intent,PickActivity.FRAGMENT_CODE_PICK_SITE);
+
+               new PickDialogFragment().getInstance(MY_SITE_CALLER_CODE,PickDialogFragment.SITE)
+                       .show(getActivity().getSupportFragmentManager(),MY_SITE_CALLER_CODE);
             }
         });
 
@@ -99,68 +98,64 @@ public class EmployeeAdditionFragment extends Fragment {
                 {
                     mRadioButtonFemale.setChecked(false);
                     mRadioButtonMale.setChecked(true);
-                    mEmployee.setMale(true);
                 }else if (checkedId==R.id.employee_add_radiobutton_female)
                 {
                     mRadioButtonMale.setChecked(false);
                     mRadioButtonFemale.setChecked(true);
-                    mEmployee.setMale(false);
                 }
             }
         });
 
 
-        update();
-        return view;
-    }
 
-    private void saveData() {
-        mEmployee.setActive(true);
-        mEmployee.setName(mName.getText().toString());
-        mEmployee.setAge(Integer.parseInt(mAge.getText().toString()));
-        mEmployee.setAddress(mAddress.getText().toString());
-        mEmployee.setNote(mNote.getText().toString());
 
-        saveUpdateDbData();
-    }
-
-    private void saveUpdateDbData()
-    {
-
-        EmployeeLab.getInstanceOf(getActivity()).updateEmployee(mEmployee);
-
-    }
-
-    public void update()
-    {
-        mName.setText(mEmployee.getName());
-        mAddress.setText(mEmployee.getAddress());
-        mNote.setText(mEmployee.getNote());
-
-        if(mEmployee.isMale())
+        Bundle args=getArguments();
+        //differentiate between edit and add calls
+        if (args!=null)
         {
-            mRadioButtonMale.setChecked(true);
-            mRadioButtonFemale.setChecked(false);
-        }else if (!mEmployee.isMale())
-        {
-            mRadioButtonFemale.setChecked(true);
-            mRadioButtonMale.setChecked(false);
+            UUID uuid=(UUID)args.getSerializable(ARGS_CODE);
+
+            mEmployee=EmployeeLab.getInstanceOf(getActivity()).getEmployeeById(uuid);
+            PickCache.getInstance().addThisInMyList(MY_DESIGNATION_CALLER_CODE,mEmployee.getDesignations());
+            PickCache.getInstance().addThisInMyList(MY_SITE_CALLER_CODE,mEmployee.getSites());
+            updateData();
         }
 
-
-        mAge.setText(mEmployee.getAgeString());
-
-        updateDesgsAndSites();
+        return new AlertDialog.Builder(getActivity())
+                .setView(view)
+                .create();
     }
+
+    private void updateData()
+        {
+            mName.setText(mEmployee.getName());
+            mAddress.setText(mEmployee.getAddress());
+            mNote.setText(mEmployee.getNote());
+
+            if(mEmployee.isMale())
+            {
+                mRadioButtonMale.setChecked(true);
+                mRadioButtonFemale.setChecked(false);
+            }else if (!mEmployee.isMale())
+            {
+                mRadioButtonFemale.setChecked(true);
+                mRadioButtonMale.setChecked(false);
+            }
+
+
+            mAge.setText(mEmployee.getAgeString());
+
+            updateDesgsAndSites();
+        }
 
 
     private void updateDesgsAndSites()
     {
 
-        List<UUID> designations=mEmployee.getDesignations();
-        List<UUID> sites=mEmployee.getSites();
+        List<UUID> designations=PickCache.getInstance().getPickables(MY_DESIGNATION_CALLER_CODE);
+        List<UUID> sites=PickCache.getInstance().getPickables(MY_SITE_CALLER_CODE);
 
-        LayoutInflater layoutInflater=getLayoutInflater(null);
+        LayoutInflater layoutInflater=LayoutInflater.from(getActivity());
 
         mDesignations.removeAllViews();
         mSites.removeAllViews();
@@ -176,27 +171,24 @@ public class EmployeeAdditionFragment extends Fragment {
         }
     }
 
-
     private class SimpleDesignationView
     {
         private LinearLayout mLinearLayout;
         private View mView;
-        private DesignationLab mDesignationLab;
         private UUID mUUID;
 
         public SimpleDesignationView(LinearLayout linearLayout, LayoutInflater layoutInflater, UUID uuid)
         {
             mLinearLayout=linearLayout;
-            mDesignationLab=DesignationLab.getInstanceOf(getActivity());
             mUUID=uuid;
             mView=layoutInflater.inflate(R.layout.simple_tex_with_close_card,null);
             TextView textView=(TextView)mView.findViewById(R.id.simple_with_close_text);
-            textView.setText(mDesignationLab.getDesignationStringById(uuid));
+            textView.setText(DesignationLab.getInstanceOf(getActivity()).getDesignationStringById(uuid));
             ImageButton closeButton=(ImageButton)mView.findViewById(R.id.simple_with_close_close_Button);
             closeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mEmployee.removeDesignationById(mUUID);
+                    PickCache.getInstance().getPickables(MY_DESIGNATION_CALLER_CODE).remove(mUUID);
                     mLinearLayout.removeView(mView);
                 }
             });
@@ -208,22 +200,20 @@ public class EmployeeAdditionFragment extends Fragment {
     {
         LinearLayout mLinearLayout;
         private View mView;
-        private SitesLab mSitesLab;
         private UUID mUUID;
 
         public SimpleSiteView(LinearLayout linearLayout, LayoutInflater layoutInflater, UUID uuid)
         {
             mLinearLayout=linearLayout;
-            mSitesLab=SitesLab.getInstanceOf(getActivity());
             mUUID=uuid;
             mView=layoutInflater.inflate(R.layout.simple_tex_with_close_card,null);
             TextView textView=(TextView)mView.findViewById(R.id.simple_with_close_text);
-            textView.setText(mSitesLab.getSiteStringById(uuid));
+            textView.setText(SitesLab.getInstanceOf(getActivity()).getSiteStringById(uuid));
             ImageButton closeButton=(ImageButton)mView.findViewById(R.id.simple_with_close_close_Button);
             closeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mEmployee.removeSiteByid(mUUID);
+                    PickCache.getInstance().getPickables(MY_SITE_CALLER_CODE).remove(mUUID);
                     mLinearLayout.removeView(mView);
                 }
             });
@@ -231,58 +221,43 @@ public class EmployeeAdditionFragment extends Fragment {
         }
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        saveData();
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if(data==null)
-            return;
-
-        UUID uuid=(UUID)data.getSerializableExtra(PickActivity.RESULT_DATA_STRING_PICK_GENRAL);
-
-        if(requestCode==PickActivity.FRAGMENT_CODE_PICK_DESIGNATION)
-        {
-            mEmployee.addDesignationById(uuid,getActivity());
-            update();
-        }
-        else if (requestCode==PickActivity.FRAGMENT_CODE_PICK_SITE)
-        {
-            mEmployee.addSiteById(uuid,getActivity());
-            update();
-        }
-
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (mEmployee.getTitle()==null)
-            deleteMe();
-        else if (mEmployee.getTitle().trim().isEmpty())
-            deleteMe();
-
-    }
-
-    private void deleteMe()
+    private void  saveEmployee(Employee employee)
     {
+        if (employee==null)
+        {
+            mEmployee=new Employee();
+            EmployeeLab.getInstanceOf(getActivity()).addEmployee(mEmployee);
+        }
+        mEmployee.setActive(true);
+        mEmployee.setName(mName.getText().toString());
+        mEmployee.setAge(Integer.parseInt(mAge.getText().toString()));
+        mEmployee.setAddress(mAddress.getText().toString());
+        mEmployee.setNote(mNote.getText().toString());
+        mEmployee.setMale(mRadioButtonMale.isChecked());
 
-        EmployeeLab.getInstanceOf(getActivity()).deleteEmployee(mEmployee,getActivity());
+        mEmployee.setDesignations(PickCache.getInstance().getPickables(MY_DESIGNATION_CALLER_CODE),getActivity());
+        mEmployee.setSites(PickCache.getInstance().getPickables(MY_SITE_CALLER_CODE),getActivity());
+
+        EmployeeLab.getInstanceOf(getActivity()).updateEmployee(mEmployee);
+    }
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        PickCache.getInstance().destroyMyCache(MY_DESIGNATION_CALLER_CODE);
+        PickCache.getInstance().destroyMyCache(MY_SITE_CALLER_CODE);
     }
 
-    public void setEmployee(Employee employee) {
-        mEmployee = employee;
-    }
-
-    public static EmployeeAdditionFragment createInstance(Employee employee)
+    public static EmployeeAdditionDialogFragment getDialogFrag(@Nullable UUID uuid)
     {
-        EmployeeAdditionFragment employeeAdditionFragment=new EmployeeAdditionFragment();
-        employeeAdditionFragment.setEmployee(employee);
-        return employeeAdditionFragment;
+        if (uuid==null)
+            return new EmployeeAdditionDialogFragment();
+        else
+        {
+            EmployeeAdditionDialogFragment fragment=new EmployeeAdditionDialogFragment();
+            Bundle args=new Bundle();
+            args.putSerializable(ARGS_CODE,uuid);
+            fragment.setArguments(args);
+            return fragment;
+        }
     }
 }

@@ -90,6 +90,7 @@ public class SitesLab implements LabObeservable {
 
     public void updateSite(Site site)
     {
+        alertAllObservers();
         String siteIdString=site.getId().toString();
         ContentValues values= AttendanceDbToolsProvider.getContentValues(site);
         mDatabase.update(SitesTable.NAME,values, SitesTable.Cols.UID+"=?",new String[]{siteIdString});
