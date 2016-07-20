@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -22,7 +23,7 @@ import java.util.UUID;
 /**
  * Created by sylveryte on 20/7/16.
  */
-public class EmployeeAdditionDialogFragment extends DialogFragment {
+public class EmployeeAdditionDialogFragment extends DialogFragment implements DialogObserver {
 
     private static final String ARGS_CODE="empargscode";
     private static final String MY_SITE_CALLER_CODE="emp_call_site";
@@ -47,10 +48,13 @@ public class EmployeeAdditionDialogFragment extends DialogFragment {
     private LinearLayout mDesignations;
     private LinearLayout mSites;
 
+    private Fragment mItSelf;
+
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
+        mItSelf=this;
         View view= LayoutInflater.from(getActivity()).inflate(R.layout.employee_addition_fragment,null,false);
 
         mName=(EditText)view.findViewById(R.id.employee_add_name);
@@ -77,7 +81,7 @@ public class EmployeeAdditionDialogFragment extends DialogFragment {
         mChooseDesignationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new PickDialogFragment().getInstance(MY_DESIGNATION_CALLER_CODE,PickDialogFragment.DESIGNATION)
+                new PickDialogFragment().getInstance(MY_DESIGNATION_CALLER_CODE,PickDialogFragment.DESIGNATION,mItSelf)
                     .show(getActivity().getSupportFragmentManager(),MY_DESIGNATION_CALLER_CODE);
             }
         });
@@ -86,7 +90,7 @@ public class EmployeeAdditionDialogFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
 
-               new PickDialogFragment().getInstance(MY_SITE_CALLER_CODE,PickDialogFragment.SITE)
+               new PickDialogFragment().getInstance(MY_SITE_CALLER_CODE,PickDialogFragment.SITE,mItSelf)
                        .show(getActivity().getSupportFragmentManager(),MY_SITE_CALLER_CODE);
             }
         });
@@ -169,6 +173,11 @@ public class EmployeeAdditionDialogFragment extends DialogFragment {
         {
             new SimpleSiteView(mSites,layoutInflater,uuid);
         }
+    }
+
+    @Override
+    public void doSomeUpadate() {
+        updateDesgsAndSites();
     }
 
     private class SimpleDesignationView

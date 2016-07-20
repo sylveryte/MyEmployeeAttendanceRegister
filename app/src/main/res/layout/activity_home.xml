@@ -43,6 +43,7 @@
         android:layout_margin="16dp"
         android:id="@+id/floating_add_menu"
         fab:fab_addButtonColorNormal="@color/colorAccent"
+        app:fab_expandDirection="up"
         fab:fab_addButtonColorPressed="@color/white_pressed"
         fab:fab_addButtonPlusIconColor="@color/white"
         fab:fab_labelStyle="@style/menu_labels_style"

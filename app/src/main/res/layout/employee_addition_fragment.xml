@@ -5,170 +5,90 @@
 <LinearLayout
     android:layout_width="match_parent"
     android:orientation="vertical"
+    android:padding="10dp"
     android:layout_height="wrap_content">
-    <TableLayout
+    <EditText
         android:layout_width="match_parent"
-        android:padding="10dp"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:hint="Name"
+        android:ems="10"
+        android:id="@+id/employee_add_name"
+        android:layout_column="1"/>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Address"
+        android:id="@+id/employee_add_address"
+        android:layout_column="1"
+        android:inputType="textLongMessage"/>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Age"
+        android:id="@+id/employee_add_age"
+        android:inputType="numberSigned"/>
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/employee_add_radiobuttongroup_malefemale">
+        <RadioButton
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Male"
+            android:id="@+id/employee_add_radiobutton_male"/>
 
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        <RadioButton
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Female"
+            android:id="@+id/employee_add_radiobutton_female"
+            android:layout_gravity="right"/>
+    </RadioGroup>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/employee_add_designation_linear_layout">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="Name"
-                android:layout_column="0"/>
+    </LinearLayout>
 
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:inputType="textPersonName"
-                android:ems="10"
-                android:id="@+id/employee_add_name"
-                android:layout_column="1"/>
-        </TableRow>
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="Address"
-                android:layout_column="0"/>
 
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:id="@+id/employee_add_address"
-                android:layout_column="1"
-                android:inputType="textLongMessage"/>
-        </TableRow>
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+    <Button
+        android:text="Choose Designation"
+        android:id="@+id/employee_choose_designation_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="Age"
-                android:layout_column="0"/>
 
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:id="@+id/employee_add_age"
-                android:layout_column="1"
-                android:allowUndo="false"
-                android:inputType="numberSigned"/>
-        </TableRow>
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/employee_add_sites_linear_layout">
+    </LinearLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="Gender"
-                android:layout_column="0"/>
 
-            <RadioGroup
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:id="@+id/employee_add_radiobuttongroup_malefemale"
-                android:layout_column="1">
-                    <RadioButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Male"
-                        android:id="@+id/employee_add_radiobutton_male"/>
+    <Button
+        android:text="Choose Site"
+        android:id="@+id/employee_choose_site_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
-                    <RadioButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Female"
-                        android:id="@+id/employee_add_radiobutton_female"
-                        android:layout_gravity="right"/>
-            </RadioGroup>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:id="@+id/employee_add_note"
+        android:hint="Note"
+        android:inputType="textLongMessage"/>
 
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_column="1"
-                android:id="@+id/employee_add_designation_linear_layout">
-
-            </LinearLayout>
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <Button
-                android:text="Choose Designation"
-                android:id="@+id/employee_choose_designation_button"
-                android:layout_column="1"/>
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_column="1"
-                android:id="@+id/employee_add_sites_linear_layout">
-            </LinearLayout>
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <Button
-                android:text="Choose Site"
-                android:id="@+id/employee_choose_site_button"
-                android:layout_column="1"/>
-        </TableRow>
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="Note"
-                android:layout_column="0"/>
-
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:id="@+id/employee_add_note"
-                android:layout_column="1"
-                android:inputType="textLongMessage"/>
-        </TableRow>
-
-    </TableLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="horizontal"
@@ -183,4 +103,4 @@
             android:layout_width="wrap_content"/>
     </LinearLayout>
 </LinearLayout>
-    </ScrollView>
+</ScrollView>

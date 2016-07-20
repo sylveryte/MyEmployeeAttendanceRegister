@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -26,6 +27,9 @@ public class PickDialogFragment extends DialogFragment {
     //these are to get from args
     private static final String REQUEST_CODE="pickablescode";
     private static final String CALLER_CODE="callercodebro";
+
+    private static final int OBSERVER_CODE=2112;
+
 
     public static final int SITE=91;
     public static final int DESIGNATION=92;
@@ -50,6 +54,10 @@ public class PickDialogFragment extends DialogFragment {
         mDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                DialogObserver callback = (DialogObserver) getTargetFragment();
+                callback.doSomeUpadate();
+
                 getDialog().dismiss();
             }
         });
@@ -157,7 +165,7 @@ public class PickDialogFragment extends DialogFragment {
         }
     }
 
-    public PickDialogFragment getInstance(@NonNull String caller,@NonNull int codeFromThisFragmentOnly)
+    public PickDialogFragment getInstance(@NonNull String caller, @NonNull int codeFromThisFragmentOnly,Fragment observer)
     {
         PickDialogFragment fragment=new PickDialogFragment();
 
@@ -165,6 +173,7 @@ public class PickDialogFragment extends DialogFragment {
         bundle.putInt(REQUEST_CODE,codeFromThisFragmentOnly);
         bundle.putString(CALLER_CODE,caller);
 
+        fragment.setTargetFragment(observer,OBSERVER_CODE);
         fragment.setArguments(bundle);
 
         return fragment;
