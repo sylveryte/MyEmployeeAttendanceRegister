@@ -39,6 +39,13 @@ public class SiteAdditionDialogFragment extends DialogFragment {
         mAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                if (mEditText_siteName.getText().toString().trim().isEmpty())
+                {
+                    mEditText_siteName.setError("Please enter site name");
+                    return;
+                }
+
                 saveDesignation(mSite);
                 getDialog().dismiss();
             }

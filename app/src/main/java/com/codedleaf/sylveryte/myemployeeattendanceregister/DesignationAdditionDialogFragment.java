@@ -41,6 +41,13 @@ public class DesignationAdditionDialogFragment extends DialogFragment {
         mAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                if (mEditText_designationName.getText().toString().trim().isEmpty())
+                {
+                    mEditText_designationName.setError("Please enter designation");
+                    return;
+                }
+
                 saveDesignation(mDesignation);
                 getDialog().dismiss();
             }

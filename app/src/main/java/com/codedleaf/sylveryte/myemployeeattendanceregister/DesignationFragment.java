@@ -8,6 +8,8 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,7 +44,18 @@ public class DesignationFragment extends Fragment implements LabObserver {
         View view=inflater.inflate(R.layout.recycler_fragment,container,false);
 
         mRecyclerView =(RecyclerView)view.findViewById(R.id.fragment_recycler_view);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        //for automatic
+        //// TODO: 22/6/16  looks suspicious
+        DisplayMetrics metrics=new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        int cardWidth=(int)metrics.xdpi;
+        int spans=(int)Math.floor(mRecyclerView.getContext().getResources().getDisplayMetrics().widthPixels/(float)cardWidth);
+
+        mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(spans,StaggeredGridLayoutManager.VERTICAL));
+
+       // mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
         mDesignationAdapter=new DesignationAdapter(mLab.getDesignations());
         mRecyclerView.setAdapter(mDesignationAdapter);
 

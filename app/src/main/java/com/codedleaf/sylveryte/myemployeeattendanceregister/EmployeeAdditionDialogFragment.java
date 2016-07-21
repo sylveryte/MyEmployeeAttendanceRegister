@@ -45,8 +45,8 @@ public class EmployeeAdditionDialogFragment extends DialogFragment implements Di
 
     private Employee mEmployee;
 
-    private LinearLayout mDesignations;
-    private LinearLayout mSites;
+    private LinearLayout mDesignationsLinearLayout;
+    private LinearLayout mSitesLinearLayout;
 
     private DialogPickObserver mItSelf;
 
@@ -61,8 +61,8 @@ public class EmployeeAdditionDialogFragment extends DialogFragment implements Di
         mAddress=(EditText)view.findViewById(R.id.employee_add_address);
         mNote=(EditText)view.findViewById(R.id.employee_add_note);
         mAge=(EditText)view.findViewById(R.id.employee_add_age);
-        mDesignations=(LinearLayout) view.findViewById(R.id.employee_add_designation_linear_layout);
-        mSites=(LinearLayout)view.findViewById(R.id.employee_add_sites_linear_layout);
+        mDesignationsLinearLayout =(LinearLayout) view.findViewById(R.id.employee_add_designation_linear_layout);
+        mSitesLinearLayout =(LinearLayout)view.findViewById(R.id.employee_add_sites_linear_layout);
         mRadioGroupMaleFemale=(RadioGroup)view.findViewById(R.id.employee_add_radiobuttongroup_malefemale);
         mRadioButtonFemale=(RadioButton)view.findViewById(R.id.employee_add_radiobutton_female);
         mRadioButtonMale=(RadioButton)view.findViewById(R.id.employee_add_radiobutton_male);
@@ -73,6 +73,26 @@ public class EmployeeAdditionDialogFragment extends DialogFragment implements Di
         mDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                //validation errors
+
+                if (mName.getText().toString().trim().isEmpty())
+                {
+                    mName.setError("Please Enter Name");
+                    return;
+                }
+                if (mAge.getText().toString().trim().isEmpty())
+                {
+                    mAge.setError("Please enter age");
+                    return;
+                }
+
+                if(!(mRadioButtonMale.isChecked()||mRadioButtonFemale.isChecked()))
+                {
+                    mRadioButtonMale.setError("Please Select Gender");
+                    return;
+                }
+
                 saveEmployee(mEmployee);
                 getDialog().dismiss();
             }
@@ -164,17 +184,17 @@ public class EmployeeAdditionDialogFragment extends DialogFragment implements Di
 
         LayoutInflater layoutInflater=LayoutInflater.from(getActivity());
 
-        mDesignations.removeAllViews();
-        mSites.removeAllViews();
+        mDesignationsLinearLayout.removeAllViews();
+        mSitesLinearLayout.removeAllViews();
 
         for (UUID uuid:designations)
         {
-            new SimpleDesignationView(mDesignations,layoutInflater,uuid);
+            new SimpleDesignationView(mDesignationsLinearLayout,layoutInflater,uuid);
         }
 
         for (UUID uuid:sites)
         {
-            new SimpleSiteView(mSites,layoutInflater,uuid);
+            new SimpleSiteView(mSitesLinearLayout,layoutInflater,uuid);
         }
     }
 

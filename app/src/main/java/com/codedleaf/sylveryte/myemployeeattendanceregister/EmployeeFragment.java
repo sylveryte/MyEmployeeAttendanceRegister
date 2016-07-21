@@ -10,6 +10,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,8 +47,16 @@ public class EmployeeFragment extends Fragment implements LabObserver {
 
         mRecyclerView =(RecyclerView)view.findViewById(R.id.fragment_recycler_view);
 
+        //for automatic
+        //// TODO: 22/6/16  looks suspicious
+        DisplayMetrics metrics=new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        int cardWidth=(int)metrics.xdpi*2;
+        int spans=(int)Math.floor(mRecyclerView.getContext().getResources().getDisplayMetrics().widthPixels/(float)cardWidth);
 
-        mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(1,StaggeredGridLayoutManager.VERTICAL));
+        mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(spans,StaggeredGridLayoutManager.VERTICAL));
+
+      //  mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(1,StaggeredGridLayoutManager.VERTICAL));
         mEmployeeAdapter=new EmployeeAdapter(mLab.getEmployees());
         mRecyclerView.setAdapter(mEmployeeAdapter);
 
