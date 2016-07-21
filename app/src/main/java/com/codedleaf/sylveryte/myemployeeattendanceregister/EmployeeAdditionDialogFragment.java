@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -160,8 +159,8 @@ public class EmployeeAdditionDialogFragment extends DialogFragment implements Di
     private void updateDesgsAndSites()
     {
 
-        List<UUID> designations=PickCache.getInstance().getPickables(MY_DESIGNATION_CALLER_CODE);
-        List<UUID> sites=PickCache.getInstance().getPickables(MY_SITE_CALLER_CODE);
+        List<UUID> designations=PickCache.getInstance().getUUIDs(MY_DESIGNATION_CALLER_CODE);
+        List<UUID> sites=PickCache.getInstance().getUUIDs(MY_SITE_CALLER_CODE);
 
         LayoutInflater layoutInflater=LayoutInflater.from(getActivity());
 
@@ -201,7 +200,7 @@ public class EmployeeAdditionDialogFragment extends DialogFragment implements Di
             closeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    PickCache.getInstance().getPickables(MY_DESIGNATION_CALLER_CODE).remove(mUUID);
+                    PickCache.getInstance().getUUIDs(MY_DESIGNATION_CALLER_CODE).remove(mUUID);
                     mLinearLayout.removeView(mView);
                 }
             });
@@ -226,7 +225,7 @@ public class EmployeeAdditionDialogFragment extends DialogFragment implements Di
             closeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    PickCache.getInstance().getPickables(MY_SITE_CALLER_CODE).remove(mUUID);
+                    PickCache.getInstance().getUUIDs(MY_SITE_CALLER_CODE).remove(mUUID);
                     mLinearLayout.removeView(mView);
                 }
             });
@@ -248,8 +247,8 @@ public class EmployeeAdditionDialogFragment extends DialogFragment implements Di
         mEmployee.setNote(mNote.getText().toString());
         mEmployee.setMale(mRadioButtonMale.isChecked());
 
-        mEmployee.setDesignations(PickCache.getInstance().getPickables(MY_DESIGNATION_CALLER_CODE),getActivity());
-        mEmployee.setSites(PickCache.getInstance().getPickables(MY_SITE_CALLER_CODE),getActivity());
+        mEmployee.setDesignations(PickCache.getInstance().getUUIDs(MY_DESIGNATION_CALLER_CODE),getActivity());
+        mEmployee.setSites(PickCache.getInstance().getUUIDs(MY_SITE_CALLER_CODE),getActivity());
 
         mEmployee.updateMyDB(getActivity());
     }

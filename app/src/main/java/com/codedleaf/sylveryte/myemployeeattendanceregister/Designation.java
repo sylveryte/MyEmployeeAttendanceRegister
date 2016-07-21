@@ -96,7 +96,7 @@ public class Designation implements Pickable,DialogPickObserver {
 
     @Override
     public void doSomeUpdate(Context context) {
-        for (UUID uuid:PickCache.getInstance().getPickables(getId().toString()))
+        for (UUID uuid:PickCache.getInstance().getUUIDs(getId().toString()))
         {
             addEmployeeInvolvedById(uuid,context);
         }

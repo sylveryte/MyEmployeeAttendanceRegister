@@ -67,7 +67,7 @@ public class DesignationFragment extends Fragment implements LabObserver {
                 @Override
                 public void onClick(View v) {
 
-                    CharSequence choices[] = new CharSequence[] {"Assign Employees", "Edit","Delete"};
+                    CharSequence choices[] = new CharSequence[] {"Assign Employees", "Show Assignments","Edit","Delete"};
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     builder.setTitle(mDesignation.getTitle());
@@ -77,7 +77,7 @@ public class DesignationFragment extends Fragment implements LabObserver {
 
                             switch (which)
                             {
-                                case 2:
+                                case 3:
                                 {
                                     new AlertDialog.Builder(getActivity())
                                             .setTitle("Delete "+mDesignation.getTitle())
@@ -99,11 +99,18 @@ public class DesignationFragment extends Fragment implements LabObserver {
                                     break;
                                 }
 
-                                case 1: {
+                                case 2: {
 
                                     DesignationAdditionDialogFragment.getDialogFrag(mDesignation.getId())
                                             .show(getActivity().getSupportFragmentManager(),DIALOG_FRAGMENT_CODE);
 
+                                    break;
+                                }
+                                case 1:
+                                {
+                                    SimpleListDialogFragment.getInstance(mDesignation.getId().toString()
+                                            ,EmployeeLab.getInstanceOf(getActivity()).getPickables(mDesignation.getEmployees()))
+                                            .show(getActivity().getSupportFragmentManager(),DIALOG_FRAGMENT_CODE);
                                     break;
                                 }
                                 case 0: {

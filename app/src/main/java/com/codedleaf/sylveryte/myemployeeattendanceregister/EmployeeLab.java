@@ -64,6 +64,20 @@ public class EmployeeLab implements LabObeservable {
         return sEmployeeLab;
     }
 
+    public List<Pickable> getPickables(List<UUID> empIds)
+    {
+        List<Pickable> pickables=new ArrayList<>();
+        for (UUID uuid:empIds)
+        {
+            Pickable pickable=getEmployeeById(uuid);
+            if (pickable == null) {
+                continue;
+            }
+            pickables.add(pickable);
+        }
+        return pickables;
+    }
+
     public void addEmployee(Employee employee)
     {
         if (mEmployees.contains(employee))

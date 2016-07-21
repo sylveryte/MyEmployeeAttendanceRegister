@@ -3,6 +3,8 @@
     <color name="colorPrimary">#5b5b5b</color>
     <color name="colorPrimaryDark">#383838</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="simpleList">#97c2ff</color>
+    <color name="recylceBackground">#001636</color>
     <color name="colorEmployeeCard">#ce7292</color>
     <color name="colorEmployeeCardDeactivated">#815c69</color>
     <color name="colorSiteCard">#7fde9f</color>

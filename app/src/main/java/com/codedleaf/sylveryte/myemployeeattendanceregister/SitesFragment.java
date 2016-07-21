@@ -114,15 +114,15 @@ public class SitesFragment extends Fragment implements LabObserver {
                 @Override
                 public void onClick(View v) {
 
-                    CharSequence choices[] = new CharSequence[] {"Take Attendance", "Show Stats","Assign Employees","Active??","Edit","Delete"};
+                    CharSequence choices[] = new CharSequence[] {"Take Attendance", "Show Stats","Show Assignments","Assign Employees","Active??","Edit","Delete"};
 
                     if (mSite.isActive())
                     {
-                        choices[3]="Deactivate";
+                        choices[4]="Deactivate";
                     }
                     else
                     {
-                        choices[3]="Activate";
+                        choices[4]="Activate";
                     }
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -133,7 +133,7 @@ public class SitesFragment extends Fragment implements LabObserver {
 
                             switch (which)
                             {
-                                case 5:
+                                case 6:
                                 {
                                     new AlertDialog.Builder(getActivity())
                                             .setTitle("Delete "+mSite.getTitle())
@@ -158,12 +158,20 @@ public class SitesFragment extends Fragment implements LabObserver {
 
                                 case 2:
                                 {
-                                    PickDialogFragment.getInstance(mSite.getId().toString(),mSite,PickDialogFragment.EMPLOYEE,mSite.getEmployeesInvolved())
+                                    SimpleListDialogFragment.getInstance(mSite.getId().toString(),
+                                            EmployeeLab.getInstanceOf(getActivity()).getPickables(mSite.getEmployeesInvolved()))
                                             .show(getActivity().getSupportFragmentManager(),DIALOG_PICK_FRAGMENT_CODE);
                                     break;
                                 }
 
                                 case 3:
+                                {
+                                    PickDialogFragment.getInstance(mSite.getId().toString(),mSite,PickDialogFragment.EMPLOYEE,mSite.getEmployeesInvolved())
+                                            .show(getActivity().getSupportFragmentManager(),DIALOG_PICK_FRAGMENT_CODE);
+                                    break;
+                                }
+
+                                case 4:
                                 {
                                     if (mSite.isActive())
                                     {
@@ -179,7 +187,7 @@ public class SitesFragment extends Fragment implements LabObserver {
                                     break;
                                 }
 
-                                case 4: {
+                                case 5: {
 
                                     SiteAdditionDialogFragment.getSiteFrag(mSite.getId()).show(getActivity().getSupportFragmentManager(),DIALOG_FRAGMENT_CODE);
                                     break;

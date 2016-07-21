@@ -95,6 +95,20 @@ public class DesignationLab implements LabObeservable {
             labObserver.update();
     }
 
+    public List<Pickable> getPickables(List<UUID> desgIds)
+    {
+        List<Pickable> pickables=new ArrayList<>();
+        for (UUID uuid:desgIds)
+        {
+            Pickable pickable=getDesigantionById(uuid);
+            if (pickable == null) {
+                continue;
+            }
+            pickables.add(pickable);
+        }
+        return pickables;
+    }
+
     public static DesignationLab getInstanceOf(Context context)
     {
         if (sDesignationLab==null)

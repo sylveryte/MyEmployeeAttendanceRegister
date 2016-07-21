@@ -111,6 +111,20 @@ public class SitesLab implements LabObeservable {
         return getSiteById(uuid).getTitle();
     }
 
+    public List<Pickable> getPickables(List<UUID> siteIds)
+    {
+        List<Pickable> pickables=new ArrayList<>();
+        for (UUID uuid:siteIds)
+        {
+            Pickable pickable=getSiteById(uuid);
+            if (pickable == null) {
+                continue;
+            }
+            pickables.add(pickable);
+        }
+        return pickables;
+    }
+
     public List<Employee> getCurrentEmployeesInSiteBySiteId(UUID siteId,Context context)
     {
         List<Employee> employees=new ArrayList<>();

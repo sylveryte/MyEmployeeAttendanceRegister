@@ -3,7 +3,6 @@ package com.codedleaf.sylveryte.myemployeeattendanceregister;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Observer;
 import java.util.UUID;
 
 /**
@@ -12,19 +11,22 @@ import java.util.UUID;
 public class PickCache {
     private static PickCache sPickCache;
 
-    private HashMap<String,List<UUID>> mMap;
+    private HashMap<String,List<UUID>> UUIDMap;
     private HashMap<String,DialogPickObserver> ObserverMap;
+    private HashMap<String,List<Pickable>> PickableMap;
 
     private PickCache()
     {
-        mMap=new HashMap<>(5);
+        UUIDMap =new HashMap<>(5);
         ObserverMap=new HashMap<>(5);
+        PickableMap=new HashMap<>(5);
     }
 
-    private void addPickables(String id,List<UUID> list)
+    private void addUUIDs(String id, List<UUID> list)
     {
-        mMap.put(id,list);
+        UUIDMap.put(id,list);
     }
+
     public void addObserver(String id,DialogPickObserver observer)
     {
         ObserverMap.put(id,observer);
@@ -34,13 +36,22 @@ public class PickCache {
         return ObserverMap.get(id);
     }
 
-    public List<UUID> getPickables(String id)
+    public void addPickables(String id,List<Pickable> pickables)
     {
-        List<UUID> list=mMap.get(id);
+        PickableMap.put(id,pickables);
+    }
+    public List<Pickable> getPickable(String id)
+    {
+        return PickableMap.get(id);
+    }
+
+    public List<UUID> getUUIDs(String id)
+    {
+        List<UUID> list= UUIDMap.get(id);
         if (list==null)
         {
             list=new ArrayList<>();
-            addPickables(id,list);
+            addUUIDs(id,list);
         }
         return list;
     }
@@ -49,12 +60,12 @@ public class PickCache {
     {
         if (list==null)
             return;
-        getPickables(id).addAll(list);
+        getUUIDs(id).addAll(list);
     }
 
     public void destroyMyCache(String id)
     {
-        mMap.remove(id);
+        UUIDMap.remove(id);
     }
 
     public static PickCache getInstance()

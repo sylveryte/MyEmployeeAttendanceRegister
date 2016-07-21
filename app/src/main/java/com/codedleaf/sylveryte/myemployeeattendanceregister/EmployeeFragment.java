@@ -103,15 +103,15 @@ public class EmployeeFragment extends Fragment implements LabObserver {
                 @Override
                 public void onClick(View v) {
 
-                    CharSequence choices[] = new CharSequence[] {"Show Current Assignments","Edit","Active??","Delete"};
+                    CharSequence choices[] = new CharSequence[] {"Edit","Active??","Show Site(s)","Show Designation(s)","Delete"};
 
                     if (mEmployee.isActive())
                     {
-                        choices[2]="Deactivate";
+                        choices[1]="Deactivate";
                     }
                     else
                     {
-                        choices[2]="Activate";
+                        choices[1]="Activate";
                     }
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -122,7 +122,7 @@ public class EmployeeFragment extends Fragment implements LabObserver {
 
                             switch (which)
                             {
-                                case 3:
+                                case 4:
                                 {
                                     new AlertDialog.Builder(getActivity())
                                             .setTitle("Delete "+mEmployee.getTitle())
@@ -145,7 +145,7 @@ public class EmployeeFragment extends Fragment implements LabObserver {
                                     break;
                                 }
 
-                                case 2:
+                                case 1:
                                 {
                                     mEmployee.setActive(!mEmployee.isActive());
                                     mEmployee.updateMyDB(getActivity());
@@ -154,17 +154,27 @@ public class EmployeeFragment extends Fragment implements LabObserver {
                                 }
 
 
-                                case 1: {
+                                case 0: {
                                     EmployeeAdditionDialogFragment.getDialogFrag(mEmployee.getId())
                                             .show(getActivity().getSupportFragmentManager(),DIALOG_FRAGMENT_CODE);
 
                                     break;
                                 }
-                                case 0: {
+                                case 2: {
 
                                     //hah haha :<
+                                    //after few weeks :grin:
+                                    SimpleListDialogFragment.getInstance(mEmployee.getId().toString(),
+                                            SitesLab.getInstanceOf(getActivity()).getPickables(mEmployee.getSites()))
+                                            .show(getActivity().getSupportFragmentManager(),DIALOG_FRAGMENT_CODE);
 
                                     break;
+                                }
+                                case 3:
+                                {
+                                    SimpleListDialogFragment.getInstance(mEmployee.getId().toString(),
+                                            DesignationLab.getInstanceOf(getActivity()).getPickables(mEmployee.getDesignations()))
+                                            .show(getActivity().getSupportFragmentManager(),DIALOG_FRAGMENT_CODE);
                                 }
                             }
                         }
