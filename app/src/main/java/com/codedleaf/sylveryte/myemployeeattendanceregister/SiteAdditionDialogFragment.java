@@ -78,7 +78,7 @@ public class SiteAdditionDialogFragment extends DialogFragment {
         site.setTitle(mEditText_siteName.getText().toString());
         site.setDescription(mEditText_description.getText().toString());
 
-        SitesLab.getInstanceOf(getActivity()).updateSite(site);
+        site.updateMyDB(getActivity());
     }
 
     public static SiteAdditionDialogFragment getSiteFrag(@Nullable UUID uuid)

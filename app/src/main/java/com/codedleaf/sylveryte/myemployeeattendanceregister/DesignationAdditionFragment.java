@@ -69,7 +69,7 @@ public class DesignationAdditionFragment extends Fragment {
         mDesignation.setTitle(mEditText_designationName.getText().toString());
         mDesignation.setDescription(mEditText_description.getText().toString());
 
-        DesignationLab.getInstanceOf(getActivity()).updateDesignation(mDesignation);
+        mDesignation.updateMyDB(getActivity());
     }
 
     public void update()

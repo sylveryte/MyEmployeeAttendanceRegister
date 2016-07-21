@@ -11,6 +11,7 @@
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:clickable="false"
             android:id="@+id/checkBox"/>
 
     </LinearLayout>
@@ -26,11 +27,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="2dp"
+            android:clickable="false"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="New Text"
             android:id="@+id/pick_card_title"/>
         <TextView
             android:layout_width="wrap_content"
+            android:clickable="false"
             android:layout_height="wrap_content"
             android:padding="2dp"
             android:text="New Text"

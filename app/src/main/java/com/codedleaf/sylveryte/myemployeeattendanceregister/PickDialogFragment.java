@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,8 +16,8 @@ import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -27,8 +28,6 @@ public class PickDialogFragment extends DialogFragment {
     //these are to get from args
     private static final String REQUEST_CODE="pickablescode";
     private static final String CALLER_CODE="callercodebro";
-
-    private static final int OBSERVER_CODE=2112;
 
 
     public static final int SITE=91;
@@ -47,7 +46,7 @@ public class PickDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         View view=LayoutInflater.from(getActivity()).inflate(R.layout.pick_fragment,null,false);
 
-        String caller=getArguments().getString(CALLER_CODE);
+        final String caller=getArguments().getString(CALLER_CODE);
         mPicked=PickCache.getInstance().getPickables(caller);
 
         mDone=(ImageButton)view.findViewById(R.id.pick_done);
@@ -55,9 +54,7 @@ public class PickDialogFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
 
-                DialogObserver callback = (DialogObserver) getTargetFragment();
-                callback.doSomeUpadate();
-
+                PickCache.getInstance().getObserver(caller).doSomeUpdate(getActivity());
                 getDialog().dismiss();
             }
         });
@@ -165,15 +162,17 @@ public class PickDialogFragment extends DialogFragment {
         }
     }
 
-    public PickDialogFragment getInstance(@NonNull String caller, @NonNull int codeFromThisFragmentOnly,Fragment observer)
+    public static PickDialogFragment getInstance(@NonNull String callerContainer, DialogPickObserver observer, @NonNull int codeFromThisFragmentOnly, @Nullable List<UUID> includeThese)
     {
         PickDialogFragment fragment=new PickDialogFragment();
 
         Bundle bundle=new Bundle(2);
         bundle.putInt(REQUEST_CODE,codeFromThisFragmentOnly);
-        bundle.putString(CALLER_CODE,caller);
+        bundle.putString(CALLER_CODE,callerContainer);
 
-        fragment.setTargetFragment(observer,OBSERVER_CODE);
+        PickCache.getInstance().addObserver(callerContainer,observer);
+        PickCache.getInstance().addThisInMyList(callerContainer,includeThese);
+
         fragment.setArguments(bundle);
 
         return fragment;

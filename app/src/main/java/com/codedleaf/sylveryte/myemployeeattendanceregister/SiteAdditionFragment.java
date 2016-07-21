@@ -75,7 +75,7 @@ public class SiteAdditionFragment extends Fragment {
         mSite.setTitle(mEditText_siteName.getText().toString());
         mSite.setDescription(mEditText_description.getText().toString());
 
-        SitesLab.getInstanceOf(getActivity()).updateSite(mSite);
+        mSite.updateMyDB(getActivity());
     }
 
     public void update()

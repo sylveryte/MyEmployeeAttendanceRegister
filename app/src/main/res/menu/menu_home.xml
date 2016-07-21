@@ -7,4 +7,19 @@
         android:orderInCategory="100"
         android:title="@string/action_settings"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/addSite"
+        android:orderInCategory="2"
+        android:title="@string/add_site"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/addEmployee"
+        android:orderInCategory="1"
+        android:title="@string/add_employee"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/addDesignation"
+        android:orderInCategory="3"
+        android:title="@string/add_designation"
+        app:showAsAction="never"/>
 </menu>

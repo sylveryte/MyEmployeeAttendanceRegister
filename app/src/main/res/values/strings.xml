@@ -110,4 +110,7 @@
     </string>
     <string name="title_activity_del">del</string>
     <string name="section_format">Hello World from section: %1$d</string>
+    <string name="add_designation">Add Designation</string>
+    <string name="add_employee">Add Employee</string>
+    <string name="add_site">Add Site</string>
 </resources>

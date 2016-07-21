@@ -214,7 +214,7 @@ public class Employee implements Pickable{
             Designation designation=designationLab.getDesigantionById(uuid);
             if (designation!=null)
             {
-                designation.removeEmployeeInvolvedById(uuid);
+                designation.removeEmployeeInvolvedById(uuid,context);
             }
         }
 
@@ -224,7 +224,7 @@ public class Employee implements Pickable{
             Site site=sitesLab.getSiteById(uuid);
             if(site!=null)
             {
-                site.removeEmployeeById(uuid);
+                site.removeEmployeeById(uuid,context);
             }
         }
 
@@ -236,17 +236,19 @@ public class Employee implements Pickable{
         if(mSites.contains(siteid))
             return;
         mSites.add(siteid);
+        updateMyDB(context);
 
         Site site=SitesLab.getInstanceOf(context).getSiteById(siteid);
         site.addEmployeeById(mEmployeeId,context);
     }
 
 
-    public void removeSiteByid(UUID uuid)
+    public void removeSiteByid(UUID uuid,Context context)
     {
         if (!mSites.contains(uuid))
             return;
         mSites.remove(uuid);
+        updateMyDB(context);
     }
 
     public void addDesignationById(UUID desigantionid,Context context)
@@ -255,15 +257,22 @@ public class Employee implements Pickable{
         if (mDesignations.contains(desigantionid))
             return;
         mDesignations.add(desigantionid);
+        updateMyDB(context);
 
         Designation designation=DesignationLab.getInstanceOf(context).getDesigantionById(desigantionid);
         designation.addEmployeeInvolvedById(mEmployeeId,context);
     }
-    public void removeDesignationById(UUID uuid)
+    public void removeDesignationById(UUID uuid,Context context)
     {
         if (!mDesignations.contains(uuid))
             return;
         mDesignations.remove(uuid);
+        updateMyDB(context);
+    }
+
+    public void updateMyDB(Context context)
+    {
+        EmployeeLab.getInstanceOf(context).updateEmployee(this);
     }
 
 }

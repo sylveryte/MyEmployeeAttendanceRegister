@@ -148,7 +148,7 @@ public class EmployeeFragment extends Fragment implements LabObserver {
                                 case 2:
                                 {
                                     mEmployee.setActive(!mEmployee.isActive());
-                                    mLab.updateEmployee(mEmployee);
+                                    mEmployee.updateMyDB(getActivity());
                                     update();
                                     break;
                                 }
@@ -212,7 +212,7 @@ public class EmployeeFragment extends Fragment implements LabObserver {
 
     @Override
     public void update() {
-
+        if (mEmployeeAdapter!=null)
             mEmployeeAdapter.notifyDataSetChanged();
     }
 

@@ -91,6 +91,7 @@ public class SitesFragment extends Fragment implements LabObserver {
     private class SiteHolder extends RecyclerView.ViewHolder
     {
         private static final String DIALOG_FRAGMENT_CODE = "editdialogsite";
+        private static final String DIALOG_PICK_FRAGMENT_CODE = "pickempdialogsite";
 
         private TextView title;
         private TextView description;
@@ -113,15 +114,15 @@ public class SitesFragment extends Fragment implements LabObserver {
                 @Override
                 public void onClick(View v) {
 
-                    CharSequence choices[] = new CharSequence[] {"Take Attendance", "Show Stats","Active??","Edit","Delete"};
+                    CharSequence choices[] = new CharSequence[] {"Take Attendance", "Show Stats","Assign Employees","Active??","Edit","Delete"};
 
                     if (mSite.isActive())
                     {
-                        choices[2]="Deactivate";
+                        choices[3]="Deactivate";
                     }
                     else
                     {
-                        choices[2]="Activate";
+                        choices[3]="Activate";
                     }
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -132,7 +133,7 @@ public class SitesFragment extends Fragment implements LabObserver {
 
                             switch (which)
                             {
-                                case 4:
+                                case 5:
                                 {
                                     new AlertDialog.Builder(getActivity())
                                             .setTitle("Delete "+mSite.getTitle())
@@ -157,6 +158,13 @@ public class SitesFragment extends Fragment implements LabObserver {
 
                                 case 2:
                                 {
+                                    PickDialogFragment.getInstance(mSite.getId().toString(),mSite,PickDialogFragment.EMPLOYEE,mSite.getEmployeesInvolved())
+                                            .show(getActivity().getSupportFragmentManager(),DIALOG_PICK_FRAGMENT_CODE);
+                                    break;
+                                }
+
+                                case 3:
+                                {
                                     if (mSite.isActive())
                                     {
                                         mSite.setFinishedDate(new LocalDate());
@@ -166,12 +174,12 @@ public class SitesFragment extends Fragment implements LabObserver {
                                         mSite.setFinishedDate(null);
                                     }
                                     mSite.setActive(!mSite.isActive());
-                                    mSitesLab.updateSite(mSite);
+                                    mSite.updateMyDB(getActivity());
                                     update();
                                     break;
                                 }
 
-                                case 3: {
+                                case 4: {
 
                                     SiteAdditionDialogFragment.getSiteFrag(mSite.getId()).show(getActivity().getSupportFragmentManager(),DIALOG_FRAGMENT_CODE);
                                     break;
@@ -231,6 +239,7 @@ public class SitesFragment extends Fragment implements LabObserver {
 
     @Override
     public void update() {
+        if (mSiteAdapter!=null)
         mSiteAdapter.notifyDataSetChanged();
     }
 

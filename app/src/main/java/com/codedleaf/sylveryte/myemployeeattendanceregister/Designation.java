@@ -9,7 +9,7 @@ import java.util.UUID;
 /**
  * Created by sylveryte on 12/6/16.
  */
-public class Designation implements Pickable {
+public class Designation implements Pickable,DialogPickObserver {
 
     private String mTitle;
     private String mDescription;
@@ -30,6 +30,9 @@ public class Designation implements Pickable {
         mDesignationId=designationId;
     }
 
+    public List<UUID> getEmployees() {
+        return mEmployees;
+    }
 
     public String getTitle() {
         return mTitle;
@@ -55,7 +58,7 @@ public class Designation implements Pickable {
             Employee employee=lab.getEmployeeById(uuid);
             if (employee!=null)
             {
-                employee.removeDesignationById(mDesignationId);
+                employee.removeDesignationById(mDesignationId,context);
             }
         }
     }
@@ -65,6 +68,7 @@ public class Designation implements Pickable {
         if (mEmployees.contains(uuid))
             return;
         mEmployees.add(uuid);
+        updateMyDB(context);
 
         Employee employee=EmployeeLab.getInstanceOf(context).getEmployeeById(uuid);
         if (employee==null)
@@ -72,15 +76,31 @@ public class Designation implements Pickable {
         employee.addDesignationById(mDesignationId,context);
     }
 
-    public void removeEmployeeInvolvedById(UUID uuid)
+    public void removeEmployeeInvolvedById(UUID uuid,Context context)
     {
         if (!mEmployees.contains(uuid))
             return;
         mEmployees.remove(uuid);
+        updateMyDB(context);
     }
 
     @Override
     public UUID getId() {
         return mDesignationId;
+    }
+
+    public void updateMyDB(Context context)
+    {
+        DesignationLab.getInstanceOf(context).updateDesignation(this);
+    }
+
+    @Override
+    public void doSomeUpdate(Context context) {
+        for (UUID uuid:PickCache.getInstance().getPickables(getId().toString()))
+        {
+            addEmployeeInvolvedById(uuid,context);
+        }
+        PickCache.getInstance().destroyMyCache(getId().toString());
+        updateMyDB(context);
     }
 }

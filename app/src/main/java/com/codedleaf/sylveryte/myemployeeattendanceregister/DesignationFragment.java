@@ -54,6 +54,7 @@ public class DesignationFragment extends Fragment implements LabObserver {
 
 
         private static final String DIALOG_FRAGMENT_CODE = "editdialogdesig";
+        private static final String DIALOG_PICK_FRAGMENT_CODE = "pickempdialogdesig";
 
         private TextView title;
         private TextView description;
@@ -66,7 +67,7 @@ public class DesignationFragment extends Fragment implements LabObserver {
                 @Override
                 public void onClick(View v) {
 
-                    CharSequence choices[] = new CharSequence[] {"??????", "Edit","Delete"};
+                    CharSequence choices[] = new CharSequence[] {"Assign Employees", "Edit","Delete"};
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     builder.setTitle(mDesignation.getTitle());
@@ -108,6 +109,9 @@ public class DesignationFragment extends Fragment implements LabObserver {
                                 case 0: {
 
                                     //haha a :( lot of work
+                                    // (afte few weeks) yeah :? :grin: :grin:
+                                    PickDialogFragment.getInstance(mDesignation.getId().toString(),mDesignation,PickDialogFragment.EMPLOYEE,mDesignation.getEmployees())
+                                            .show(getActivity().getSupportFragmentManager(),DIALOG_PICK_FRAGMENT_CODE);
 
                                     break;
                                 }
@@ -176,6 +180,7 @@ public class DesignationFragment extends Fragment implements LabObserver {
 
     @Override
     public void update() {
+        if (mDesignationAdapter!=null)
         mDesignationAdapter.notifyDataSetChanged();
     }
 

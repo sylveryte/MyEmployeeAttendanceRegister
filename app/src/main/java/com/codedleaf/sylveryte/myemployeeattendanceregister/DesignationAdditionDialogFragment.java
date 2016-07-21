@@ -82,7 +82,7 @@ public class DesignationAdditionDialogFragment extends DialogFragment {
         mDesignation.setTitle(mEditText_designationName.getText().toString());
         mDesignation.setDescription(mEditText_description.getText().toString());
 
-        DesignationLab.getInstanceOf(getActivity()).updateDesignation(mDesignation);
+        mDesignation.updateMyDB(getActivity());
     }
 
     public static DesignationAdditionDialogFragment getDialogFrag(@Nullable UUID uuid)

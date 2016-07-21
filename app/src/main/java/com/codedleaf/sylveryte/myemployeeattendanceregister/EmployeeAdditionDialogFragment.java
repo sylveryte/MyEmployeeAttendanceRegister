@@ -2,6 +2,7 @@ package com.codedleaf.sylveryte.myemployeeattendanceregister;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -23,11 +24,11 @@ import java.util.UUID;
 /**
  * Created by sylveryte on 20/7/16.
  */
-public class EmployeeAdditionDialogFragment extends DialogFragment implements DialogObserver {
+public class EmployeeAdditionDialogFragment extends DialogFragment implements DialogPickObserver {
 
     private static final String ARGS_CODE="empargscode";
-    private static final String MY_SITE_CALLER_CODE="emp_call_site";
-    private static final String MY_DESIGNATION_CALLER_CODE="emp_call_designation";
+    public static final String MY_SITE_CALLER_CODE = "somethingsite";
+    public static final String MY_DESIGNATION_CALLER_CODE = "somethingdesig";
 
     private EditText mName;
     private EditText mAddress;
@@ -48,7 +49,7 @@ public class EmployeeAdditionDialogFragment extends DialogFragment implements Di
     private LinearLayout mDesignations;
     private LinearLayout mSites;
 
-    private Fragment mItSelf;
+    private DialogPickObserver mItSelf;
 
     @NonNull
     @Override
@@ -79,18 +80,21 @@ public class EmployeeAdditionDialogFragment extends DialogFragment implements Di
         });
         //choose
         mChooseDesignationButton.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
-                new PickDialogFragment().getInstance(MY_DESIGNATION_CALLER_CODE,PickDialogFragment.DESIGNATION,mItSelf)
+                new PickDialogFragment().getInstance(MY_DESIGNATION_CALLER_CODE,mItSelf,PickDialogFragment.DESIGNATION,null)
                     .show(getActivity().getSupportFragmentManager(),MY_DESIGNATION_CALLER_CODE);
             }
         });
 
         mChooseSiteButton.setOnClickListener(new View.OnClickListener() {
+
+
             @Override
             public void onClick(View v) {
 
-               new PickDialogFragment().getInstance(MY_SITE_CALLER_CODE,PickDialogFragment.SITE,mItSelf)
+               new PickDialogFragment().getInstance(MY_SITE_CALLER_CODE,mItSelf,PickDialogFragment.SITE,null)
                        .show(getActivity().getSupportFragmentManager(),MY_SITE_CALLER_CODE);
             }
         });
@@ -176,7 +180,7 @@ public class EmployeeAdditionDialogFragment extends DialogFragment implements Di
     }
 
     @Override
-    public void doSomeUpadate() {
+    public void doSomeUpdate(Context context) {
         updateDesgsAndSites();
     }
 
@@ -247,7 +251,7 @@ public class EmployeeAdditionDialogFragment extends DialogFragment implements Di
         mEmployee.setDesignations(PickCache.getInstance().getPickables(MY_DESIGNATION_CALLER_CODE),getActivity());
         mEmployee.setSites(PickCache.getInstance().getPickables(MY_SITE_CALLER_CODE),getActivity());
 
-        EmployeeLab.getInstanceOf(getActivity()).updateEmployee(mEmployee);
+        mEmployee.updateMyDB(getActivity());
     }
     @Override
     public void onDestroyView() {

@@ -11,7 +11,7 @@ import java.util.UUID;
 /**
  * Created by sylveryte on 12/6/16.
  */
-public class Site implements Pickable {
+public class Site implements Pickable,DialogPickObserver {
 
 
     private String mTitle;
@@ -100,12 +100,11 @@ public class Site implements Pickable {
             Employee employee=lab.getEmployeeById(uuid);
             if (employee!=null)
             {
-                employee.removeSiteByid(mSiteId);
+                employee.removeSiteByid(mSiteId,context);
             }
         }
 
         EntryLab.getInstanceOf(context).cleanseEntriesOfSiteId(mSiteId);
-
     }
 
     public void addEmployeeById(UUID empId,Context context)
@@ -113,6 +112,7 @@ public class Site implements Pickable {
         if (mEmployeesInvolved.contains(empId))
             return;
         mEmployeesInvolved.add(empId);
+        updateMyDB(context);
 
         Employee employee=EmployeeLab.getInstanceOf(context).getEmployeeById(empId);
 
@@ -121,10 +121,26 @@ public class Site implements Pickable {
         employee.addSiteById(mSiteId,context);
     }
 
-    public void removeEmployeeById(UUID uuid)
+    public void removeEmployeeById(UUID uuid,Context context)
     {
         if (!mEmployeesInvolved.contains(uuid))
             return;
         mEmployeesInvolved.remove(uuid);
+        updateMyDB(context);
+    }
+
+    public void updateMyDB(Context context)
+    {
+        SitesLab.getInstanceOf(context).updateSite(this);
+    }
+
+    @Override
+    public void doSomeUpdate(Context context) {
+        for (UUID uuid:PickCache.getInstance().getPickables(getId().toString()))
+        {
+            addEmployeeById(uuid,context);
+        }
+        PickCache.getInstance().destroyMyCache(getId().toString());
+        updateMyDB(context);
     }
 }

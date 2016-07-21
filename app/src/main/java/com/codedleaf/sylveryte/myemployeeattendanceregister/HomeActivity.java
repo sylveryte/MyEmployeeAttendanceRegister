@@ -14,9 +14,11 @@ import android.view.View;
 
 public class HomeActivity extends AppCompatActivity {
 
-    private static final String FRAGMENT_CODE = "codedleafbro";
+
     private static final String DIALOG_FRAGMENT_CODE = "codedleafbrodialog";
-    private static final int REQUEST_CODE=1;
+
+
+    private com.getbase.floatingactionbutton.FloatingActionsMenu mMenu;
 
 
     /**
@@ -48,18 +50,13 @@ public class HomeActivity extends AppCompatActivity {
         com.getbase.floatingactionbutton.FloatingActionButton addEmployee=(com.getbase.floatingactionbutton.FloatingActionButton)findViewById(R.id.floating_add_employee);
 
 
-        final com.getbase.floatingactionbutton.FloatingActionsMenu menu=(com.getbase.floatingactionbutton.FloatingActionsMenu)findViewById(R.id.floating_add_menu);
+        mMenu=(com.getbase.floatingactionbutton.FloatingActionsMenu)findViewById(R.id.floating_add_menu);
 
         if (addSite != null) {
             addSite.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    SiteAdditionDialogFragment.getSiteFrag(null)
-                            .show(getSupportFragmentManager(),DIALOG_FRAGMENT_CODE);
-
-                    if (menu != null) {
-                        menu.collapse();
-                    }
+                    startAddSite();
                 }
             });
         }
@@ -69,12 +66,7 @@ public class HomeActivity extends AppCompatActivity {
             addDesignation.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    DesignationAdditionDialogFragment.getDialogFrag(null)
-                            .show(getSupportFragmentManager(),DIALOG_FRAGMENT_CODE);
-
-                    if (menu != null) {
-                        menu.collapse();
-                    }
+                    startAddDesignation();
                 }
             });
         }
@@ -84,13 +76,7 @@ public class HomeActivity extends AppCompatActivity {
             addEmployee.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    EmployeeAdditionDialogFragment.getDialogFrag(null)
-                            .show(getSupportFragmentManager(),DIALOG_FRAGMENT_CODE);
-
-
-                    if (menu != null) {
-                        menu.collapse();
-                    }
+                    startAddEmployee();
                 }
             });
         }
@@ -108,12 +94,41 @@ public class HomeActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(mViewPager);
     }
 
+    private void startAddEmployee() {
+        EmployeeAdditionDialogFragment.getDialogFrag(null)
+                .show(getSupportFragmentManager(),DIALOG_FRAGMENT_CODE);
+
+
+        closeFloatingMenu();
+    }
+
+    private void startAddDesignation() {
+        DesignationAdditionDialogFragment.getDialogFrag(null)
+                .show(getSupportFragmentManager(),DIALOG_FRAGMENT_CODE);
+
+        closeFloatingMenu();
+    }
+
+    private void startAddSite() {
+        SiteAdditionDialogFragment.getSiteFrag(null)
+                .show(getSupportFragmentManager(),DIALOG_FRAGMENT_CODE);
+
+        closeFloatingMenu();
+    }
+
+    private void closeFloatingMenu() {
+        if (mMenu != null) {
+            mMenu.collapse();
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
+        // Inflate the mMenu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_home, menu);
         return true;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -123,10 +138,28 @@ public class HomeActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id)
+        {
+            case R.id.action_settings :
+            {
+                break;
+            }
+            case R.id.addSite:
+            {
+                startAddSite();
+                break;
+            }
+            case R.id.addDesignation:
+            {
+                startAddDesignation();
+                break;
+            }
+            case R.id.addEmployee:
+            {
+                startAddEmployee();
+                break;
+            }
         }
-
         return super.onOptionsItemSelected(item);
     }
 

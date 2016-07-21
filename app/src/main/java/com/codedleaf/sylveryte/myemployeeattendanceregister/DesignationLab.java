@@ -54,11 +54,6 @@ public class DesignationLab implements LabObeservable {
 
     public void addDesignation(Designation designation)
     {
-        if (mDesignations.contains(designation))
-        {
-            updateDesignation(designation);
-            return;
-        }
         mDesignations.add(designation);
         alertAllObservers();
 
