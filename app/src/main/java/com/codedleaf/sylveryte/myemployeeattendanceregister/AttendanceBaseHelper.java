@@ -31,11 +31,11 @@ public class AttendanceBaseHelper extends SQLiteOpenHelper {
         db.execSQL("create table " + EntriesTable.NAME + "("+
         " _id integer primary key autoincrement, " +
                 EntriesTable.Cols.EMPLOYEEID+","+
-                EntriesTable.Cols.DAY+","+
-                EntriesTable.Cols.MONTH+","+
-                EntriesTable.Cols.YEAR+","+
+                EntriesTable.Cols.DAY+" INTEGER,"+
+                EntriesTable.Cols.MONTH+" INTEGER,"+
+                EntriesTable.Cols.YEAR+" INTEGER,"+
                 EntriesTable.Cols.NOTE+","+
-                EntriesTable.Cols.REMARK+","+
+                EntriesTable.Cols.REMARK+" INTEGER,"+
                 EntriesTable.Cols.SITEID+
                 ")"
 

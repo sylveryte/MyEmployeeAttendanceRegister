@@ -16,6 +16,8 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.PercentFormatter;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
 import org.joda.time.LocalDate;
 
@@ -63,8 +65,8 @@ public class SiteStatFragment extends Fragment {
 
         mPieChart.setDragDecelerationFrictionCoef(0.95f);
 
-        mPieChart.setCenterTextTypeface(mTfLight);
-        mPieChart.setCenterText(generateCenterSpannableText());
+//        mPieChart.setCenterTextTypeface(mTfLight);
+        mPieChart.setCenterText("codedleaf");
 
         mPieChart.setDrawHoleEnabled(true);
         mPieChart.setHoleColor(Color.WHITE);
@@ -86,15 +88,22 @@ public class SiteStatFragment extends Fragment {
         // mPieChart.setDrawUnitsInChart(true);
 
         // add a selection listener
-        mPieChart.setOnChartValueSelectedListener(this);
+        mPieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+            @Override
+            public void onValueSelected(com.github.mikephil.charting.data.Entry e, Highlight h) {
 
-        setData(4, 100);
+            }
+
+            @Override
+            public void onNothingSelected() {
+
+            }
+        });
+
+        setPieData();
 
         mPieChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
         // mPieChart.spin(2000, 0, 360);
-
-        mSeekBarX.setOnSeekBarChangeListener(this);
-        mSeekBarY.setOnSeekBarChangeListener(this);
 
         Legend l = mPieChart.getLegend();
         l.setPosition(Legend.LegendPosition.RIGHT_OF_CHART);
@@ -104,7 +113,7 @@ public class SiteStatFragment extends Fragment {
 
         // entry label styling
         mPieChart.setEntryLabelColor(Color.WHITE);
-        mPieChart.setEntryLabelTypeface(mTfRegular);
+//        mPieChart.setEntryLabelTypeface(mTfRegular);
         mPieChart.setEntryLabelTextSize(12f);
 
 
@@ -149,7 +158,7 @@ public class SiteStatFragment extends Fragment {
         pieData.setValueTextSize(11f);
         pieData.setValueTextColor(Color.WHITE);
 
-        pieData.setValueTypeface(mTfLight);
+//        pieData.setValueTypeface(mTfLight);
 
         mPieChart.setData(pieData);
 

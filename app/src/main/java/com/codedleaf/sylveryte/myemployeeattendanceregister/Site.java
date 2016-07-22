@@ -96,7 +96,7 @@ public class Site implements Pickable,DialogPickObserver {
     public float getFloat(LocalDate month,int remark, Context context)
     {
         List<Entry> entries=EntryLab.getInstanceOf(context)
-                .getEntries(null,month.getMonthOfYear(),month.getYear(),remark,mSiteId);
+                .getEntries(null,month.getMonthOfYear(),month.getYear(),remark,mSiteId,null);
 
         if (entries!=null)
         {

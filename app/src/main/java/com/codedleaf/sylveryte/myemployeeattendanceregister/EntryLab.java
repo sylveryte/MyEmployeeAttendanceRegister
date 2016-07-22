@@ -83,36 +83,140 @@ public class EntryLab {
 
 
     //databases code queries
-    private EntryCursorWrapper queryEntriesOfMonth(String day,String month,String year,String remark, String siteId)
+    private EntryCursorWrapper queryEntriesOfMonth(@Nullable  Integer day,@Nullable Integer month,@Nullable Integer year,@Nullable Integer remark,@Nullable  String siteId,@Nullable String empId)
     {
-        if (day==null)
-            day="*";
-        if (month==null)
-            month="*";
-        if (year==null)
-            year="*";
-        if (remark==null)
-            remark="*";
-        if (siteId==null)
-            siteId="*";
 
-        Cursor cursor=mDatabase.query(
-                AttendanceDbSchema.EntriesTable.NAME,
-                null, //columns null coz select all columns :)
-                        AttendanceDbSchema.EntriesTable.Cols.DAY+"=? AND "+
-                                AttendanceDbSchema.EntriesTable.Cols.MONTH+"=? AND "+
-                                AttendanceDbSchema.EntriesTable.Cols.YEAR+"=? AND "+
-                                AttendanceDbSchema.EntriesTable.Cols.REMARK+"=? AND "+
-                                AttendanceDbSchema.EntriesTable.Cols.SITEID+"=?",
-        new String[]{day
-                ,month
-                ,year
-                ,remark
-                ,siteId},
-                null, //group by
-                null, //having
-                null //orderby
-        );
+        String sqlStatementString="SELECT * FROM "+AttendanceDbSchema.EntriesTable.NAME+" WHERE ";
+
+        ArrayList<String> args=new ArrayList<>();
+
+        int conditionsCounter=0;
+
+        boolean last=false;//to know if last one was true [in down ifs]
+
+        if (day!=null)
+        {
+            sqlStatementString+=AttendanceDbSchema.EntriesTable.Cols.DAY+"=? ";
+            args.add(String.valueOf(day));
+
+            last=true;
+            conditionsCounter++;
+        }
+        if (month!=null)
+        {
+            if (last)
+                sqlStatementString+=" AND ";
+
+            sqlStatementString+=AttendanceDbSchema.EntriesTable.Cols.MONTH+"=? ";
+            args.add(String.valueOf(month));
+
+            last=true;
+            conditionsCounter++;
+        }
+        if (year!=null)
+        {
+            if (last)
+                sqlStatementString+=" AND ";
+
+            sqlStatementString+=AttendanceDbSchema.EntriesTable.Cols.YEAR+"=? ";
+            args.add(String.valueOf(year));
+
+            last=true;
+            conditionsCounter++;
+        }
+        if (remark!=null)
+        {
+            if (last)
+                sqlStatementString+=" AND ";
+
+            sqlStatementString+=AttendanceDbSchema.EntriesTable.Cols.REMARK+"=? ";
+            args.add(String.valueOf(remark));
+
+            last=true;
+            conditionsCounter++;
+        }
+        if (siteId!=null)
+        {
+            if (last)
+                sqlStatementString+=" AND ";
+
+            sqlStatementString+=AttendanceDbSchema.EntriesTable.Cols.SITEID+"=? ";
+            args.add(siteId);
+
+            last=true;
+            conditionsCounter++;
+        }
+        if (empId!=null)
+        {
+            if (last)
+                sqlStatementString+=" AND ";
+
+            sqlStatementString+=AttendanceDbSchema.EntriesTable.Cols.EMPLOYEEID+"=? ";
+            args.add(empId);
+
+            last=true;
+            conditionsCounter++;
+        }
+
+        if (!last)
+//            sqlStatementString="SELECT * FROM "+AttendanceDbSchema.EntriesTable.NAME;
+            sqlStatementString="SELECT * FROM "+AttendanceDbSchema.EntriesTable.NAME;
+
+
+        String[] argsArray=new String[conditionsCounter];
+
+
+        if (!last)
+            argsArray=null;
+        else
+        {
+            for (int i=0;i<args.size();i++)
+            {
+                argsArray[i]=args.get(i);
+
+            }
+        }
+
+            String a= argsArray != null ? argsArray[0] : null;
+
+
+
+        Cursor cursor=mDatabase.rawQuery(sqlStatementString,argsArray);
+
+/*//        Cursor cursor=mDatabase.query(
+//                AttendanceDbSchema.EntriesTable.NAME,
+//                null, //columns null coz select all columns :)
+//                        AttendanceDbSchema.EntriesTable.Cols.DAY+"=? AND "+
+//                                AttendanceDbSchema.EntriesTable.Cols.MONTH+"=? AND "+
+//                                AttendanceDbSchema.EntriesTable.Cols.YEAR+"=? AND "+
+//                                AttendanceDbSchema.EntriesTable.Cols.REMARK+"=? AND "+
+//                                AttendanceDbSchema.EntriesTable.Cols.SITEID+"=? AND ",
+//                                AttendanceDbSchema.EntriesTable.Cols.+"=? AND ",
+//        new String[]{day
+//                ,month
+//                ,year
+//                ,remark
+//                ,siteId},
+//                null, //group by
+//                null, //having
+//                null //orderby
+//        );
+
+//        Cursor cursor=mDatabase.rawQuery("select * from "+AttendanceDbSchema.EntriesTable.NAME+" where "+AttendanceDbSchema.EntriesTable.Cols.DAY+"=? AND "+
+//                                AttendanceDbSchema.EntriesTable.Cols.MONTH+"=? AND "+
+//                                AttendanceDbSchema.EntriesTable.Cols.YEAR+"=? AND "+
+////                                AttendanceDbSchema.EntriesTable.Cols.REMARK+"=? AND "+
+//                                AttendanceDbSchema.EntriesTable.Cols.SITEID+"=?",
+//                new String[]{day
+//                ,month
+//                ,year
+////                ,remark
+//                ,siteId});
+
+        //// TODO: 22/7/16 do something
+        Cursor cursor=mDatabase.rawQuery("select * from "+AttendanceDbSchema.EntriesTable.NAME,null);*/
+
+
         return new EntryCursorWrapper(cursor);
 
     }
@@ -128,7 +232,7 @@ public class EntryLab {
         }
     }
 
-    public void adddEntrySetToDatabase(EntrySetOfDay entrySetOfDay)
+    public void addEntrySetToDatabase(EntrySetOfDay entrySetOfDay)
     {
         List<Entry> entries= entrySetOfDay.getEntries();
         for (Entry entry:entries)
@@ -144,13 +248,16 @@ public class EntryLab {
         LocalDate date=entry.getDate();
 
         ContentValues values= AttendanceDbToolsProvider.getContentValues(entry);
+
+
+
         mDatabase.update(AttendanceDbSchema.EntriesTable.NAME,
                 values,
                 AttendanceDbSchema.EntriesTable.Cols.EMPLOYEEID+"=? AND "+
                         AttendanceDbSchema.EntriesTable.Cols.DAY+"=? AND "+
                         AttendanceDbSchema.EntriesTable.Cols.MONTH+"=? AND "+
                         AttendanceDbSchema.EntriesTable.Cols.YEAR+"=? AND "+
-                        AttendanceDbSchema.EntriesTable.Cols.SITEID+"=?"
+                        AttendanceDbSchema.EntriesTable.Cols.SITEID+"=? "
                 ,new String[]{empIdString,
                         String.valueOf(date.getDayOfMonth()),
                         String.valueOf(date.getMonthOfYear()),
@@ -166,7 +273,7 @@ public class EntryLab {
 
 
 //entries
-    public List<Entry> getEntries(@Nullable Integer day, @Nullable Integer month, @Nullable Integer year,@Nullable Integer remark, @Nullable UUID siteId)
+    public List<Entry> getEntries(@Nullable Integer day, @Nullable Integer month, @Nullable Integer year,@Nullable Integer remark, @Nullable UUID siteId,@Nullable UUID empId)
     {
         List<Entry> entries=new ArrayList<>();
         int i=0;
@@ -175,15 +282,20 @@ public class EntryLab {
         if (siteId==null)
             site = null;
         else site=siteId.toString();
+        String emp;
+        if (empId==null)
+            emp = null;
+        else emp=empId.toString();
 
-        EntryCursorWrapper cursorWrapper= queryEntriesOfMonth(String.valueOf(day)
-                ,String.valueOf(month)
-                ,String.valueOf(year)
-                ,String.valueOf(remark)
-                ,site);
+        EntryCursorWrapper cursorWrapper= queryEntriesOfMonth(
+                day
+                ,month
+                ,year
+                ,remark
+                ,site
+                ,emp);
         try
         {
-
             cursorWrapper.moveToFirst();
             while (!cursorWrapper.isAfterLast())
             {
@@ -203,11 +315,6 @@ public class EntryLab {
         return entries;
     }
 
-    public List<Entry> getEntries(LocalDate dayDate,@Nullable Integer remark,@Nullable UUID siteId)
-    {
-        return getEntries(dayDate.getDayOfMonth(),dayDate.getMonthOfYear(),dayDate.getYear(),remark,siteId);
-    }
-
 
 
     private  class EntryCursorWrapper extends CursorWrapper
@@ -225,8 +332,8 @@ public class EntryLab {
 
 
             int day=getInt(getColumnIndex(AttendanceDbSchema.EntriesTable.Cols.DAY));
-            int month=getInt(getColumnIndex(AttendanceDbSchema.EntriesTable.Cols.DAY));
-            int year=getInt(getColumnIndex(AttendanceDbSchema.EntriesTable.Cols.DAY));
+            int month=getInt(getColumnIndex(AttendanceDbSchema.EntriesTable.Cols.MONTH));
+            int year=getInt(getColumnIndex(AttendanceDbSchema.EntriesTable.Cols.YEAR));
 
             String note=getString(getColumnIndex(AttendanceDbSchema.EntriesTable.Cols.NOTE));
 

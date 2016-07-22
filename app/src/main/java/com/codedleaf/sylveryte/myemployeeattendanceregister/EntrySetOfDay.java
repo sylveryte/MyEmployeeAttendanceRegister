@@ -28,7 +28,7 @@ public class EntrySetOfDay {
     {
         //must be called once :/
 
-        mEntries=EntryLab.getInstanceOf(context).getEntries(mDate,null,mSiteId);
+        mEntries=EntryLab.getInstanceOf(context).getEntries(mDate.getDayOfMonth(),mDate.getMonthOfYear(),mDate.getYear(),null,mSiteId,null);
 
         if (mEntries==null)
             initializeEntries(context);
@@ -46,7 +46,7 @@ public class EntrySetOfDay {
             mEntries.add(entry);
         }
 
-        EntryLab.getInstanceOf(context).adddEntrySetToDatabase(this);
+        EntryLab.getInstanceOf(context).addEntrySetToDatabase(this);
     }
 
     public LocalDate getDate() {
