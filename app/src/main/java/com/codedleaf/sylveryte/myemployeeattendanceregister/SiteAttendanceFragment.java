@@ -30,8 +30,8 @@ public class SiteAttendanceFragment extends Fragment {
     private static final String ARGS_CODE="siteattendanceargs";
 
     private Site mSite;
-    private EntrySetOfDay mEntrySetOfDay;
     private RecyclerView mRecyclerView;
+    private List<Entry> mEntries;
     private EmployeeAttendanceAdapter mEmployeeAttendanceAdpater;
 
     @Override
@@ -49,10 +49,12 @@ public class SiteAttendanceFragment extends Fragment {
         UUID siteId=(UUID)getArguments().getSerializable(ARGS_CODE);
         LocalDate date=new LocalDate();
 
-        mEntrySetOfDay =EntryLab.getInstanceOf(getActivity()).getEntrySetOfDay(date,siteId,getActivity());
-        mSite=SitesLab.getInstanceOf(getActivity()).getSiteById(siteId);
+//        mEntrySetOfDay =EntryLab.getInstanceOf(getActivity()).getEntrySetOfDay(date,siteId,getActivity());
+//        mSite=SitesLab.getInstanceOf(getActivity()).getSiteById(siteId);
 
-        mEmployeeAttendanceAdpater=new EmployeeAttendanceAdapter(mEntrySetOfDay.getEntries());
+        mEntries=EntryLab.getInstanceOf(getActivity()).getEntries(date,siteId,null);
+
+        mEmployeeAttendanceAdpater=new EmployeeAttendanceAdapter(mEntries);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.fragment_recycler_view);
 
 
@@ -223,7 +225,7 @@ public class SiteAttendanceFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        EntryLab.getInstanceOf(getActivity()).updateEntrySet(mEntrySetOfDay);
+        EntryLab.getInstanceOf(getActivity()).updateEntries(mEntries);
     }
 
     public static SiteAttendanceFragment createInstance(Site site)

@@ -39,20 +39,6 @@ public class EntryLab {
         return sEntryLab;
     }
 
-    public EntrySetOfDay getEntrySetOfDay(LocalDate date, UUID siteId, Context context)
-    {
-        EntrySetOfDay entrySetOfDayToReturn = new EntrySetOfDay(siteId,date);
-        entrySetOfDayToReturn.startEntriesProcess(context);
-        return entrySetOfDayToReturn;
-    }
-
-    public EntrySetOfDay getEntrySetOfMonth(LocalDate date, UUID siteId, Context context)
-    {
-        // TODO: 22/7/16    could there be possibility of pickable's id
-
-        return null;
-    }
-
 
     private void deleteEntriesByEmpId(UUID empId)
     {
@@ -159,7 +145,6 @@ public class EntryLab {
         }
 
         if (!last)
-//            sqlStatementString="SELECT * FROM "+AttendanceDbSchema.EntriesTable.NAME;
             sqlStatementString="SELECT * FROM "+AttendanceDbSchema.EntriesTable.NAME;
 
 
@@ -177,45 +162,8 @@ public class EntryLab {
             }
         }
 
-            String a= argsArray != null ? argsArray[0] : null;
-
-
 
         Cursor cursor=mDatabase.rawQuery(sqlStatementString,argsArray);
-
-/*//        Cursor cursor=mDatabase.query(
-//                AttendanceDbSchema.EntriesTable.NAME,
-//                null, //columns null coz select all columns :)
-//                        AttendanceDbSchema.EntriesTable.Cols.DAY+"=? AND "+
-//                                AttendanceDbSchema.EntriesTable.Cols.MONTH+"=? AND "+
-//                                AttendanceDbSchema.EntriesTable.Cols.YEAR+"=? AND "+
-//                                AttendanceDbSchema.EntriesTable.Cols.REMARK+"=? AND "+
-//                                AttendanceDbSchema.EntriesTable.Cols.SITEID+"=? AND ",
-//                                AttendanceDbSchema.EntriesTable.Cols.+"=? AND ",
-//        new String[]{day
-//                ,month
-//                ,year
-//                ,remark
-//                ,siteId},
-//                null, //group by
-//                null, //having
-//                null //orderby
-//        );
-
-//        Cursor cursor=mDatabase.rawQuery("select * from "+AttendanceDbSchema.EntriesTable.NAME+" where "+AttendanceDbSchema.EntriesTable.Cols.DAY+"=? AND "+
-//                                AttendanceDbSchema.EntriesTable.Cols.MONTH+"=? AND "+
-//                                AttendanceDbSchema.EntriesTable.Cols.YEAR+"=? AND "+
-////                                AttendanceDbSchema.EntriesTable.Cols.REMARK+"=? AND "+
-//                                AttendanceDbSchema.EntriesTable.Cols.SITEID+"=?",
-//                new String[]{day
-//                ,month
-//                ,year
-////                ,remark
-//                ,siteId});
-
-        //// TODO: 22/7/16 do something
-        Cursor cursor=mDatabase.rawQuery("select * from "+AttendanceDbSchema.EntriesTable.NAME,null);*/
-
 
         return new EntryCursorWrapper(cursor);
 
@@ -223,23 +171,7 @@ public class EntryLab {
     //end of db queries
 
 
-    public void updateEntrySet(EntrySetOfDay entrySetOfDay)
-    {
-        List<Entry> entries= entrySetOfDay.getEntries();
-        for (Entry entry:entries)
-        {
-            updateEntry(entry);
-        }
-    }
 
-    public void addEntrySetToDatabase(EntrySetOfDay entrySetOfDay)
-    {
-        List<Entry> entries= entrySetOfDay.getEntries();
-        for (Entry entry:entries)
-        {
-            addEntryToDatabase(entry);
-        }
-    }
 
     public void updateEntry(Entry entry)
     {
@@ -271,6 +203,13 @@ public class EntryLab {
         mDatabase.insert(AttendanceDbSchema.EntriesTable.NAME,null,values);
     }
 
+    public void updateEntries(List<Entry> entryList)
+    {
+        for (Entry entry:entryList)
+        {
+            updateEntry(entry);
+        }
+    }
 
 //entries
     public List<Entry> getEntries(@Nullable Integer day, @Nullable Integer month, @Nullable Integer year,@Nullable Integer remark, @Nullable UUID siteId,@Nullable UUID empId)
@@ -315,6 +254,10 @@ public class EntryLab {
         return entries;
     }
 
+    public List<Entry> getEntries(LocalDate date,UUID siteId,UUID empid)
+    {
+       return getEntries(date.getDayOfMonth(),date.getMonthOfYear(),date.getYear(),null,siteId,empid);
+    }
 
 
     private  class EntryCursorWrapper extends CursorWrapper
