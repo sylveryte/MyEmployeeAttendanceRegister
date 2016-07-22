@@ -1,6 +1,8 @@
 package com.codedleaf.sylveryte.myemployeeattendanceregister;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import org.joda.time.LocalDate;
 
@@ -60,6 +62,9 @@ public class Site implements Pickable,DialogPickObserver {
     }
 
     public String getDescription() {
+        return getEmployeesInvolved().size()+" Employees\n"+mDescription;
+    }
+    public String getDescriptionPure() {
         return mDescription;
     }
 
@@ -85,6 +90,27 @@ public class Site implements Pickable,DialogPickObserver {
 
     public List<UUID> getEmployeesInvolved() {
         return mEmployeesInvolved;
+    }
+
+    //for chart
+    public float getFloat(LocalDate month,int remark, Context context)
+    {
+        List<Entry> entries=EntryLab.getInstanceOf(context)
+                .getEntries(null,month.getMonthOfYear(),month.getYear(),remark,mSiteId);
+
+        if (entries!=null)
+        {
+            int total=entries.size();
+            int counted=0;
+
+            for (Entry entry: entries)
+            {
+                if (entry.getRemark()==remark)
+                    counted++;
+            }
+            return (float)counted/total;
+        }
+        return 0.0f;
     }
 
     @Override

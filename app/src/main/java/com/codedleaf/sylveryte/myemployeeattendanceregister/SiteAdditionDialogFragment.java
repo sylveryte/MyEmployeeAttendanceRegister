@@ -69,7 +69,7 @@ public class SiteAdditionDialogFragment extends DialogFragment {
     private void updateData()
     {
         mEditText_siteName.setText(mSite.getTitle());
-        mEditText_description.setText(mSite.getDescription());
+        mEditText_description.setText(mSite.getDescriptionPure());
     }
 
 

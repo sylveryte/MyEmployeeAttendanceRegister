@@ -92,6 +92,7 @@ public class HomeActivity extends AppCompatActivity {
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
+        mViewPager.setCurrentItem(1);
     }
 
     private void startAddEmployee() {

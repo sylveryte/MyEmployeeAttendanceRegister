@@ -2,9 +2,12 @@ package com.codedleaf.sylveryte.myemployeeattendanceregister;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.CursorWrapper;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import org.joda.time.LocalDate;
 
@@ -36,11 +39,18 @@ public class EntryLab {
         return sEntryLab;
     }
 
-    public EntrySet getEntrySet(LocalDate date, UUID siteId,Context context)
+    public EntrySetOfDay getEntrySetOfDay(LocalDate date, UUID siteId, Context context)
     {
-        EntrySet entrySetToReturn = new EntrySet(siteId,date);
-        entrySetToReturn.startEntriesProcess(context);
-        return entrySetToReturn;
+        EntrySetOfDay entrySetOfDayToReturn = new EntrySetOfDay(siteId,date);
+        entrySetOfDayToReturn.startEntriesProcess(context);
+        return entrySetOfDayToReturn;
+    }
+
+    public EntrySetOfDay getEntrySetOfMonth(LocalDate date, UUID siteId, Context context)
+    {
+        // TODO: 22/7/16    could there be possibility of pickable's id
+
+        return null;
     }
 
 
@@ -72,37 +82,55 @@ public class EntryLab {
     }
 
 
-
-
-    //databases code
-    private EntryCursorWrapper queryEntries(String date,String siteId)
+    //databases code queries
+    private EntryCursorWrapper queryEntriesOfMonth(String day,String month,String year,String remark, String siteId)
     {
+        if (day==null)
+            day="*";
+        if (month==null)
+            month="*";
+        if (year==null)
+            year="*";
+        if (remark==null)
+            remark="*";
+        if (siteId==null)
+            siteId="*";
+
         Cursor cursor=mDatabase.query(
                 AttendanceDbSchema.EntriesTable.NAME,
                 null, //columns null coz select all columns :)
-                AttendanceDbSchema.EntriesTable.Cols.DATE+"=? AND "+ AttendanceDbSchema.EntriesTable.Cols.SITEID+"=?",
-                new String[]{date,siteId},
+                        AttendanceDbSchema.EntriesTable.Cols.DAY+"=? AND "+
+                                AttendanceDbSchema.EntriesTable.Cols.MONTH+"=? AND "+
+                                AttendanceDbSchema.EntriesTable.Cols.YEAR+"=? AND "+
+                                AttendanceDbSchema.EntriesTable.Cols.REMARK+"=? AND "+
+                                AttendanceDbSchema.EntriesTable.Cols.SITEID+"=?",
+        new String[]{day
+                ,month
+                ,year
+                ,remark
+                ,siteId},
                 null, //group by
                 null, //having
                 null //orderby
         );
-
         return new EntryCursorWrapper(cursor);
 
     }
+    //end of db queries
 
-    public void updateEntrySet(EntrySet entrySet)
+
+    public void updateEntrySet(EntrySetOfDay entrySetOfDay)
     {
-        List<Entry> entries=entrySet.getEntries();
+        List<Entry> entries= entrySetOfDay.getEntries();
         for (Entry entry:entries)
         {
             updateEntry(entry);
         }
     }
 
-    public void adddEntrySetToDatabase(EntrySet entrySet)
+    public void adddEntrySetToDatabase(EntrySetOfDay entrySetOfDay)
     {
-        List<Entry> entries=entrySet.getEntries();
+        List<Entry> entries= entrySetOfDay.getEntries();
         for (Entry entry:entries)
         {
             addEntryToDatabase(entry);
@@ -113,13 +141,21 @@ public class EntryLab {
     {
         String empIdString=entry.getEmployeeId().toString();
         String siteIdString=entry.getSiteId().toString();
-        String dateString=CodedleafTools.getStringFromLocalDate(entry.getDate());
+        LocalDate date=entry.getDate();
 
         ContentValues values= AttendanceDbToolsProvider.getContentValues(entry);
         mDatabase.update(AttendanceDbSchema.EntriesTable.NAME,
                 values,
-                AttendanceDbSchema.EntriesTable.Cols.EMPLOYEEID+"=? AND "+ AttendanceDbSchema.EntriesTable.Cols.SITEID+"=? AND "+ AttendanceDbSchema.EntriesTable.Cols.DATE+"=?"
-                ,new String[]{empIdString,siteIdString,dateString});
+                AttendanceDbSchema.EntriesTable.Cols.EMPLOYEEID+"=? AND "+
+                        AttendanceDbSchema.EntriesTable.Cols.DAY+"=? AND "+
+                        AttendanceDbSchema.EntriesTable.Cols.MONTH+"=? AND "+
+                        AttendanceDbSchema.EntriesTable.Cols.YEAR+"=? AND "+
+                        AttendanceDbSchema.EntriesTable.Cols.SITEID+"=?"
+                ,new String[]{empIdString,
+                        String.valueOf(date.getDayOfMonth()),
+                        String.valueOf(date.getMonthOfYear()),
+                        String.valueOf(date.getYear()),
+                        siteIdString});
     }
 
     public void addEntryToDatabase(Entry entry)
@@ -129,13 +165,22 @@ public class EntryLab {
     }
 
 
-
-    public List<Entry> getEntries(LocalDate date,UUID siteId)
+//entries
+    public List<Entry> getEntries(@Nullable Integer day, @Nullable Integer month, @Nullable Integer year,@Nullable Integer remark, @Nullable UUID siteId)
     {
         List<Entry> entries=new ArrayList<>();
         int i=0;
 
-        EntryCursorWrapper cursorWrapper=queryEntries(CodedleafTools.getStringFromLocalDate(date),siteId.toString());
+        String site;
+        if (siteId==null)
+            site = null;
+        else site=siteId.toString();
+
+        EntryCursorWrapper cursorWrapper= queryEntriesOfMonth(String.valueOf(day)
+                ,String.valueOf(month)
+                ,String.valueOf(year)
+                ,String.valueOf(remark)
+                ,site);
         try
         {
 
@@ -158,6 +203,12 @@ public class EntryLab {
         return entries;
     }
 
+    public List<Entry> getEntries(LocalDate dayDate,@Nullable Integer remark,@Nullable UUID siteId)
+    {
+        return getEntries(dayDate.getDayOfMonth(),dayDate.getMonthOfYear(),dayDate.getYear(),remark,siteId);
+    }
+
+
 
     private  class EntryCursorWrapper extends CursorWrapper
     {
@@ -171,10 +222,15 @@ public class EntryLab {
             String empIdString=getString(getColumnIndex(AttendanceDbSchema.EntriesTable.Cols.EMPLOYEEID));
             String remark=getString(getColumnIndex(AttendanceDbSchema.EntriesTable.Cols.REMARK));
             String siteIdString=getString(getColumnIndex(AttendanceDbSchema.EntriesTable.Cols.SITEID));
-            String date=getString(getColumnIndex(AttendanceDbSchema.EntriesTable.Cols.DATE));
+
+
+            int day=getInt(getColumnIndex(AttendanceDbSchema.EntriesTable.Cols.DAY));
+            int month=getInt(getColumnIndex(AttendanceDbSchema.EntriesTable.Cols.DAY));
+            int year=getInt(getColumnIndex(AttendanceDbSchema.EntriesTable.Cols.DAY));
+
             String note=getString(getColumnIndex(AttendanceDbSchema.EntriesTable.Cols.NOTE));
 
-            Entry entry=new Entry(UUID.fromString(empIdString),UUID.fromString(siteIdString),CodedleafTools.getLocalDateFromString(date));
+            Entry entry=new Entry(UUID.fromString(empIdString),UUID.fromString(siteIdString),new LocalDate(year,month,day));
             entry.setRemark(Integer.parseInt(remark));
             entry.setNote(note);
             return entry;

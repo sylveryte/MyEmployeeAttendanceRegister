@@ -25,15 +25,6 @@
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
-            android:name=".DeleteMe"
-            android:label="@string/title_activity_delete_me"
-            android:parentActivityName=".HomeActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.codedleaf.sylveryte.myemployeeattendanceregister.HomeActivity"/>
-        </activity>
-        <activity
             android:name=".StatActivity"
             android:label="@string/title_activity_stat"
             android:parentActivityName=".HomeActivity"

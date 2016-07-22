@@ -12,7 +12,9 @@ public class AttendanceDbSchema {
         public static final class Cols
         {
             public static final String REMARK="remark";
-            public static final String DATE="date";
+            public static final String DAY="day";
+            public static final String MONTH="month";
+            public static final String YEAR="year";
             public static final String NOTE="note";
             public static final String SITEID="siteuuid";
             public static final String EMPLOYEEID="employeeuuid";

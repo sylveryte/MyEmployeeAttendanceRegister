@@ -9,9 +9,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.InputType;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +30,7 @@ public class SiteAttendanceFragment extends Fragment {
     private static final String ARGS_CODE="siteattendanceargs";
 
     private Site mSite;
-    private EntrySet mEntrySet;
+    private EntrySetOfDay mEntrySetOfDay;
     private RecyclerView mRecyclerView;
     private EmployeeAttendanceAdapter mEmployeeAttendanceAdpater;
 
@@ -51,10 +49,10 @@ public class SiteAttendanceFragment extends Fragment {
         UUID siteId=(UUID)getArguments().getSerializable(ARGS_CODE);
         LocalDate date=new LocalDate();
 
-        mEntrySet=EntryLab.getInstanceOf(getActivity()).getEntrySet(date,siteId,getActivity());
+        mEntrySetOfDay =EntryLab.getInstanceOf(getActivity()).getEntrySetOfDay(date,siteId,getActivity());
         mSite=SitesLab.getInstanceOf(getActivity()).getSiteById(siteId);
 
-        mEmployeeAttendanceAdpater=new EmployeeAttendanceAdapter(mEntrySet.getEntries());
+        mEmployeeAttendanceAdpater=new EmployeeAttendanceAdapter(mEntrySetOfDay.getEntries());
         mRecyclerView = (RecyclerView) view.findViewById(R.id.fragment_recycler_view);
 
 
@@ -225,7 +223,7 @@ public class SiteAttendanceFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        EntryLab.getInstanceOf(getActivity()).updateEntrySet(mEntrySet);
+        EntryLab.getInstanceOf(getActivity()).updateEntrySet(mEntrySetOfDay);
     }
 
     public static SiteAttendanceFragment createInstance(Site site)

@@ -11,14 +11,14 @@ import java.util.UUID;
 /**
  * Created by sylveryte on 27/6/16.
  */
-public class EntrySet {
+public class EntrySetOfDay {
 
     private UUID mSiteId;
     private LocalDate mDate;
     private List<Entry> mEntries;
 
 
-    public EntrySet(UUID siteId,LocalDate date)
+    public EntrySetOfDay(UUID siteId, LocalDate date)
     {
         mSiteId=siteId;
         mDate=date;
@@ -28,7 +28,7 @@ public class EntrySet {
     {
         //must be called once :/
 
-        mEntries=EntryLab.getInstanceOf(context).getEntries(mDate,mSiteId);
+        mEntries=EntryLab.getInstanceOf(context).getEntries(mDate,null,mSiteId);
 
         if (mEntries==null)
             initializeEntries(context);

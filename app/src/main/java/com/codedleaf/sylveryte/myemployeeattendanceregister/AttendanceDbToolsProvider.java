@@ -30,7 +30,7 @@ public class AttendanceDbToolsProvider {
         ContentValues values=new ContentValues();
         values.put(SitesTable.Cols.UID,site.getId().toString());
         values.put(SitesTable.Cols.TITLE,site.getTitle());
-        values.put(SitesTable.Cols.DESC,site.getDescription());
+        values.put(SitesTable.Cols.DESC,site.getDescriptionPure());
         values.put(SitesTable.Cols.ACTIVE,CodedleafTools.getStringOfBoolean(site.isActive()));
         values.put(SitesTable.Cols.BEGINDATE,CodedleafTools.getStringFromLocalDate(site.getBeginDate()));
         values.put(SitesTable.Cols.ENDDATE,CodedleafTools.getStringFromLocalDate(site.getFinishedDate()));
@@ -43,10 +43,12 @@ public class AttendanceDbToolsProvider {
         ContentValues values=new ContentValues();
         //// TODO: 6/7/16 doubts about putting int values of remark :/
         values.put(EntriesTable.Cols.REMARK,entry.getRemark());
-        values.put(EntriesTable.Cols.DATE,CodedleafTools.getStringFromLocalDate(entry.getDate()));
         values.put(EntriesTable.Cols.EMPLOYEEID,entry.getEmployeeId().toString());
         values.put(EntriesTable.Cols.SITEID,entry.getSiteId().toString());
         values.put(EntriesTable.Cols.NOTE,entry.getNote());
+        values.put(EntriesTable.Cols.DAY,entry.getDate().getDayOfMonth());
+        values.put(EntriesTable.Cols.MONTH,entry.getDate().getMonthOfYear());
+        values.put(EntriesTable.Cols.YEAR,entry.getDate().getYear());
 
         return values;
     }
