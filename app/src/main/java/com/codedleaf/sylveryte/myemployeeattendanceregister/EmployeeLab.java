@@ -60,6 +60,17 @@ public class EmployeeLab implements LabObeservable {
         {
             sEmployeeLab=new EmployeeLab(context);
             sEmployeeLab.initializeDatabase(context);
+
+
+           /* //// TODO: 24/7/16 get rid of this
+            for (int i=0;i<15;i++)
+            {
+                Employee employee=new Employee();
+                employee.setName("Emp "+i*3);
+                employee.setMale(i%2==0);
+                employee.setAge(20+i);
+                sEmployeeLab.addEmployee(employee);
+            }*/
         }
         return sEmployeeLab;
     }

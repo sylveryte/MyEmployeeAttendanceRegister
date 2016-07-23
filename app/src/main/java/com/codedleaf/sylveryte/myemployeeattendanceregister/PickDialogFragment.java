@@ -155,8 +155,7 @@ public class PickDialogFragment extends DialogFragment {
             if (mPicked.contains(mPickable.getId()))
             {
                 mCheckBox.setChecked(true);
-            }
-
+            }else mCheckBox.setChecked(false);
         }
     }
 

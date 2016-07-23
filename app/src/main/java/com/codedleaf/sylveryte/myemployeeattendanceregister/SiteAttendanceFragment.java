@@ -1,5 +1,6 @@
 package com.codedleaf.sylveryte.myemployeeattendanceregister;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,15 +11,21 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,8 +38,14 @@ public class SiteAttendanceFragment extends Fragment {
 
     private Site mSite;
     private RecyclerView mRecyclerView;
-    private List<Entry> mEntries;
     private EmployeeAttendanceAdapter mEmployeeAttendanceAdpater;
+
+    HashMap<UUID,List<Entry>> mEntriesMap;
+    List<UUID> mEmployees;
+
+    private LinearLayout dateContainer;
+
+    private int NoOfDays;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,156 +57,286 @@ public class SiteAttendanceFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.recycler_fragment, container, false);
+        View view = inflater.inflate(R.layout.attendance_fragment, container, false);
 
-        UUID siteId=(UUID)getArguments().getSerializable(ARGS_CODE);
+        NoOfDays=3;
         LocalDate date=new LocalDate();
 
-//        mEntrySetOfDay =EntryLab.getInstanceOf(getActivity()).getEntrySetOfDay(date,siteId,getActivity());
-//        mSite=SitesLab.getInstanceOf(getActivity()).getSiteById(siteId);
 
-        mEntries=EntryLab.getInstanceOf(getActivity()).getEntries(date,siteId,null);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.attendance_fragment_recycler_view);
+        dateContainer=(LinearLayout)view.findViewById(R.id.date_container_ll);
+        inflateSquareDatesViews(inflater,dateContainer,date);
 
-        mEmployeeAttendanceAdpater=new EmployeeAttendanceAdapter(mEntries);
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.fragment_recycler_view);
+        inflateEntries(date);
 
 
-/*
-        //for automatic
-        //// TODO: 22/6/16  looks suspicious
-        DisplayMetrics metrics=new DisplayMetrics();
-        getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        int cardWidth=(int)metrics.xdpi;
-        int spans=(int)Math.floor(mRecyclerView.getContext().getResources().getDisplayMetrics().widthPixels/(float)cardWidth);
-        mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(spans,StaggeredGridLayoutManager.VERTICAL));*/
+        //// TODO: 23/7/16 do something about this one
 
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL,false));
-
-        mRecyclerView.setAdapter(mEmployeeAttendanceAdpater);
-
+        if (mEmployees!=null)
+        {
+            mEmployeeAttendanceAdpater = new EmployeeAttendanceAdapter(mEmployees);
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+            mRecyclerView.setAdapter(mEmployeeAttendanceAdpater);
+        }
         return view;
+    }
+
+    private void inflateSquareDatesViews(LayoutInflater inflater, LinearLayout dateContainer, LocalDate date)
+    {
+
+        DateTimeFormatter fmt = DateTimeFormat.forPattern("d\nE");
+
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT,1.0f);
+
+        for (int i=0;i< NoOfDays;i++)
+        {
+            LinearLayout view=(LinearLayout)inflater.inflate(R.layout.attendance_gola_square,null,false);
+
+            view.setGravity(Gravity.CENTER);
+
+
+            view.setLayoutParams(lp);
+
+            TextView textView=(TextView) view.findViewById(R.id.button_square_date);
+
+            LocalDate localDate=date.minusDays(i);
+
+            textView.setText(fmt.print(localDate));
+
+            dateContainer.addView(view);
+        }
+
+        dateContainer.invalidate();
+    }
+
+    public void inflateEntries(LocalDate date)
+    {
+        UUID siteId=(UUID)getArguments().getSerializable(ARGS_CODE);
+        mSite=SitesLab.getInstanceOf(getActivity()).getSiteById(siteId);
+
+        mEntriesMap=new HashMap<>();
+        mEmployees=mSite.getEmployeesInvolved();
+
+        if (mEmployees!=null)
+        {
+            for (UUID empID:mEmployees)
+            {
+                mEntriesMap.put(empID,getEntries(empID,siteId,date));
+            }
+        }
+    }
+
+    public List<Entry> getEntries(UUID empId,UUID siteId,LocalDate date)
+    {
+        List<Entry> toReturnEntries=new ArrayList<>(NoOfDays);
+        for (int i=0;i<NoOfDays;i++)
+        {
+            Entry entry=null;
+            List<Entry> entries;
+            LocalDate localDate=date.minusDays(i);
+            entries=EntryLab.getInstanceOf(getActivity()).getEntries(date,siteId,empId);
+            //for new entries
+            if (entries==null)
+            {
+                if (localDate.equals(date))
+                {
+                    entry=new Entry(empId,siteId);
+                    EntryLab.getInstanceOf(getActivity()).addEntryToDatabase(entry);
+                }
+            }else
+            {
+                entry=entries.get(0);
+            }
+            if (entry!=null)
+                toReturnEntries.add(entry);
+        }
+        return toReturnEntries;
     }
 
     private class EmployeeAttendanceHolder extends RecyclerView.ViewHolder
     {
-        private Entry mEntry;
+        private Employee mEmployee;
+        private List<Entry> mEntryList;
+        private List<GolaView> mGolaViews;
+
+        private LinearLayout mGolaContainer;
+
         private TextView mTextViewName;
-        private TextView mTextViewRemark;
-        private CardView mCardView;
 
         public EmployeeAttendanceHolder(View itemView) {
             super(itemView);
+
             mTextViewName=(TextView)itemView.findViewById(R.id.employee_attendance_name);
-            mTextViewRemark=(TextView)itemView.findViewById(R.id.employee_attendance_remark);
-            mCardView=(CardView)itemView.findViewById(R.id.employee_attendance_card);
+            mGolaContainer=(LinearLayout)itemView.findViewById(R.id.gola_container);
 
-
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    CharSequence choices[] = new CharSequence[] {"Present", "Late", "Halftime", "Overtime","Absent","Not Specified","Edit Note"};
-
-                    if (mEntry.getNote()==null) {
-                        choices[6] = "Add Note";
-                    }
-                    else if (mEntry.getNote().trim().isEmpty())
-                    {
-                        choices[6] = "Add Note";
-                    }
-
-
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                    builder.setTitle("Set status");
-                    builder.setItems(choices, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            setColorOfCardAndState(which);
-                        }
-                    });
-                    builder.show();
-                }
-            });
-        }
-
-        public void setColorOfCardAndState(int which)
-        {
-            switch (which)
+            mGolaViews=new ArrayList<>();
+            for (int i=0;i<NoOfDays;i++)
             {
-                case 0: mEntry.setRemark(Entry.PRESENT);
-                    mCardView.setCardBackgroundColor(ContextCompat.getColor(getActivity(),R.color.attendancePresent));
-                    break;
-                case 1: mEntry.setRemark(Entry.LATE);
-                    mCardView.setCardBackgroundColor(ContextCompat.getColor(getActivity(),R.color.attendanceLate));
-                    break;
-                case 2: mEntry.setRemark(Entry.HALF_TIME);
-                    mCardView.setCardBackgroundColor(ContextCompat.getColor(getActivity(),R.color.attendanceHalfTime));
-                    break;
-                case 3: mEntry.setRemark(Entry.OVER_TIME);
-                    mCardView.setCardBackgroundColor(ContextCompat.getColor(getActivity(),R.color.attendanceOvertime));break;
-                case 4: mEntry.setRemark(Entry.ABSENT);
-                    mCardView.setCardBackgroundColor(ContextCompat.getColor(getActivity(),R.color.attendanceAbsent));
-                    break;
-                case 5: mEntry.setRemark(Entry.NOTSPECIFIED);
-                    mCardView.setCardBackgroundColor(ContextCompat.getColor(getActivity(),R.color.attendanceNotSpecified));
-                    break;
-                case 6:
-                {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                    builder.setTitle("Enter Note");
+                GolaView golaView=new GolaView(getActivity());
 
-                    // Set up the input
-                    final EditText input = new EditText(getActivity());
-                    // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
-
-                    LinearLayout layout=new LinearLayout(getActivity());
-                    layout.setPadding(35,15,35,15);
-                    layout.addView(input);
-                    input.setInputType(InputType.TYPE_CLASS_TEXT);
-
-                    input.setText(mEntry.getNote());
-
-                    builder.setView(layout);
-
-                    // Set up the buttons
-                    builder.setPositiveButton("Set", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            mEntry.setNote(input.getText().toString());
-                        }
-                    });
-                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                        }
-                    });
-
-                    builder.show();
-                }
+                mGolaContainer.addView(golaView.getLayoutView());
+                mGolaViews.add(golaView);
             }
-            setRemark();
+
+
         }
 
-        private void setRemark()
+        private void bind(UUID empId)
         {
-            mTextViewRemark.setText(mEntry.getRemarkString());
+            mEmployee=EmployeeLab.getInstanceOf(getActivity()).getEmployeeById(empId);
+            mTextViewName.setText(mEmployee.getTitle());
+            mEntryList=mEntriesMap.get(empId);
+            if (mEntryList==null)
+                mEntryList=new ArrayList<>();
+
+
+            for (int i=0;i<mEntryList.size();i++)
+            {
+                mGolaViews.get(i).setEntry(mEntryList.get(i));
+            }
+
+            for (GolaView golaView: mGolaViews)
+            {
+                golaView.setClicability();
+            }
         }
 
-        private void bind(Entry entry)
+        //gola view class
+        private class GolaView extends View
         {
-            mEntry=entry;
-            mTextViewName.setText(entry.getEmployeeInfo(getActivity()));
-            setColorOfCardAndState(mEntry.getRemark()%10);
-            setRemark();
+            private Entry mEntry;
+            private CardView mGolaCard;
+            private LinearLayout mLayoutView;
+
+            public GolaView(Context context)
+            {
+                super(context);
+                mLayoutView=(LinearLayout)LayoutInflater.from(getActivity()).inflate(R.layout.attendance_gola,null,true);
+                mLayoutView.setGravity(Gravity.CENTER);
+                mGolaCard =(CardView) mLayoutView.findViewById(R.id.attendance_gola_b);
+
+                mLayoutView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        CharSequence choices[] = new CharSequence[] {"Present", "Late", "Halftime", "Overtime","Absent","Not Specified","Edit Note"};
+
+                        if (mEntry.getNote()==null) {
+                            choices[6] = "Add Note";
+                        }
+                        else if (mEntry.getNote().trim().isEmpty())
+                        {
+                            choices[6] = "Add Note";
+                        }
+
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        builder.setTitle("Set status");
+                        builder.setItems(choices, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                setColorOfCardAndState(which);
+                            }
+                        });
+                        builder.show();
+                    }
+                });
+            }
+
+            public void setEntry(Entry entry)
+            {
+                mEntry = entry;
+                setColorOfCardAndState(mEntry.getRemark()%10);
+            }
+
+            public void setClicability()
+            {
+                if (mEntry==null)
+                    mLayoutView.setClickable(false);
+                else
+                    mLayoutView.setClickable(true);
+            }
+
+            public LinearLayout getLayoutView() {
+
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT,1.0f);
+                mLayoutView.setLayoutParams(lp);
+                return mLayoutView;
+            }
+
+            public void setColorOfCardAndState(int which)
+            {
+                switch (which)
+                {
+                    case 0: mEntry.setRemark(Entry.PRESENT);
+                        mGolaCard.setCardBackgroundColor(ContextCompat.getColor(getActivity(),R.color.attendancePresent));
+                        break;
+                    case 1: mEntry.setRemark(Entry.LATE);
+                        mGolaCard.setCardBackgroundColor(ContextCompat.getColor(getActivity(),R.color.attendanceLate));
+                        break;
+                    case 2: mEntry.setRemark(Entry.HALF_TIME);
+                        mGolaCard.setCardBackgroundColor(ContextCompat.getColor(getActivity(),R.color.attendanceHalfTime));
+                        break;
+                    case 3: mEntry.setRemark(Entry.OVER_TIME);
+                        mGolaCard.setCardBackgroundColor(ContextCompat.getColor(getActivity(),R.color.attendanceOvertime));break;
+                    case 4: mEntry.setRemark(Entry.ABSENT);
+                        mGolaCard.setCardBackgroundColor(ContextCompat.getColor(getActivity(),R.color.attendanceAbsent));
+                        break;
+                    case 5: mEntry.setRemark(Entry.NOTSPECIFIED);
+                        mGolaCard.setCardBackgroundColor(ContextCompat.getColor(getActivity(),R.color.attendanceNotSpecified));
+                        break;
+                    case 6:
+                    {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        builder.setTitle("Enter Note");
+
+                        // Set up the input
+                        final EditText input = new EditText(getActivity());
+                        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+
+                        LinearLayout layout=new LinearLayout(getActivity());
+                        layout.setPadding(35,15,35,15);
+                        layout.addView(input);
+                        input.setInputType(InputType.TYPE_CLASS_TEXT);
+
+                        input.setText(mEntry.getNote());
+
+                        builder.setView(layout);
+
+                        // Set up the buttons
+                        builder.setPositiveButton("Set", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                mEntry.setNote(input.getText().toString());
+                                updateEntry();
+                            }
+                        });
+                        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+
+                        builder.show();
+                    }
+                }
+                invalidate();
+                updateEntry();
+            }
+
+            public void updateEntry()
+            {
+                EntryLab.getInstanceOf(getActivity()).updateEntry(mEntry);
+            }
         }
     }
 
 
     private class EmployeeAttendanceAdapter extends RecyclerView.Adapter<EmployeeAttendanceHolder>
     {
-        List<Entry> mEntries;
+        List<UUID> mEntries;
 
-        public EmployeeAttendanceAdapter(List<Entry> entries)
+        public EmployeeAttendanceAdapter(List<UUID> entries)
         {
             mEntries=entries;
         }
@@ -201,7 +344,7 @@ public class SiteAttendanceFragment extends Fragment {
         @Override
         public EmployeeAttendanceHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater layoutInflater=getActivity().getLayoutInflater();
-            View view=layoutInflater.inflate(R.layout.employee_attendance_layout,parent,false);
+            View view=layoutInflater.inflate(R.layout.attendance_layout,parent,false);
 
             return new EmployeeAttendanceHolder(view);
         }
@@ -225,7 +368,8 @@ public class SiteAttendanceFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        EntryLab.getInstanceOf(getActivity()).updateEntries(mEntries);
+        //// TODO: 23/7/16 dont forget to update
+       // EntryLab.getInstanceOf(getActivity()).updateEntries(mEntries);
     }
 
     public static SiteAttendanceFragment createInstance(Site site)
