@@ -259,6 +259,31 @@ public class EntryLab {
        return getEntries(date.getDayOfMonth(),date.getMonthOfYear(),date.getYear(),null,siteId,empid);
     }
 
+    public Entry getEntry(@NonNull LocalDate date,@NonNull UUID siteId,@NonNull UUID empId)
+    {
+
+        Entry entry=null;
+
+        EntryCursorWrapper cursorWrapper= queryEntriesOfMonth(
+                date.getDayOfMonth()
+                ,date.getMonthOfYear()
+                ,date.getYear()
+                ,null
+                ,siteId.toString()
+                ,empId.toString());
+        try
+        {
+            cursorWrapper.moveToFirst();
+            if (!cursorWrapper.isAfterLast())
+                entry=cursorWrapper.getEntry();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return entry;
+    }
+
 
     private  class EntryCursorWrapper extends CursorWrapper
     {

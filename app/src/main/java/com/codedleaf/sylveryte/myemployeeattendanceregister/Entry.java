@@ -28,6 +28,7 @@ public class Entry {
     private UUID mSiteId;
     private UUID mEmployeeId;
 
+    private Boolean mNew;
 
     private String mNote;
 
@@ -39,6 +40,9 @@ public class Entry {
         mSiteId=siteId;
 
         mDate=new LocalDate();
+
+        mNew=false;
+
         mRemark=NOTSPECIFIED;
     }
 
@@ -47,6 +51,8 @@ public class Entry {
         mEmployeeId=employeeId;
 
         mSiteId=siteId;
+
+        mNew=false;
 
         mDate=date;
     }
@@ -65,6 +71,14 @@ public class Entry {
 
     public UUID getSiteId() {
         return mSiteId;
+    }
+
+    public Boolean isNew() {
+        return mNew;
+    }
+
+    public void setNew(Boolean aNew) {
+        mNew = aNew;
     }
 
     public UUID getEmployeeId() {

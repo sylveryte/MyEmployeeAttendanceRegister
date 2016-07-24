@@ -214,7 +214,7 @@ public class Employee implements Pickable{
             Designation designation=designationLab.getDesigantionById(uuid);
             if (designation!=null)
             {
-                designation.removeEmployeeInvolvedById(uuid,context);
+                designation.removeEmployeeInvolvedById(mEmployeeId,context);
             }
         }
 
@@ -224,7 +224,7 @@ public class Employee implements Pickable{
             Site site=sitesLab.getSiteById(uuid);
             if(site!=null)
             {
-                site.removeEmployeeById(uuid,context);
+                site.removeEmployeeById(mEmployeeId,context);
             }
         }
 

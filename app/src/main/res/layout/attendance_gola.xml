@@ -16,6 +16,7 @@
             android:padding="1dp"
             android:gravity="center"
             android:textColor="@color/white"
+            android:id="@+id/gola_text"
             android:layout_height="match_parent"/>
         </android.support.v7.widget.CardView>
 

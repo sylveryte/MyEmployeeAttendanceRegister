@@ -127,6 +127,7 @@ public class Site implements Pickable,DialogPickObserver {
             if (employee!=null)
             {
                 employee.removeSiteByid(mSiteId,context);
+
             }
         }
 

@@ -141,6 +141,7 @@ public class EmployeeFragment extends Fragment implements LabObserver {
                                                     // continue with delete
                                                     mLab.deleteEmployee(mEmployee,getActivity());
                                                     update();
+                                                    getActivity().invalidateOptionsMenu();
                                                 }
                                             })
                                             .setNegativeButton("NO", new DialogInterface.OnClickListener() {

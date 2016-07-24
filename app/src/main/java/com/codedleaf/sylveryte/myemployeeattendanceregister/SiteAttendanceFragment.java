@@ -2,6 +2,8 @@ package com.codedleaf.sylveryte.myemployeeattendanceregister;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Configuration;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,11 +13,11 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -42,6 +44,7 @@ public class SiteAttendanceFragment extends Fragment {
 
     HashMap<UUID,List<Entry>> mEntriesMap;
     List<UUID> mEmployees;
+    List<LocalDate> mLocalDates;
 
     private LinearLayout dateContainer;
 
@@ -58,16 +61,19 @@ public class SiteAttendanceFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.attendance_fragment, container, false);
+        dateContainer=(LinearLayout)view.findViewById(R.id.date_container_ll);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.attendance_fragment_recycler_view);
 
-        NoOfDays=3;
+        NoOfDays=calculateNoOfDatesShould();
+        mLocalDates=new ArrayList<>();
         LocalDate date=new LocalDate();
 
 
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.attendance_fragment_recycler_view);
-        dateContainer=(LinearLayout)view.findViewById(R.id.date_container_ll);
         inflateSquareDatesViews(inflater,dateContainer,date);
+        inflateEntries();
 
-        inflateEntries(date);
+
+
 
 
         //// TODO: 23/7/16 do something about this one
@@ -79,6 +85,22 @@ public class SiteAttendanceFragment extends Fragment {
             mRecyclerView.setAdapter(mEmployeeAttendanceAdpater);
         }
         return view;
+    }
+
+
+
+    private int calculateNoOfDatesShould()
+    {
+        int count;
+        DisplayMetrics matrices=getActivity().getResources().getDisplayMetrics();
+        count=(int)(matrices.heightPixels/matrices.density)/(2*75);
+
+        if (count<1)
+        {
+            count=2;
+        }
+
+        return count;
     }
 
     private void inflateSquareDatesViews(LayoutInflater inflater, LinearLayout dateContainer, LocalDate date)
@@ -100,6 +122,7 @@ public class SiteAttendanceFragment extends Fragment {
             TextView textView=(TextView) view.findViewById(R.id.button_square_date);
 
             LocalDate localDate=date.minusDays(i);
+            mLocalDates.add(localDate);
 
             textView.setText(fmt.print(localDate));
 
@@ -109,7 +132,7 @@ public class SiteAttendanceFragment extends Fragment {
         dateContainer.invalidate();
     }
 
-    public void inflateEntries(LocalDate date)
+    public void inflateEntries()
     {
         UUID siteId=(UUID)getArguments().getSerializable(ARGS_CODE);
         mSite=SitesLab.getInstanceOf(getActivity()).getSiteById(siteId);
@@ -121,34 +144,27 @@ public class SiteAttendanceFragment extends Fragment {
         {
             for (UUID empID:mEmployees)
             {
-                mEntriesMap.put(empID,getEntries(empID,siteId,date));
+                mEntriesMap.put(empID,getEntries(empID,siteId));
             }
         }
     }
 
-    public List<Entry> getEntries(UUID empId,UUID siteId,LocalDate date)
+    public List<Entry> getEntries(UUID empId,UUID siteId)
     {
         List<Entry> toReturnEntries=new ArrayList<>(NoOfDays);
         for (int i=0;i<NoOfDays;i++)
         {
-            Entry entry=null;
-            List<Entry> entries;
-            LocalDate localDate=date.minusDays(i);
-            entries=EntryLab.getInstanceOf(getActivity()).getEntries(date,siteId,empId);
+            Entry entry;
+            entry=EntryLab.getInstanceOf(getActivity()).getEntry(mLocalDates.get(i),siteId,empId);
             //for new entries
-            if (entries==null)
+
+            if (entry==null)
             {
-                if (localDate.equals(date))
-                {
-                    entry=new Entry(empId,siteId);
-                    EntryLab.getInstanceOf(getActivity()).addEntryToDatabase(entry);
-                }
-            }else
-            {
-                entry=entries.get(0);
+                entry = new Entry(empId,siteId,mLocalDates.get(i));
+                entry.setNew(true);
             }
-            if (entry!=null)
-                toReturnEntries.add(entry);
+
+            toReturnEntries.add(entry);
         }
         return toReturnEntries;
     }
@@ -172,13 +188,11 @@ public class SiteAttendanceFragment extends Fragment {
             mGolaViews=new ArrayList<>();
             for (int i=0;i<NoOfDays;i++)
             {
-                GolaView golaView=new GolaView(getActivity());
+                GolaView golaView=new GolaView(getActivity(),mLocalDates.get(i));
 
                 mGolaContainer.addView(golaView.getLayoutView());
                 mGolaViews.add(golaView);
             }
-
-
         }
 
         private void bind(UUID empId)
@@ -190,7 +204,7 @@ public class SiteAttendanceFragment extends Fragment {
                 mEntryList=new ArrayList<>();
 
 
-            for (int i=0;i<mEntryList.size();i++)
+            for (int i=0;i<NoOfDays;i++)
             {
                 mGolaViews.get(i).setEntry(mEntryList.get(i));
             }
@@ -207,13 +221,22 @@ public class SiteAttendanceFragment extends Fragment {
             private Entry mEntry;
             private CardView mGolaCard;
             private LinearLayout mLayoutView;
+            private LocalDate mDate;
 
-            public GolaView(Context context)
+            private TextView mTextView;
+
+            public GolaView(Context context,LocalDate date)
             {
                 super(context);
                 mLayoutView=(LinearLayout)LayoutInflater.from(getActivity()).inflate(R.layout.attendance_gola,null,true);
                 mLayoutView.setGravity(Gravity.CENTER);
                 mGolaCard =(CardView) mLayoutView.findViewById(R.id.attendance_gola_b);
+                mTextView=(TextView)mLayoutView.findViewById(R.id.gola_text);
+                mDate=date;
+
+                String s=date.getDayOfMonth()+" ";
+
+                mTextView.setText(s);
 
                 mLayoutView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -235,6 +258,13 @@ public class SiteAttendanceFragment extends Fragment {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 setColorOfCardAndState(which);
+
+                                if (mEntry.isNew())
+                                {
+                                    EntryLab.getInstanceOf(getActivity()).addEntryToDatabase(mEntry);
+                                    mEntry.setNew(false);
+                                }
+                                updateEntry();
                             }
                         });
                         builder.show();
@@ -244,8 +274,14 @@ public class SiteAttendanceFragment extends Fragment {
 
             public void setEntry(Entry entry)
             {
+                if (entry.getDate().equals(mDate))
                 mEntry = entry;
                 setColorOfCardAndState(mEntry.getRemark()%10);
+
+                if (mEntry.isNew())
+                {
+                    mGolaCard.setCardBackgroundColor(ContextCompat.getColor(getActivity(),R.color.white));
+                }
             }
 
             public void setClicability()
@@ -320,8 +356,6 @@ public class SiteAttendanceFragment extends Fragment {
                         builder.show();
                     }
                 }
-                invalidate();
-                updateEntry();
             }
 
             public void updateEntry()
@@ -381,5 +415,16 @@ public class SiteAttendanceFragment extends Fragment {
         siteAttendanceFragment.setArguments(args);
 
         return siteAttendanceFragment;
+    }
+
+    private void recreateMe()
+    {
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        recreateMe();
     }
 }
