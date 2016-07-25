@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:background="@color/blue"
+              android:layout_height="match_parent">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="5dp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Nothing\nto\nshow\nhere\n:/"
+        android:textColor="@color/blue_800"
+        android:gravity="center"
+        android:id="@+id/nothingToShow"
+        android:textStyle="bold|italic"/>
+
+</LinearLayout>

@@ -144,7 +144,11 @@ public class Site implements Pickable,DialogPickObserver {
         Employee employee=EmployeeLab.getInstanceOf(context).getEmployeeById(empId);
 
         if (employee==null)
+        {
+            mEmployeesInvolved.remove(empId);
+            updateMyDB(context);
             return;
+        }
         employee.addSiteById(mSiteId,context);
     }
 
@@ -153,6 +157,9 @@ public class Site implements Pickable,DialogPickObserver {
         if (!mEmployeesInvolved.contains(uuid))
             return;
         mEmployeesInvolved.remove(uuid);
+        Employee employee=EmployeeLab.getInstanceOf(context).getEmployeeById(uuid);
+        //fucking cant believe it below was remove designation
+        employee.removeSiteByid(getId(),context);
         updateMyDB(context);
     }
 
@@ -163,15 +170,15 @@ public class Site implements Pickable,DialogPickObserver {
 
     @Override
     public void doSomeUpdate(Context context) {
-        for (UUID uuid:PickCache.getInstance().getUUIDs(getId().toString()))
+        for (UUID uuid:PickCache.getInstance().getPicked(getId().toString()))
         {
             addEmployeeById(uuid,context);
         }
-        for (UUID uuid:PickCache.getInstance().getRemovedUUIDs(getId().toString()))
+        List<UUID> list=PickCache.getInstance().getRemoved(getId().toString());
+        for (UUID uuid:list)
         {
             removeEmployeeById(uuid,context);
         }
-        PickCache.getInstance().destroyMyCache(getId().toString());
         updateMyDB(context);
     }
 }

@@ -30,13 +30,20 @@ public class SimpleListDialogFragment extends DialogFragment {
         View view= LayoutInflater.from(getActivity()).inflate(R.layout.recycler_fragment,null,false);
 
         final String caller=getArguments().getString(CALLER_CODE);
-        List<Pickable> pickableList = PickCache.getInstance().getPickable(caller);
+        List<Pickable> pickableList = PickCache.getInstance().getPickables(caller);
 
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.fragment_recycler_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        if(pickableList.isEmpty())
+        {
+            view= LayoutInflater.from(getActivity()).inflate(R.layout.nothing_to_show,null,false);
 
-        PickAdapter pickAdapter = new PickAdapter(pickableList);
-        recyclerView.setAdapter(pickAdapter);
+        }else
+        {
+            RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.fragment_recycler_view);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+            PickAdapter pickAdapter = new PickAdapter(pickableList);
+            recyclerView.setAdapter(pickAdapter);
+        }
 
         return new AlertDialog.Builder(getActivity())
                 .setView(view)
@@ -98,7 +105,7 @@ public class SimpleListDialogFragment extends DialogFragment {
         bundle.putString(CALLER_CODE,callerId);
         fragment.setArguments(bundle);
 
-        PickCache.getInstance().addPickables(callerId,showThese);
+        PickCache.getInstance().storePickables(callerId,showThese);
         return fragment;
     }
 }

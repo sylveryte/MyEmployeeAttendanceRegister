@@ -15,6 +15,7 @@ import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,104 +27,176 @@ public class PickDialogFragment extends DialogFragment {
     //these are to get from args
     private static final String REQUEST_CODE="pickablescode";
     private static final String CALLER_CODE="callercodebro";
-
+    private static final String REQUESTER_CODE = "meriIdboletoh";
 
     public static final int SITE=91;
     public static final int DESIGNATION=92;
     public static final int EMPLOYEE=93;
 
-    private List<? extends Pickable> mPickableList;
-    private List<UUID> mPicked;
-    private List<UUID> mRemoved;
-    private RecyclerView mRecyclerView;
-    private PickAdapter mPickAdapter;
 
-    private ImageButton mDone;
+    List<PickingChavaClass> chavaList;
 
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         View view=LayoutInflater.from(getActivity()).inflate(R.layout.pick_fragment,null,false);
 
-        final String caller=getArguments().getString(CALLER_CODE);
-        mPicked=PickCache.getInstance().getUUIDs(caller);
-        mRemoved=PickCache.getInstance().getRemovedUUIDs(caller);
+        List<? extends Pickable> pickableList=new ArrayList<>(0);
+        List<UUID> picked=new ArrayList<>(0);
+        final UUID callerUuid=(UUID)getArguments().getSerializable(CALLER_CODE);
 
-        mDone=(ImageButton)view.findViewById(R.id.pick_done);
-        mDone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                PickCache.getInstance().getObserver(caller).doSomeUpdate(getActivity());
-                getDialog().dismiss();
-            }
-        });
-
-        mRecyclerView =(RecyclerView)view.findViewById(R.id.pick_fragment_recycler_view);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-        switch (getArguments().getInt(REQUEST_CODE))
+        final int requestFor=getArguments().getInt(REQUEST_CODE);
+        switch (requestFor)
         {
             case SITE:
             {
-                mPickableList=SitesLab.getInstanceOf(getActivity()).getSites();
+                pickableList=SitesLab.getInstanceOf(getActivity()).getSites();
                 break;
             }
             case DESIGNATION:
             {
-                mPickableList=DesignationLab.getInstanceOf(getActivity()).getDesignations();
+                pickableList=DesignationLab.getInstanceOf(getActivity()).getDesignations();
                 break;
             }
             case EMPLOYEE:
             {
-                mPickableList=EmployeeLab.getInstanceOf(getActivity()).getEmployees();
+                pickableList=EmployeeLab.getInstanceOf(getActivity()).getEmployees();
+                break;
+            }
+        }
+
+        final int requester=getArguments().getInt(REQUESTER_CODE);
+        switch (requester)
+        {
+            case SITE:
+            {
+                Site site=SitesLab.getInstanceOf(getActivity()).getSiteById(callerUuid);
+                picked=site.getEmployeesInvolved();
+                break;
+            }
+            case DESIGNATION:
+            {
+                Designation designation=DesignationLab.getInstanceOf(getActivity()).getDesigantionById(callerUuid);
+                picked=designation.getEmployees();
+                break;
+            }
+            case EMPLOYEE:
+            {
+                Employee employee=EmployeeLab.getInstanceOf(getActivity()).getEmployeeById(callerUuid);
+                if (requestFor==DESIGNATION)
+                    picked=employee.getDesignations();
+                else picked=employee.getSites();
                 break;
             }
         }
 
 
-        mPickAdapter=new PickAdapter(mPickableList);
-        mRecyclerView.setAdapter(mPickAdapter);
+        if (pickableList.isEmpty())
+        {
+            view=LayoutInflater.from(getActivity()).inflate(R.layout.nothing_to_show,null,false);
+        }else
+        {
+
+            //PickCache.getInstance().getUUIDs(caller);
+
+            chavaList = new ArrayList<>();
+            for (Pickable pickable:pickableList)
+            {
+                //herer
+                if (picked.contains(pickable.getId()))
+                    chavaList.add(new PickingChavaClass(true,pickable));
+                else
+                    chavaList.add(new PickingChavaClass(false,pickable));
+            }
+
+            ImageButton done = (ImageButton) view.findViewById(R.id.pick_done);
+            done.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    List<UUID> picked=new ArrayList<>();
+                    List<UUID> removed=new ArrayList<>();
+
+                    for (PickingChavaClass chavaClass:chavaList)
+                    {
+                        if (chavaClass.isChecked())
+                            picked.add(chavaClass.getPickable().getId());
+                        else
+                            removed.add(chavaClass.getPickable().getId());
+                    }
+
+                    ///pick cache should be used here only
+                    String caller="Lag gayi!";
+                    if (callerUuid!=null)
+                    {
+                        if (requester==EMPLOYEE&&requestFor==DESIGNATION)
+                        {
+                            caller=callerUuid.toString()+"d";
+                        }
+                        else if (requester==EMPLOYEE&&requestFor==SITE)
+                        {
+                            caller=callerUuid.toString()+"s";
+                        }
+                        else
+                        {
+                            caller=callerUuid.toString();
+                        }
+                    }
+
+                    PickCache.getInstance().storePicked(caller,picked);
+                    PickCache.getInstance().storeRemoved(caller,removed);
+
+                    PickCache.getInstance().getObserver(callerUuid.toString()).doSomeUpdate(getActivity());
+                    getDialog().dismiss();
+                }
+            });
+
+            RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.pick_fragment_recycler_view);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+            PickAdapter pickAdapter = new PickAdapter(chavaList);
+            recyclerView.setAdapter(pickAdapter);
+        }
 
         return new AlertDialog.Builder(getActivity())
                 .setView(view)
                 .create();
     }
 
-    private class PickAdapter extends RecyclerView.Adapter<PickHolder>
+    private class PickAdapter extends RecyclerView.Adapter<PickChavaHolder>
     {
-        private List<? extends Pickable> mPickables;
-        public PickAdapter(List<? extends Pickable> pickableList)
+        private List<PickingChavaClass> mChavaClasses;
+        public PickAdapter(List<PickingChavaClass> list)
         {
-            mPickables=pickableList;
+            mChavaClasses=list;
         }
 
         @Override
-        public PickHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public PickChavaHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater inflater=getActivity().getLayoutInflater();
             View view=inflater.inflate(R.layout.pick_card,parent,false);
-            return new PickHolder(view);
+            return new PickChavaHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(PickHolder holder, int position) {
-            holder.bind(mPickables.get(position));
+        public void onBindViewHolder(PickChavaHolder holder, int position) {
+            holder.bind(mChavaClasses.get(position));
         }
 
         @Override
         public int getItemCount() {
-            return mPickables.size();
+            return mChavaClasses.size();
         }
     }
 
-    private class PickHolder extends RecyclerView.ViewHolder
+    private class PickChavaHolder extends RecyclerView.ViewHolder
     {
         private TextView title;
         private TextView description;
         private CheckBox mCheckBox;
-        private Pickable mPickable;
+        private PickingChavaClass mChavaClass;
 
-        public PickHolder(View itemView) {
+        public PickChavaHolder(View itemView) {
             super(itemView);
 
             //PICKING done here
@@ -136,14 +209,11 @@ public class PickDialogFragment extends DialogFragment {
                 public void onClick(View v) {
                     if (mCheckBox.isChecked())
                     {
-                        mPicked.remove(mPickable.getId());
-                        mRemoved.add(mPickable.getId());
+                        mChavaClass.setChecked(false);
                         mCheckBox.setChecked(false);
                     }else
                     {
-                        mPicked.add(mPickable.getId());
-                        if (mRemoved.contains(mPickable.getId()))
-                            mRemoved.remove(mPickable.getId());
+                        mChavaClass.setChecked(true);
                         mCheckBox.setChecked(true);
                     }
                 }
@@ -151,29 +221,29 @@ public class PickDialogFragment extends DialogFragment {
 
         }
 
-        public void bind(Pickable pickable)
+        public void bind(PickingChavaClass chavaClass)
         {
-            mPickable=pickable;
-            title.setText(pickable.getTitle());
-            description.setText(pickable.getDescription());
+            mChavaClass=chavaClass;
+            title.setText(mChavaClass.getPickable().getTitle());
+            description.setText(mChavaClass.getPickable().getDescription());
 
-            if (mPicked.contains(mPickable.getId()))
+            if (mChavaClass.isChecked())
             {
                 mCheckBox.setChecked(true);
             }else mCheckBox.setChecked(false);
         }
     }
 
-    public static PickDialogFragment getInstance(@NonNull String callerContainerIsId, DialogPickObserver observer, @NonNull int codeFromThisFragmentOnly, @Nullable List<UUID> includeThese)
+    public static PickDialogFragment getInstance(@NonNull UUID callerContainerIsId, DialogPickObserver observer,int youWantFromPDF, int requesterFromPDF)
     {
         PickDialogFragment fragment=new PickDialogFragment();
 
-        Bundle bundle=new Bundle(2);
-        bundle.putInt(REQUEST_CODE,codeFromThisFragmentOnly);
-        bundle.putString(CALLER_CODE,callerContainerIsId);
+        Bundle bundle=new Bundle(3);
+        bundle.putInt(REQUEST_CODE,youWantFromPDF);
+        bundle.putInt(REQUESTER_CODE,requesterFromPDF);
+        bundle.putSerializable(CALLER_CODE,callerContainerIsId);
 
-        PickCache.getInstance().addObserver(callerContainerIsId,observer);
-        PickCache.getInstance().addThisInMyList(callerContainerIsId,includeThese);
+        PickCache.getInstance().addObserver(callerContainerIsId.toString(),observer);
 
         fragment.setArguments(bundle);
 

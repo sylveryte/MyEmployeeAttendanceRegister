@@ -72,7 +72,11 @@ public class Designation implements Pickable,DialogPickObserver {
 
         Employee employee=EmployeeLab.getInstanceOf(context).getEmployeeById(uuid);
         if (employee==null)
+        {
+            mEmployees.remove(uuid);
+            updateMyDB(context);
             return;
+        }
         employee.addDesignationById(mDesignationId,context);
     }
 
@@ -81,6 +85,10 @@ public class Designation implements Pickable,DialogPickObserver {
         if (!mEmployees.contains(uuid))
             return;
         mEmployees.remove(uuid);
+
+        Employee employee=EmployeeLab.getInstanceOf(context).getEmployeeById(uuid);
+        employee.removeDesignationById(getId(),context);
+
         updateMyDB(context);
     }
 
@@ -96,16 +104,14 @@ public class Designation implements Pickable,DialogPickObserver {
 
     @Override
     public void doSomeUpdate(Context context) {
-        for (UUID uuid:PickCache.getInstance().getUUIDs(getId().toString()))
+        for (UUID uuid:PickCache.getInstance().getPicked(getId().toString()))
         {
             addEmployeeInvolvedById(uuid,context);
         }
-        for (UUID uuid:PickCache.getInstance().getRemovedUUIDs(getId().toString()))
+        for (UUID uuid:PickCache.getInstance().getRemoved(getId().toString()))
         {
             removeEmployeeInvolvedById(uuid,context);
         }
-
-        PickCache.getInstance().destroyMyCache(getId().toString());
         updateMyDB(context);
     }
 }

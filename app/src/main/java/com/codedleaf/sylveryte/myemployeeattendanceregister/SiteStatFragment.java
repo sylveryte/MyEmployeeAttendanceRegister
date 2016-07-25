@@ -1,23 +1,24 @@
 package com.codedleaf.sylveryte.myemployeeattendanceregister;
 
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.PercentFormatter;
-import com.github.mikephil.charting.highlight.Highlight;
-import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
 import org.joda.time.LocalDate;
 
@@ -59,6 +60,25 @@ public class SiteStatFragment extends Fragment {
 
         mPieChart =(PieChart)view.findViewById(R.id.piechartsite);
 
+
+        Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), "OpenSans-Light.ttf");
+
+        mPieChart.setCenterTextTypeface(tf);
+       // mPieChart.setCenterText(generateCenterText());
+       // mPieChart.setCenterTextSize(10f);
+      //  mPieChart.setCenterTextTypeface(tf);
+
+        mPieChart.setHoleRadius(30f);
+        mPieChart.setTransparentCircleRadius(50f);
+
+        Legend l = mPieChart.getLegend();
+        l.setPosition(Legend.LegendPosition.RIGHT_OF_CHART);
+
+        mPieChart.setData(getPieData());
+        mPieChart.setCenterText("codedleaf");
+
+/*
+
         mPieChart.setUsePercentValues(true);
         mPieChart.setDescription("");
         mPieChart.setExtraOffsets(5, 10, 5, 5);
@@ -66,7 +86,6 @@ public class SiteStatFragment extends Fragment {
         mPieChart.setDragDecelerationFrictionCoef(0.95f);
 
 //        mPieChart.setCenterTextTypeface(mTfLight);
-        mPieChart.setCenterText("codedleaf");
 
         mPieChart.setDrawHoleEnabled(true);
         mPieChart.setHoleColor(Color.WHITE);
@@ -84,23 +103,12 @@ public class SiteStatFragment extends Fragment {
         mPieChart.setRotationEnabled(true);
         mPieChart.setHighlightPerTapEnabled(true);
 
+
         // mPieChart.setUnit(" €");
         // mPieChart.setDrawUnitsInChart(true);
 
         // add a selection listener
-        mPieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
-            @Override
-            public void onValueSelected(com.github.mikephil.charting.data.Entry e, Highlight h) {
 
-            }
-
-            @Override
-            public void onNothingSelected() {
-
-            }
-        });
-
-        setPieData();
 
         mPieChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
         // mPieChart.spin(2000, 0, 360);
@@ -118,16 +126,15 @@ public class SiteStatFragment extends Fragment {
 
 
 
+*/
 
 
-
-        //doesnt work why?
         getActivity().setTitle(mSite.getTitle());
 
         return view;
     }
 
-    private void setPieData()
+    private PieData getPieData()
     {
         //this is gonna be big method hopefully
         ArrayList<PieEntry> pieEntries=new ArrayList<>();
@@ -138,7 +145,7 @@ public class SiteStatFragment extends Fragment {
         pieEntries.add(new PieEntry(mSite.getFloat(mDate,Entry.HALF_TIME,getActivity()),"HalfTime"));
         pieEntries.add(new PieEntry(mSite.getFloat(mDate,Entry.OVER_TIME,getActivity()),"Overtime"));
 
-        PieDataSet dataSet=new PieDataSet(pieEntries,"Remarks");
+        PieDataSet dataSet=new PieDataSet(pieEntries," ");
         dataSet.setSliceSpace(3f);
         dataSet.setSelectionShift(5f);
 
@@ -160,14 +167,15 @@ public class SiteStatFragment extends Fragment {
 
 //        pieData.setValueTypeface(mTfLight);
 
-        mPieChart.setData(pieData);
-
-        // undo all highlights
-        mPieChart.highlightValues(null);
-
-        mPieChart.invalidate();
+        return pieData;
     }
 
+    private SpannableString generateCenterText() {
+        SpannableString s = new SpannableString("Revenues\nQuarters 2015");
+        s.setSpan(new RelativeSizeSpan(2f), 0, 8, 0);
+        s.setSpan(new ForegroundColorSpan(Color.GRAY), 8, s.length(), 0);
+        return s;
+    }
 
     public static SiteStatFragment createInstance(Site site)
     {

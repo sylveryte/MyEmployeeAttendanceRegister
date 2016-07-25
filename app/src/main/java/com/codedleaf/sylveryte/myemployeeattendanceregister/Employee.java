@@ -239,6 +239,12 @@ public class Employee implements Pickable,DialogPickObserver{
         updateMyDB(context);
 
         Site site=SitesLab.getInstanceOf(context).getSiteById(siteid);
+        if (site==null)
+        {
+            mSites.remove(siteid);
+            updateMyDB(context);
+            return;
+        }
         site.addEmployeeById(mEmployeeId,context);
     }
 
@@ -248,6 +254,8 @@ public class Employee implements Pickable,DialogPickObserver{
         if (!mSites.contains(uuid))
             return;
         mSites.remove(uuid);
+        Site site=SitesLab.getInstanceOf(context).getSiteById(uuid);
+        site.removeEmployeeById(getId(),context);
         updateMyDB(context);
     }
 
@@ -260,6 +268,12 @@ public class Employee implements Pickable,DialogPickObserver{
         updateMyDB(context);
 
         Designation designation=DesignationLab.getInstanceOf(context).getDesigantionById(desigantionid);
+        if (designation==null)
+        {
+            mDesignations.remove(desigantionid);
+            updateMyDB(context);
+            return;
+        }
         designation.addEmployeeInvolvedById(mEmployeeId,context);
     }
     public void removeDesignationById(UUID uuid,Context context)
@@ -267,6 +281,9 @@ public class Employee implements Pickable,DialogPickObserver{
         if (!mDesignations.contains(uuid))
             return;
         mDesignations.remove(uuid);
+        Designation designation=DesignationLab.getInstanceOf(context).getDesigantionById(uuid);
+        designation.removeEmployeeInvolvedById(getId(),context);
+
         updateMyDB(context);
     }
 
@@ -275,29 +292,25 @@ public class Employee implements Pickable,DialogPickObserver{
 
 
         String desgedId=getId().toString()+"d";
-        for (UUID uuid:PickCache.getInstance().getUUIDs(desgedId))
+        for (UUID uuid:PickCache.getInstance().getPicked(desgedId))
         {
             addDesignationById(uuid,context);
         }
-        for (UUID uuid:PickCache.getInstance().getRemovedUUIDs(getId().toString()))
+        for (UUID uuid:PickCache.getInstance().getRemoved(desgedId))
         {
             removeDesignationById(uuid,context);
         }
 
         String sitedId=getId().toString()+"s";
-        for (UUID uuid:PickCache.getInstance().getUUIDs(sitedId))
+        for (UUID uuid:PickCache.getInstance().getPicked(sitedId))
         {
             addSiteById(uuid,context);
         }
-        for (UUID uuid:PickCache.getInstance().getRemovedUUIDs(sitedId))
+        for (UUID uuid:PickCache.getInstance().getRemoved(sitedId))
         {
             removeSiteByid(uuid,context);
         }
 
-
-        PickCache.getInstance().destroyMyCache(getId().toString());
-        PickCache.getInstance().destroyMyCache(desgedId);
-        PickCache.getInstance().destroyMyCache(sitedId);
         updateMyDB(context);
     }
 

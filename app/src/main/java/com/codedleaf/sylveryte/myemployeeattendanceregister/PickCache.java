@@ -11,21 +11,53 @@ import java.util.UUID;
 public class PickCache {
     private static PickCache sPickCache;
 
-    private HashMap<String,List<UUID>> UUIDMap;
+    private HashMap<String,List<UUID>> mForPickMap;
+    private HashMap<String,List<Pickable>> mForShowMap;
     private HashMap<String,DialogPickObserver> ObserverMap;
-    private HashMap<String,List<Pickable>> PickableMap;
 
     private PickCache()
     {
-        UUIDMap =new HashMap<>(5);
-        ObserverMap=new HashMap<>(5);
-        PickableMap=new HashMap<>(5);
+        mForPickMap =new HashMap<>(1);
+        mForShowMap =new HashMap<>(1);
+        ObserverMap=new HashMap<>(1);
     }
 
-    private void addUUIDs(String id, List<UUID> list)
+    public void storePicked(String id, List<UUID> list)
     {
-        UUIDMap.put(id,list);
+        mForPickMap.put(id,list);
     }
+
+    public void storePickables(String id,List<Pickable> pickables)
+    {
+        mForShowMap.put(id,pickables);
+    }
+    public List<Pickable> getPickables(String id)
+    {
+        return mForShowMap.get(id);
+    }
+
+    public void storeRemoved(String id, List<UUID> list)
+    {
+        storePicked(id+"r",list);
+    }
+
+    public List<UUID> getPicked(String id)
+    {
+        List<UUID> toReturn=new ArrayList<>(0);
+        if (mForPickMap.containsKey(id))
+        {
+            toReturn= mForPickMap.get(id);
+            mForPickMap.remove(id);
+        }
+
+        return toReturn;
+    }
+
+    public List<UUID> getRemoved(String id)
+    {
+        return getPicked(id+"r");
+    }
+
 
     public void addObserver(String id,DialogPickObserver observer)
     {
@@ -36,51 +68,8 @@ public class PickCache {
         return ObserverMap.get(id);
     }
 
-    public void addPickables(String id,List<Pickable> pickables)
-    {
-        PickableMap.put(id,pickables);
-    }
-    public List<Pickable> getPickable(String id)
-    {
-        return PickableMap.get(id);
-    }
 
-    public List<UUID> getUUIDs(String id)
-    {
-        List<UUID> list= UUIDMap.get(id);
-        if (list==null)
-        {
-            list=new ArrayList<>();
-            addUUIDs(id,list);
-        }
-        return list;
-    }
 
-    public List<UUID> getRemovedUUIDs(String id)
-    {
-        id+="r";
-
-        List<UUID> list= UUIDMap.get(id);
-        if (list==null)
-        {
-            list=new ArrayList<>();
-            addUUIDs(id,list);
-        }
-        return list;
-    }
-
-    public void addThisInMyList(String id,List<UUID> list)
-    {
-        if (list==null)
-            return;
-        getUUIDs(id).addAll(list);
-    }
-
-    public void destroyMyCache(String id)
-    {
-        UUIDMap.remove(id);
-        UUIDMap.remove(id+"r");
-    }
 
     public static PickCache getInstance()
     {

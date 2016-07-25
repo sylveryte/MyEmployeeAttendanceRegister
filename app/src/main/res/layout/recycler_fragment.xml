@@ -1,22 +1,6 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:background="@color/recylceBackground"
-              android:layout_height="match_parent">
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Nothing to show here !"
-        android:textColor="@color/white"
-        android:visibility="gone"
-        android:gravity="center"
-        android:id="@+id/nothingToShow"
-        android:textStyle="bold|italic"/>
 <android.support.v7.widget.RecyclerView
     android:id="@+id/fragment_recycler_view"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/recylceBackground"
     android:layout_height="match_parent"
     android:layout_width="match_parent"/>
-    </LinearLayout>

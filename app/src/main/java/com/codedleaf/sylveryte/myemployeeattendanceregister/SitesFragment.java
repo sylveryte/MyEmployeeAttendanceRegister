@@ -166,7 +166,7 @@ public class SitesFragment extends Fragment implements LabObserver {
 
                                 case 3:
                                 {
-                                    PickDialogFragment.getInstance(mSite.getId().toString(),mSite,PickDialogFragment.EMPLOYEE,mSite.getEmployeesInvolved())
+                                    PickDialogFragment.getInstance(mSite.getId(),mSite,PickDialogFragment.EMPLOYEE,PickDialogFragment.SITE)
                                             .show(getActivity().getSupportFragmentManager(),DIALOG_PICK_FRAGMENT_CODE);
                                     break;
                                 }
