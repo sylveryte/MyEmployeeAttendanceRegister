@@ -23,9 +23,11 @@ import java.util.UUID;
 /**
  * Created by sylveryte on 20/7/16.
  */
-public class EmployeeAdditionDialogFragment extends DialogFragment {
+public class EmployeeAdditionDialogFragment extends DialogFragment implements DialogPickObserver {
 
     private static final String ARGS_CODE="empargscode";
+    public static final String MY_SITE_CALLER_CODE = "somethingsite";
+    public static final String MY_DESIGNATION_CALLER_CODE = "somethingdesig";
 
     private EditText mName;
     private EditText mAddress;
@@ -36,22 +38,36 @@ public class EmployeeAdditionDialogFragment extends DialogFragment {
     private RadioButton mRadioButtonMale;
     private RadioButton mRadioButtonFemale;
 
+    private Button mChooseDesignationButton;
+    private Button mChooseSiteButton;
+
     private ImageButton mDone;
 
     private Employee mEmployee;
 
+    private LinearLayout mDesignationsLinearLayout;
+    private LinearLayout mSitesLinearLayout;
+
+    private DialogPickObserver mItSelf;
+
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+
+        mItSelf=this;
         View view= LayoutInflater.from(getActivity()).inflate(R.layout.employee_addition_fragment,null,false);
 
         mName=(EditText)view.findViewById(R.id.employee_add_name);
         mAddress=(EditText)view.findViewById(R.id.employee_add_address);
         mNote=(EditText)view.findViewById(R.id.employee_add_note);
         mAge=(EditText)view.findViewById(R.id.employee_add_age);
+        mDesignationsLinearLayout =(LinearLayout) view.findViewById(R.id.employee_add_designation_linear_layout);
+        mSitesLinearLayout =(LinearLayout)view.findViewById(R.id.employee_add_sites_linear_layout);
         mRadioGroupMaleFemale=(RadioGroup)view.findViewById(R.id.employee_add_radiobuttongroup_malefemale);
         mRadioButtonFemale=(RadioButton)view.findViewById(R.id.employee_add_radiobutton_female);
         mRadioButtonMale=(RadioButton)view.findViewById(R.id.employee_add_radiobutton_male);
+        mChooseDesignationButton=(Button)view.findViewById(R.id.employee_choose_designation_button);
+        mChooseSiteButton=(Button)view.findViewById(R.id.employee_choose_site_button);
         mDone=(ImageButton)view.findViewById(R.id.emp_addition_done);
 
         mDone.setOnClickListener(new View.OnClickListener() {
@@ -81,7 +97,26 @@ public class EmployeeAdditionDialogFragment extends DialogFragment {
                 getDialog().dismiss();
             }
         });
+        //choose
+        mChooseDesignationButton.setOnClickListener(new View.OnClickListener() {
 
+            @Override
+            public void onClick(View v) {
+                new PickDialogFragment().getInstance(MY_DESIGNATION_CALLER_CODE,mItSelf,PickDialogFragment.DESIGNATION,null)
+                    .show(getActivity().getSupportFragmentManager(),MY_DESIGNATION_CALLER_CODE);
+            }
+        });
+
+        mChooseSiteButton.setOnClickListener(new View.OnClickListener() {
+
+
+            @Override
+            public void onClick(View v) {
+
+               new PickDialogFragment().getInstance(MY_SITE_CALLER_CODE,mItSelf,PickDialogFragment.SITE,null)
+                       .show(getActivity().getSupportFragmentManager(),MY_SITE_CALLER_CODE);
+            }
+        });
 
         mRadioGroupMaleFemale.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -108,6 +143,8 @@ public class EmployeeAdditionDialogFragment extends DialogFragment {
             UUID uuid=(UUID)args.getSerializable(ARGS_CODE);
 
             mEmployee=EmployeeLab.getInstanceOf(getActivity()).getEmployeeById(uuid);
+            PickCache.getInstance().addThisInMyList(MY_DESIGNATION_CALLER_CODE,mEmployee.getDesignations());
+            PickCache.getInstance().addThisInMyList(MY_SITE_CALLER_CODE,mEmployee.getSites());
             updateData();
         }
 
@@ -135,7 +172,86 @@ public class EmployeeAdditionDialogFragment extends DialogFragment {
 
             mAge.setText(mEmployee.getAgeString());
 
+            updateDesgsAndSites();
         }
+
+
+    private void updateDesgsAndSites()
+    {
+
+        List<UUID> designations=PickCache.getInstance().getUUIDs(MY_DESIGNATION_CALLER_CODE);
+        List<UUID> sites=PickCache.getInstance().getUUIDs(MY_SITE_CALLER_CODE);
+
+        LayoutInflater layoutInflater=LayoutInflater.from(getActivity());
+
+        mDesignationsLinearLayout.removeAllViews();
+        mSitesLinearLayout.removeAllViews();
+
+        for (UUID uuid:designations)
+        {
+            new SimpleDesignationView(mDesignationsLinearLayout,layoutInflater,uuid);
+        }
+
+        for (UUID uuid:sites)
+        {
+            new SimpleSiteView(mSitesLinearLayout,layoutInflater,uuid);
+        }
+    }
+
+    @Override
+    public void doSomeUpdate(Context context) {
+        updateDesgsAndSites();
+    }
+
+    private class SimpleDesignationView
+    {
+        private LinearLayout mLinearLayout;
+        private View mView;
+        private UUID mUUID;
+
+        public SimpleDesignationView(LinearLayout linearLayout, LayoutInflater layoutInflater, UUID uuid)
+        {
+            mLinearLayout=linearLayout;
+            mUUID=uuid;
+            mView=layoutInflater.inflate(R.layout.simple_tex_with_close_card,null);
+            TextView textView=(TextView)mView.findViewById(R.id.simple_with_close_text);
+            textView.setText(DesignationLab.getInstanceOf(getActivity()).getDesignationStringById(uuid));
+            ImageButton closeButton=(ImageButton)mView.findViewById(R.id.simple_with_close_close_Button);
+            closeButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    PickCache.getInstance().getUUIDs(MY_DESIGNATION_CALLER_CODE).remove(mUUID);
+                    mLinearLayout.removeView(mView);
+                }
+            });
+
+            mLinearLayout.addView(mView);
+        }
+    }
+    private class SimpleSiteView
+    {
+        LinearLayout mLinearLayout;
+        private View mView;
+        private UUID mUUID;
+
+        public SimpleSiteView(LinearLayout linearLayout, LayoutInflater layoutInflater, UUID uuid)
+        {
+            mLinearLayout=linearLayout;
+            mUUID=uuid;
+            mView=layoutInflater.inflate(R.layout.simple_tex_with_close_card,null);
+            TextView textView=(TextView)mView.findViewById(R.id.simple_with_close_text);
+            textView.setText(SitesLab.getInstanceOf(getActivity()).getSiteStringById(uuid));
+            ImageButton closeButton=(ImageButton)mView.findViewById(R.id.simple_with_close_close_Button);
+            closeButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    PickCache.getInstance().getUUIDs(MY_SITE_CALLER_CODE).remove(mUUID);
+                    mLinearLayout.removeView(mView);
+                }
+            });
+            mLinearLayout.addView(mView);
+        }
+    }
 
     private void  saveEmployee(Employee employee)
     {
@@ -150,7 +266,15 @@ public class EmployeeAdditionDialogFragment extends DialogFragment {
         mEmployee.setAddress(mAddress.getText().toString());
         mEmployee.setNote(mNote.getText().toString());
         mEmployee.setMale(mRadioButtonMale.isChecked());
+
+        mEmployee.setDesignations(PickCache.getInstance().getUUIDs(MY_DESIGNATION_CALLER_CODE),getActivity());
+        mEmployee.setSites(PickCache.getInstance().getUUIDs(MY_SITE_CALLER_CODE),getActivity());
+
         mEmployee.updateMyDB(getActivity());
+    }
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
     }
 
     public static EmployeeAdditionDialogFragment getDialogFrag(@Nullable UUID uuid)
