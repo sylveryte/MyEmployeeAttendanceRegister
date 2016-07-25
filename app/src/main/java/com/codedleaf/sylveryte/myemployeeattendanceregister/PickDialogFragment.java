@@ -34,6 +34,7 @@ public class PickDialogFragment extends DialogFragment {
 
     private List<? extends Pickable> mPickableList;
     private List<UUID> mPicked;
+    private List<UUID> mRemoved;
     private RecyclerView mRecyclerView;
     private PickAdapter mPickAdapter;
 
@@ -46,6 +47,7 @@ public class PickDialogFragment extends DialogFragment {
 
         final String caller=getArguments().getString(CALLER_CODE);
         mPicked=PickCache.getInstance().getUUIDs(caller);
+        mRemoved=PickCache.getInstance().getRemovedUUIDs(caller);
 
         mDone=(ImageButton)view.findViewById(R.id.pick_done);
         mDone.setOnClickListener(new View.OnClickListener() {
@@ -135,10 +137,13 @@ public class PickDialogFragment extends DialogFragment {
                     if (mCheckBox.isChecked())
                     {
                         mPicked.remove(mPickable.getId());
+                        mRemoved.add(mPickable.getId());
                         mCheckBox.setChecked(false);
                     }else
                     {
                         mPicked.add(mPickable.getId());
+                        if (mRemoved.contains(mPickable.getId()))
+                            mRemoved.remove(mPickable.getId());
                         mCheckBox.setChecked(true);
                     }
                 }
@@ -159,16 +164,16 @@ public class PickDialogFragment extends DialogFragment {
         }
     }
 
-    public static PickDialogFragment getInstance(@NonNull String callerContainer, DialogPickObserver observer, @NonNull int codeFromThisFragmentOnly, @Nullable List<UUID> includeThese)
+    public static PickDialogFragment getInstance(@NonNull String callerContainerIsId, DialogPickObserver observer, @NonNull int codeFromThisFragmentOnly, @Nullable List<UUID> includeThese)
     {
         PickDialogFragment fragment=new PickDialogFragment();
 
         Bundle bundle=new Bundle(2);
         bundle.putInt(REQUEST_CODE,codeFromThisFragmentOnly);
-        bundle.putString(CALLER_CODE,callerContainer);
+        bundle.putString(CALLER_CODE,callerContainerIsId);
 
-        PickCache.getInstance().addObserver(callerContainer,observer);
-        PickCache.getInstance().addThisInMyList(callerContainer,includeThese);
+        PickCache.getInstance().addObserver(callerContainerIsId,observer);
+        PickCache.getInstance().addThisInMyList(callerContainerIsId,includeThese);
 
         fragment.setArguments(bundle);
 

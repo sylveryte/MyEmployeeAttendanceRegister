@@ -295,6 +295,7 @@ public class SiteAttendanceFragment extends Fragment {
             public LinearLayout getLayoutView() {
 
                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT,1.0f);
+                lp.gravity=Gravity.CENTER;
                 mLayoutView.setLayoutParams(lp);
                 return mLayoutView;
             }

@@ -100,6 +100,11 @@ public class Designation implements Pickable,DialogPickObserver {
         {
             addEmployeeInvolvedById(uuid,context);
         }
+        for (UUID uuid:PickCache.getInstance().getRemovedUUIDs(getId().toString()))
+        {
+            removeEmployeeInvolvedById(uuid,context);
+        }
+
         PickCache.getInstance().destroyMyCache(getId().toString());
         updateMyDB(context);
     }

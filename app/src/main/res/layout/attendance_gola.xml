@@ -2,12 +2,13 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="4dp"
+    android:gravity="center"
+    android:padding="10dp"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <android.support.v7.widget.CardView
         android:layout_width="40dp"
         app:cardCornerRadius="20dp"
-        app:cardBackgroundColor="@color/white"
+        app:cardBackgroundColor="@color/blue"
         android:padding="1dp"
         android:id="@+id/attendance_gola_b"
         android:layout_height="40dp">

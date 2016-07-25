@@ -30,7 +30,7 @@
             android:layout_weight="1"
             android:background="@color/teal_50"
             android:orientation="horizontal"
-            android:layout_gravity="right"
+            android:layout_gravity="center"
             android:id="@+id/gola_container"
             android:layout_height="match_parent">
 

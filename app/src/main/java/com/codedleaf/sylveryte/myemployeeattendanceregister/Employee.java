@@ -9,7 +9,7 @@ import java.util.UUID;
 /**
  * Created by sylveryte on 12/6/16.
  */
-public class Employee implements Pickable{
+public class Employee implements Pickable,DialogPickObserver{
 
 
 
@@ -267,6 +267,37 @@ public class Employee implements Pickable{
         if (!mDesignations.contains(uuid))
             return;
         mDesignations.remove(uuid);
+        updateMyDB(context);
+    }
+
+    @Override
+    public void doSomeUpdate(Context context) {
+
+
+        String desgedId=getId().toString()+"d";
+        for (UUID uuid:PickCache.getInstance().getUUIDs(desgedId))
+        {
+            addDesignationById(uuid,context);
+        }
+        for (UUID uuid:PickCache.getInstance().getRemovedUUIDs(getId().toString()))
+        {
+            removeDesignationById(uuid,context);
+        }
+
+        String sitedId=getId().toString()+"s";
+        for (UUID uuid:PickCache.getInstance().getUUIDs(sitedId))
+        {
+            addSiteById(uuid,context);
+        }
+        for (UUID uuid:PickCache.getInstance().getRemovedUUIDs(sitedId))
+        {
+            removeSiteByid(uuid,context);
+        }
+
+
+        PickCache.getInstance().destroyMyCache(getId().toString());
+        PickCache.getInstance().destroyMyCache(desgedId);
+        PickCache.getInstance().destroyMyCache(sitedId);
         updateMyDB(context);
     }
 

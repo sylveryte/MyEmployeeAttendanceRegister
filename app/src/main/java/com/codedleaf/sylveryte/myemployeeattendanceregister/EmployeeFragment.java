@@ -95,6 +95,7 @@ public class EmployeeFragment extends Fragment implements LabObserver {
     {
 
         private static final String DIALOG_FRAGMENT_CODE = "editdialogemp";
+        private static final String DIALOG_PICK_FRAGMENT_CODE = "picking up bro";
 
         private TextView name;
         private TextView site;
@@ -112,7 +113,7 @@ public class EmployeeFragment extends Fragment implements LabObserver {
                 @Override
                 public void onClick(View v) {
 
-                    CharSequence choices[] = new CharSequence[] {"Edit","Active??","Show Site(s)","Show Designation(s)","Delete"};
+                    CharSequence choices[] = new CharSequence[] {"Edit","Active??","Show Site(s)","Show Designation(s)","Assign Site(s)","Assign Designation(s)","Delete"};
 
                     if (mEmployee.isActive())
                     {
@@ -131,7 +132,7 @@ public class EmployeeFragment extends Fragment implements LabObserver {
 
                             switch (which)
                             {
-                                case 4:
+                                case 6:
                                 {
                                     new AlertDialog.Builder(getActivity())
                                             .setTitle("Delete "+mEmployee.getTitle())
@@ -155,6 +156,23 @@ public class EmployeeFragment extends Fragment implements LabObserver {
                                     break;
                                 }
 
+                                case 4:
+                                {
+
+                                    //assign sites
+                                    PickDialogFragment.getInstance(mEmployee.getId().toString(),mEmployee,PickDialogFragment.SITE,mEmployee.getSites())
+                                            .show(getActivity().getSupportFragmentManager(),DIALOG_PICK_FRAGMENT_CODE);
+                                    break;
+
+                                }
+                                case 5:
+                                {
+
+                                    //assign desgs
+                                    PickDialogFragment.getInstance(mEmployee.getId().toString(),mEmployee,PickDialogFragment.DESIGNATION,mEmployee.getDesignations())
+                                            .show(getActivity().getSupportFragmentManager(),DIALOG_PICK_FRAGMENT_CODE);
+                                    break;
+                                }
                                 case 1:
                                 {
                                     mEmployee.setActive(!mEmployee.isActive());

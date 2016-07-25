@@ -167,6 +167,10 @@ public class Site implements Pickable,DialogPickObserver {
         {
             addEmployeeById(uuid,context);
         }
+        for (UUID uuid:PickCache.getInstance().getRemovedUUIDs(getId().toString()))
+        {
+            removeEmployeeById(uuid,context);
+        }
         PickCache.getInstance().destroyMyCache(getId().toString());
         updateMyDB(context);
     }

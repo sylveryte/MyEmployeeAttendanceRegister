@@ -56,6 +56,19 @@ public class PickCache {
         return list;
     }
 
+    public List<UUID> getRemovedUUIDs(String id)
+    {
+        id+="r";
+
+        List<UUID> list= UUIDMap.get(id);
+        if (list==null)
+        {
+            list=new ArrayList<>();
+            addUUIDs(id,list);
+        }
+        return list;
+    }
+
     public void addThisInMyList(String id,List<UUID> list)
     {
         if (list==null)
@@ -66,6 +79,7 @@ public class PickCache {
     public void destroyMyCache(String id)
     {
         UUIDMap.remove(id);
+        UUIDMap.remove(id+"r");
     }
 
     public static PickCache getInstance()
