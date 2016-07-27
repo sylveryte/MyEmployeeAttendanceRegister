@@ -88,15 +88,15 @@ public class SiteAdditionDialogFragment extends DialogFragment {
         site.updateMyDB(getActivity());
     }
 
-    public static SiteAdditionDialogFragment getSiteFrag(@Nullable UUID uuid)
+    public static SiteAdditionDialogFragment getSiteFrag(@Nullable UUID siteId)
     {
-        if (uuid==null)
+        if (siteId==null)
             return new SiteAdditionDialogFragment();
         else
         {
             SiteAdditionDialogFragment fragment=new SiteAdditionDialogFragment();
             Bundle args=new Bundle();
-            args.putSerializable(ARGS_CODE,uuid);
+            args.putSerializable(ARGS_CODE,siteId);
             fragment.setArguments(args);
             return fragment;
         }

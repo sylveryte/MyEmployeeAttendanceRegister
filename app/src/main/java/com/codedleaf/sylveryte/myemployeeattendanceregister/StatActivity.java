@@ -35,23 +35,20 @@ public class StatActivity extends SingleFragmentActivity {
         {
             case RegisterConstants.SITE:
             {
-                Site site= sitesLab.getSiteById(uuid);
-                return SiteStatFragment.createInstance(site);
+                return SiteStatFragment.createInstance(uuid);
             }
             case RegisterConstants.EMPLOYEE:
             {
-                Employee employee= employeeLab.getEmployeeById(uuid);
-                return EmployeeStatFragment.createInstance(employee);
+                return EmployeeStatFragment.createInstance(uuid);
             }
             case RegisterConstants.DESIGNATION:
             {
-                Designation designation= designationLab.getDesigantionById(uuid);
-                return DesignationStatFragment.createInstance(designation);
+                return DesignationStatFragment.createInstance(uuid);
             }
         }
 
         Site site= sitesLab.getSites().get(0);
-        return SiteStatFragment.createInstance(site);
+        return SiteStatFragment.createInstance(uuid);
     }
 
     public static Intent fetchIntent(Context context, int registerConstant,UUID uuid)

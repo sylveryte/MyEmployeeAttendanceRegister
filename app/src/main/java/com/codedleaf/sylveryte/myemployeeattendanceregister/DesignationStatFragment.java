@@ -1,24 +1,30 @@
 package com.codedleaf.sylveryte.myemployeeattendanceregister;
 
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
+
+import java.util.UUID;
 
 /**
  * Created by sylveryte on 11/7/16.
  */
 public class DesignationStatFragment extends Fragment {
 
+    private static final String ITEM_CODE = "retrieveItem";
     private Designation mDesignation;
 
 
-    private void setDesignation(Designation designation) {
-        mDesignation = designation;
-    }
 
-    public static DesignationStatFragment createInstance(Designation designation)
+    public static DesignationStatFragment createInstance(UUID desgId)
     {
         DesignationStatFragment designationStatFragment=new DesignationStatFragment();
-        designationStatFragment.setDesignation(designation);
+
+        Bundle args=new Bundle(1);
+        args.putSerializable(ITEM_CODE,desgId);
+
+        designationStatFragment.setArguments(args);
+
         return designationStatFragment;
     }
 }

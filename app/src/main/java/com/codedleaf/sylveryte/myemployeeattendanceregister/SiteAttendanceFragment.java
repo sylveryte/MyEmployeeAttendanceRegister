@@ -407,12 +407,12 @@ public class SiteAttendanceFragment extends Fragment {
        // EntryLab.getInstanceOf(getActivity()).updateEntries(mEntries);
     }
 
-    public static SiteAttendanceFragment createInstance(Site site)
+    public static SiteAttendanceFragment createInstance(UUID siteId)
     {
         SiteAttendanceFragment siteAttendanceFragment=new SiteAttendanceFragment();
 
         Bundle args=new Bundle();
-        args.putSerializable(ARGS_CODE,site.getId());
+        args.putSerializable(ARGS_CODE,siteId);
         siteAttendanceFragment.setArguments(args);
 
         return siteAttendanceFragment;

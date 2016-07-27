@@ -177,12 +177,12 @@ public class SiteStatFragment extends Fragment {
         return s;
     }
 
-    public static SiteStatFragment createInstance(Site site)
+    public static SiteStatFragment createInstance(UUID siteId)
     {
         SiteStatFragment siteStatFragment=new SiteStatFragment();
 
         Bundle args=new Bundle(1);
-        args.putSerializable(ITEM_CODE,site.getId());
+        args.putSerializable(ITEM_CODE,siteId);
 
         siteStatFragment.setArguments(args);
 

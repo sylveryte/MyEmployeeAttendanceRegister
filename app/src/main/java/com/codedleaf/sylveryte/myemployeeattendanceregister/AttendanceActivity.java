@@ -43,9 +43,8 @@ public class AttendanceActivity extends SingleFragmentActivity {
     private Fragment getSiteFragment(Intent intent) {
 
         UUID siteId = (UUID) intent.getSerializableExtra(AttendanceActivity.siteAttendance);
-        Site site = SitesLab.getInstanceOf(getApplicationContext()).getSiteById(siteId);
 
-        return SiteAttendanceFragment.createInstance(site);
+        return SiteAttendanceFragment.createInstance(siteId);
     }
 
 }
