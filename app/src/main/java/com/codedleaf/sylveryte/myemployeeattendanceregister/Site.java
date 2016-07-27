@@ -69,7 +69,11 @@ public class Site implements Pickable,PickDialogObserver {
     }
 
     public String getDescription() {
-        return getEmployeesInvolved().size()+" Employees\n"+mDescription;
+        return getEmployeeCountString()+"\n"+mDescription;
+    }
+    public String getEmployeeCountString()
+    {
+        return getEmployeesInvolved().size()+" Employees";
     }
     public String getDescriptionPure() {
         return mDescription;
@@ -102,22 +106,31 @@ public class Site implements Pickable,PickDialogObserver {
     //for chart
     public float getFloat(LocalDate month,int remark, Context context)
     {
+        List<Entry> entriesTotal=EntryLab.getInstanceOf(context)
+                .getEntries(null,month.getMonthOfYear(),month.getYear(),null,mSiteId,null);
+
         List<Entry> entries=EntryLab.getInstanceOf(context)
                 .getEntries(null,month.getMonthOfYear(),month.getYear(),remark,mSiteId,null);
 
-        if (entries!=null)
-        {
-            int total=entries.size();
-            int counted=0;
+        if (entriesTotal==null||entries==null)
+            return 0;
+        return (float)100*entries.size()/entriesTotal.size();
+    }
 
-            for (Entry entry: entries)
+    public float getDesgPercent(UUID desgId,Context context)
+    {
+        int i=0;
+        for (Pickable pickable:EmployeeLab.getInstanceOf(context).getPickables(getEmployeesInvolved()))
+        {
+            Employee employee=(Employee)pickable;
+            if (employee.getDesignations().contains(desgId))
             {
-                if (entry.getRemark()==remark)
-                    counted++;
+                i++;
             }
-            return (float)counted/total;
         }
-        return 0.0f;
+        if (i==0||getEmployeesInvolved().size()==0)
+            return 0;
+        return (float)100*i/getEmployeesInvolved().size();
     }
 
     @Override

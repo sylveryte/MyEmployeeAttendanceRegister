@@ -31,6 +31,8 @@ public class Employee implements Pickable,PickDialogObserver {
     private UUID mEmployeeId;
 
     private List<UUID> mDesignations;
+    private List<Designation> mDesignationsActual;
+    private String mDesignationsString="";
     private List<UUID> mSites;
 
     @Override
@@ -72,7 +74,6 @@ public class Employee implements Pickable,PickDialogObserver {
         {
             addDesignationById(uuid,context);
         }
-
     }
 
     public String getDesignationString(Context context)
@@ -100,9 +101,6 @@ public class Employee implements Pickable,PickDialogObserver {
         }
         return "no Designation Assigned";
     }
-
-
-
 
     public List<UUID> getSites()
     {
@@ -140,7 +138,7 @@ public class Employee implements Pickable,PickDialogObserver {
 
     @Override
     public String getDescription() {
-        return getMaleFemaleString()+" "+getAge();
+        return getMaleFemaleString()+" "+getAge()+"\n"+mDesignationsString;
     }
 
     public  String getMaleFemaleString()
@@ -274,6 +272,7 @@ public class Employee implements Pickable,PickDialogObserver {
         if (mDesignations.contains(desigantionid))
             return;
         mDesignations.add(desigantionid);
+        mDesignationsString=getDesignationString(context);
         updateMyDB(context);
 
         Designation designation=DesignationLab.getInstanceOf(context).getDesigantionById(desigantionid);
@@ -290,6 +289,7 @@ public class Employee implements Pickable,PickDialogObserver {
         if (!mDesignations.contains(uuid))
             return;
         mDesignations.remove(uuid);
+        mDesignationsString=getDesignationString(context);
         Designation designation=DesignationLab.getInstanceOf(context).getDesigantionById(uuid);
         designation.removeEmployeeInvolvedById(getId(),context);
 

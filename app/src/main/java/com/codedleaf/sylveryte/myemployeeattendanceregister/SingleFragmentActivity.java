@@ -29,7 +29,6 @@ public abstract class SingleFragmentActivity extends AppCompatActivity {
             setSupportActionBar(toolbar);
 
 //         causing to go to home activity to sites
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
             if (fragment == null) {
                 fragment = createFragment();
