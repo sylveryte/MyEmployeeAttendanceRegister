@@ -24,7 +24,7 @@ import java.util.UUID;
 /**
  * Created by sylveryte on 20/7/16.
  */
-public class EmployeeAdditionDialogFragment extends DialogFragment implements DialogPickObserver {
+public class EmployeeAdditionFragmentDialog extends DialogFragment implements PickDialogObserver {
 
     private static final String ARGS_CODE="empargscode";
     private static final String DIALOG_FRAGMENT_CODE="emppickdialogcode";
@@ -42,7 +42,7 @@ public class EmployeeAdditionDialogFragment extends DialogFragment implements Di
     private LinearLayout mDesignationsLinearLayout;
     private LinearLayout mSitesLinearLayout;
 
-    private DialogPickObserver mItSelf;
+    private PickDialogObserver mItSelf;
 
     private List<UUID> designationPicked;
     private List<UUID> sitesPicked;
@@ -290,13 +290,13 @@ public class EmployeeAdditionDialogFragment extends DialogFragment implements Di
         super.onDestroyView();
     }
 
-    public static EmployeeAdditionDialogFragment getDialogFrag(@Nullable UUID uuid)
+    public static EmployeeAdditionFragmentDialog getDialogFrag(@Nullable UUID uuid)
     {
         if (uuid==null)
-            return new EmployeeAdditionDialogFragment();
+            return new EmployeeAdditionFragmentDialog();
         else
         {
-            EmployeeAdditionDialogFragment fragment=new EmployeeAdditionDialogFragment();
+            EmployeeAdditionFragmentDialog fragment=new EmployeeAdditionFragmentDialog();
             Bundle args=new Bundle();
             args.putSerializable(ARGS_CODE,uuid);
             fragment.setArguments(args);
