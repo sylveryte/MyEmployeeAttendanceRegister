@@ -2,10 +2,12 @@ package com.codedleaf.sylveryte.myemployeeattendanceregister;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -45,16 +47,19 @@ public class DesignationFragment extends Fragment implements LabObserver {
 
         mRecyclerView =(RecyclerView)view.findViewById(R.id.fragment_recycler_view);
 
-        //for automatic
+       /* //for automatic
         //// TODO: 22/6/16  looks suspicious
         DisplayMetrics metrics=new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
         int cardWidth=(int)metrics.xdpi;
-        int spans=(int)Math.floor(mRecyclerView.getContext().getResources().getDisplayMetrics().widthPixels/(float)cardWidth);
+        int spans=(int)Math.floor(mRecyclerView.getContext().getResources().getDisplayMetrics().widthPixels/(float)cardWidth);*/
 
-        mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(spans,StaggeredGridLayoutManager.VERTICAL));
 
-       // mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        //keeping two spans only
+//        mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
+
+
+        mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(),2));
 
         mDesignationAdapter=new DesignationAdapter(mLab.getDesignations());
         mRecyclerView.setAdapter(mDesignationAdapter);

@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -164,7 +163,7 @@ public class PickDialogFragment extends DialogFragment {
         }
     }
 
-    public static PickDialogFragment getInstance(@NonNull String id, DialogPickObserver observer,List<UUID> picked,List<? extends Pickable> pickFrom)
+    public static PickDialogFragment getInstance(@NonNull String id, PickDialogObserver observer, List<UUID> picked, List<? extends Pickable> pickFrom)
     {
         PickDialogFragment fragment=new PickDialogFragment();
 

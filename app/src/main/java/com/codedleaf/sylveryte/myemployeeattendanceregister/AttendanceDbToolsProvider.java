@@ -17,7 +17,7 @@ public class AttendanceDbToolsProvider {
             ContentValues values=new ContentValues();
             values.put(DesignationsTable.Cols.UID,designation.getId().toString());
             values.put(DesignationsTable.Cols.TITLE,designation.getTitle());
-            values.put(DesignationsTable.Cols.DESC,designation.getDescription());
+            values.put(DesignationsTable.Cols.DESC,designation.getPureDescription());
 
         return values;
     }

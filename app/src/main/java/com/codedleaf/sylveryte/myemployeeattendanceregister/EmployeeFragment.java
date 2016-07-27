@@ -16,8 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.joda.time.LocalDate;
-
 import java.util.List;
 import java.util.Locale;
 
@@ -189,7 +187,7 @@ public class EmployeeFragment extends Fragment implements LabObserver {
 
 
                                 case 0: {
-                                    EmployeeAdditionDialogFragment.getDialogFrag(mEmployee.getId())
+                                    EmployeeAdditionFragmentDialog.getDialogFrag(mEmployee.getId())
                                             .show(getActivity().getSupportFragmentManager(),DIALOG_FRAGMENT_CODE);
 
                                     break;

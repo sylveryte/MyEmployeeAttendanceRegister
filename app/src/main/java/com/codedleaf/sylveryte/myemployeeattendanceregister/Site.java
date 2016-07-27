@@ -1,8 +1,6 @@
 package com.codedleaf.sylveryte.myemployeeattendanceregister;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import org.joda.time.LocalDate;
 
@@ -13,7 +11,7 @@ import java.util.UUID;
 /**
  * Created by sylveryte on 12/6/16.
  */
-public class Site implements Pickable,DialogPickObserver {
+public class Site implements Pickable,PickDialogObserver {
 
 
     private String mTitle;
@@ -28,6 +26,10 @@ public class Site implements Pickable,DialogPickObserver {
 
     private List<UUID> mEmployeesInvolved;
 
+    @Override
+    public int getType() {
+        return RegisterConstants.SITE;
+    }
 
     public Site()
     {

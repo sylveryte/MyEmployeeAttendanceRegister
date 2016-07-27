@@ -99,7 +99,7 @@ public class HomeActivity extends AppCompatActivity {
 
 
     private void startAddEmployee() {
-        EmployeeAdditionDialogFragment.getDialogFrag(null)
+        EmployeeAdditionFragmentDialog.getDialogFrag(null)
                 .show(getSupportFragmentManager(),DIALOG_FRAGMENT_CODE);
 
 

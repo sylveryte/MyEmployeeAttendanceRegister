@@ -10,5 +10,5 @@ public interface Pickable {
     String getTitle();
     String getDescription();
     UUID getId();
-
+    int getType();
 }

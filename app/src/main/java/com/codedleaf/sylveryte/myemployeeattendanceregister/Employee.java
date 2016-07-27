@@ -9,7 +9,7 @@ import java.util.UUID;
 /**
  * Created by sylveryte on 12/6/16.
  */
-public class Employee implements Pickable,DialogPickObserver{
+public class Employee implements Pickable,PickDialogObserver {
 
 
 
@@ -28,6 +28,10 @@ public class Employee implements Pickable,DialogPickObserver{
     private List<UUID> mDesignations;
     private List<UUID> mSites;
 
+    @Override
+    public int getType() {
+        return RegisterConstants.EMPLOYEE;
+    }
 
     public Employee()
     {

@@ -63,10 +63,6 @@ public class DesignationAdditionDialogFragment extends DialogFragment {
             mDesignation=DesignationLab.getInstanceOf(getActivity()).getDesigantionById(uuid);
             updateData();
         }
-
-
-
-
         return new AlertDialog.Builder(getActivity())
                 .setView(v)
                 .create();
@@ -75,7 +71,7 @@ public class DesignationAdditionDialogFragment extends DialogFragment {
     private void updateData()
     {
         mEditText_designationName.setText(mDesignation.getTitle());
-        mEditText_description.setText(mDesignation.getDescription());
+        mEditText_description.setText(mDesignation.getPureDescription());
     }
 
     private void  saveDesignation(Designation designation)

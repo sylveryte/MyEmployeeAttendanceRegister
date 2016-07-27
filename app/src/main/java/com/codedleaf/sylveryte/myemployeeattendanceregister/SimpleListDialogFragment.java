@@ -81,15 +81,23 @@ public class SimpleListDialogFragment extends DialogFragment {
     {
         private TextView title;
         private TextView description;
+        private Pickable mPickable;
 
         public PickHolder(View itemView) {
             super(itemView);
             title=(TextView)itemView.findViewById(R.id.pick_card_title);
             description=(TextView)itemView.findViewById(R.id.pick_card_description);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(StatActivity.fetchIntent(getActivity(),mPickable.getType(),mPickable.getId()));
+                }
+            });
         }
 
         public void bind(Pickable pickable)
         {
+            mPickable=pickable;
             title.setText(pickable.getTitle());
             description.setText(pickable.getDescription());
         }

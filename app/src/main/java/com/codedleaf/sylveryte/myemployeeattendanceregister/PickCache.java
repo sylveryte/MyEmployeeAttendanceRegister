@@ -13,7 +13,7 @@ public class PickCache {
 
     private HashMap<String,List<UUID>> mForPickMap;
     private HashMap<String,List<? extends Pickable>> mForShowMap;
-    private HashMap<String,DialogPickObserver> ObserverMap;
+    private HashMap<String,PickDialogObserver> ObserverMap;
 
     private PickCache()
     {
@@ -58,11 +58,11 @@ public class PickCache {
     }
 
 
-    public void addObserver(String id,DialogPickObserver observer)
+    public void addObserver(String id,PickDialogObserver observer)
     {
         ObserverMap.put(id,observer);
     }
-    public DialogPickObserver getObserver(String id)
+    public PickDialogObserver getObserver(String id)
     {
         return ObserverMap.get(id);
     }

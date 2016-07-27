@@ -19,10 +19,6 @@ public class StatActivity extends SingleFragmentActivity {
     private static final String FRAGMENT_CODE = "stat_vagaira_ka";
     private static final String UUID_CODE = "uuid_vagaira_ka";
 
-    public static final int FRAGMENT_CODE_STAT_SITE = 30;
-    public static final int FRAGMENT_CODE_STAT_EMPLOYEE = 31;
-    public static final int FRAGMENT_CODE_STAT_DESIGNATION = 32;
-
 
     @Override
     protected Fragment createFragment() {
@@ -32,22 +28,22 @@ public class StatActivity extends SingleFragmentActivity {
         EmployeeLab employeeLab = EmployeeLab.getInstanceOf(this);
 
         Intent intent=getIntent();
-        int i=intent.getIntExtra(FRAGMENT_CODE,FRAGMENT_CODE_STAT_SITE);
+        int i=intent.getIntExtra(FRAGMENT_CODE,RegisterConstants.SITE);
         UUID uuid=(UUID)intent.getSerializableExtra(UUID_CODE);
 
         switch (i)
         {
-            case FRAGMENT_CODE_STAT_SITE:
+            case RegisterConstants.SITE:
             {
                 Site site= sitesLab.getSiteById(uuid);
                 return SiteStatFragment.createInstance(site);
             }
-            case FRAGMENT_CODE_STAT_EMPLOYEE:
+            case RegisterConstants.EMPLOYEE:
             {
                 Employee employee= employeeLab.getEmployeeById(uuid);
                 return EmployeeStatFragment.createInstance(employee);
             }
-            case FRAGMENT_CODE_STAT_DESIGNATION:
+            case RegisterConstants.DESIGNATION:
             {
                 Designation designation= designationLab.getDesigantionById(uuid);
                 return DesignationStatFragment.createInstance(designation);
@@ -58,10 +54,10 @@ public class StatActivity extends SingleFragmentActivity {
         return SiteStatFragment.createInstance(site);
     }
 
-    public static Intent fetchIntent(Context context, int fragCode,UUID uuid)
+    public static Intent fetchIntent(Context context, int registerConstant,UUID uuid)
     {
         Intent i=new Intent(context,StatActivity.class);
-        i.putExtra(FRAGMENT_CODE,fragCode);
+        i.putExtra(FRAGMENT_CODE,registerConstant);
         i.putExtra(UUID_CODE,uuid);
         return i;
     }

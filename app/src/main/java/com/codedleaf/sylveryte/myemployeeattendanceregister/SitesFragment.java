@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.DisplayMetrics;
@@ -46,14 +47,17 @@ public class SitesFragment extends Fragment implements LabObserver {
         View view=inflater.inflate(R.layout.recycler_fragment,container,false);
         mRecyclerView =(RecyclerView)view.findViewById(R.id.fragment_recycler_view);
 
-        //for automatic
+      /*  //for automatic
         //// TODO: 22/6/16  looks suspicious
         DisplayMetrics metrics=new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
         int cardWidth=(int)metrics.xdpi;
         int spans=(int)Math.floor(mRecyclerView.getContext().getResources().getDisplayMetrics().widthPixels/(float)cardWidth);
 
-        mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(spans,StaggeredGridLayoutManager.VERTICAL));
+        mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(spans,StaggeredGridLayoutManager.VERTICAL));*/
+
+        mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(),2));
+
         mSiteAdapter=new SiteAdapter(mSitesLab.getSites());
         mRecyclerView.setAdapter(mSiteAdapter);
 
@@ -197,7 +201,7 @@ public class SitesFragment extends Fragment implements LabObserver {
                                 }
                                 case 0: {
 
-                                    Intent intent1 = AttendanceActivity.fetchIntent(getActivity(), AttendanceActivity.FRAGMENT_CODE_SITE);
+                                    Intent intent1 = AttendanceActivity.fetchIntent(getActivity(),RegisterConstants.SITE);
                                     intent1.putExtra(AttendanceActivity.siteAttendance, mSite.getId());
                                     startActivity(intent1);
 
@@ -205,7 +209,7 @@ public class SitesFragment extends Fragment implements LabObserver {
                                 }
                                 case 1: {
 
-                                    Intent intent3=StatActivity.fetchIntent(getActivity(),StatActivity.FRAGMENT_CODE_STAT_SITE,mSite.getId());
+                                    Intent intent3=StatActivity.fetchIntent(getActivity(),RegisterConstants.SITE,mSite.getId());
                                     startActivity(intent3);
                                 }
                             }

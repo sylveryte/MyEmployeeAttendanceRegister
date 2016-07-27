@@ -18,13 +18,10 @@ public class AttendanceActivity extends SingleFragmentActivity {
     public static final String siteAttendance = "IAMBATMAN";
     private static final String FRAGMENT_CODE = "codedleaf.attendance.fragment.code";
 
-    public static final int FRAGMENT_CODE_DESIGNATION = 1288;
-    public static final int FRAGMENT_CODE_SITE = 1287;
 
-
-    public static Intent fetchIntent(Context context, int fragCode) {
+    public static Intent fetchIntent(Context context, int registerConstant) {
         Intent i = new Intent(context, AttendanceActivity.class);
-        i.putExtra(FRAGMENT_CODE, fragCode);
+        i.putExtra(FRAGMENT_CODE, registerConstant);
         return i;
     }
 
@@ -34,8 +31,8 @@ public class AttendanceActivity extends SingleFragmentActivity {
 
         Intent intent = getIntent();
 
-        switch (intent.getIntExtra(FRAGMENT_CODE, FRAGMENT_CODE_SITE)) {
-            case FRAGMENT_CODE_SITE: {
+        switch (intent.getIntExtra(FRAGMENT_CODE, RegisterConstants.SITE)) {
+            case RegisterConstants.SITE: {
                 return getSiteFragment(intent);
             }
         }
