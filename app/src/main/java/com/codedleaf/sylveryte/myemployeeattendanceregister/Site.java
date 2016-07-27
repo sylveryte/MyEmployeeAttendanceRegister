@@ -139,17 +139,11 @@ public class Site implements Pickable,DialogPickObserver {
         if (mEmployeesInvolved.contains(empId))
             return;
         mEmployeesInvolved.add(empId);
-        updateMyDB(context);
 
         Employee employee=EmployeeLab.getInstanceOf(context).getEmployeeById(empId);
 
-        if (employee==null)
-        {
-            mEmployeesInvolved.remove(empId);
-            updateMyDB(context);
-            return;
-        }
-        employee.addSiteById(mSiteId,context);
+        if (employee!=null)
+            employee.addSiteById(mSiteId,context);
     }
 
     public void removeEmployeeById(UUID uuid,Context context)
@@ -160,7 +154,6 @@ public class Site implements Pickable,DialogPickObserver {
         Employee employee=EmployeeLab.getInstanceOf(context).getEmployeeById(uuid);
         //fucking cant believe it below was remove designation
         employee.removeSiteByid(getId(),context);
-        updateMyDB(context);
     }
 
     public void updateMyDB(Context context)

@@ -130,7 +130,10 @@ public class DesignationFragment extends Fragment implements LabObserver {
 
                                     //haha a :( lot of work
                                     // (afte few weeks) yeah :? :grin: :grin:
-                                    PickDialogFragment.getInstance(mDesignation.getId(),mDesignation,PickDialogFragment.EMPLOYEE,PickDialogFragment.DESIGNATION)
+                                    PickDialogFragment.getInstance(mDesignation.getId().toString(),
+                                            mDesignation,
+                                            mDesignation.getEmployees(),
+                                            EmployeeLab.getInstanceOf(getActivity()).getEmployees())
                                             .show(getActivity().getSupportFragmentManager(),DIALOG_PICK_FRAGMENT_CODE);
 
                                     break;
@@ -139,11 +142,6 @@ public class DesignationFragment extends Fragment implements LabObserver {
                         }
                     });
                     builder.show();
-
-
-
-
-
                 }
             });
 

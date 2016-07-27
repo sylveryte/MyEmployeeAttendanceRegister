@@ -58,6 +58,7 @@ public class EmployeeLab implements LabObeservable {
     {
         if (sEmployeeLab==null)
         {
+            SitesLab.getInstanceOf(context);
             sEmployeeLab=new EmployeeLab(context);
             sEmployeeLab.initializeDatabase(context);
 

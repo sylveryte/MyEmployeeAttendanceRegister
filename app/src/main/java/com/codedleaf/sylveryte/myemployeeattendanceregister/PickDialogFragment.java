@@ -25,82 +25,30 @@ import java.util.UUID;
 public class PickDialogFragment extends DialogFragment {
 
     //these are to get from args
-    private static final String REQUEST_CODE="pickablescode";
     private static final String CALLER_CODE="callercodebro";
-    private static final String REQUESTER_CODE = "meriIdboletoh";
 
-    public static final int SITE=91;
-    public static final int DESIGNATION=92;
-    public static final int EMPLOYEE=93;
+    private String callerid;
 
-
-    List<PickingChavaClass> chavaList;
+    private List<PickingChavaClass> chavaList;
 
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         View view=LayoutInflater.from(getActivity()).inflate(R.layout.pick_fragment,null,false);
 
-        List<? extends Pickable> pickableList=new ArrayList<>(0);
-        List<UUID> picked=new ArrayList<>(0);
-        final UUID callerUuid=(UUID)getArguments().getSerializable(CALLER_CODE);
-
-        final int requestFor=getArguments().getInt(REQUEST_CODE);
-        switch (requestFor)
-        {
-            case SITE:
-            {
-                pickableList=SitesLab.getInstanceOf(getActivity()).getSites();
-                break;
-            }
-            case DESIGNATION:
-            {
-                pickableList=DesignationLab.getInstanceOf(getActivity()).getDesignations();
-                break;
-            }
-            case EMPLOYEE:
-            {
-                pickableList=EmployeeLab.getInstanceOf(getActivity()).getEmployees();
-                break;
-            }
-        }
-
-        final int requester=getArguments().getInt(REQUESTER_CODE);
-        switch (requester)
-        {
-            case SITE:
-            {
-                Site site=SitesLab.getInstanceOf(getActivity()).getSiteById(callerUuid);
-                picked=site.getEmployeesInvolved();
-                break;
-            }
-            case DESIGNATION:
-            {
-                Designation designation=DesignationLab.getInstanceOf(getActivity()).getDesigantionById(callerUuid);
-                picked=designation.getEmployees();
-                break;
-            }
-            case EMPLOYEE:
-            {
-                Employee employee=EmployeeLab.getInstanceOf(getActivity()).getEmployeeById(callerUuid);
-                if (requestFor==DESIGNATION)
-                    picked=employee.getDesignations();
-                else picked=employee.getSites();
-                break;
-            }
-        }
+        //get datas
+        callerid=getArguments().getString(CALLER_CODE);
+        List<? extends Pickable> pickFrom=PickCache.getInstance().getPickables(callerid);
+        List<UUID> picked=PickCache.getInstance().getPicked(callerid);
 
 
-        if (pickableList.isEmpty())
+        if (pickFrom.isEmpty())
         {
             view=LayoutInflater.from(getActivity()).inflate(R.layout.nothing_to_show,null,false);
         }else
         {
-
-            //PickCache.getInstance().getUUIDs(caller);
-
             chavaList = new ArrayList<>();
-            for (Pickable pickable:pickableList)
+            for (Pickable pickable:pickFrom)
             {
                 //herer
                 if (picked.contains(pickable.getId()))
@@ -125,28 +73,10 @@ public class PickDialogFragment extends DialogFragment {
                             removed.add(chavaClass.getPickable().getId());
                     }
 
-                    ///pick cache should be used here only
-                    String caller="Lag gayi!";
-                    if (callerUuid!=null)
-                    {
-                        if (requester==EMPLOYEE&&requestFor==DESIGNATION)
-                        {
-                            caller=callerUuid.toString()+"d";
-                        }
-                        else if (requester==EMPLOYEE&&requestFor==SITE)
-                        {
-                            caller=callerUuid.toString()+"s";
-                        }
-                        else
-                        {
-                            caller=callerUuid.toString();
-                        }
-                    }
+                    PickCache.getInstance().storePicked(callerid,picked);
+                    PickCache.getInstance().storeRemoved(callerid,removed);
+                    PickCache.getInstance().getObserver(callerid).doSomeUpdate(getActivity());
 
-                    PickCache.getInstance().storePicked(caller,picked);
-                    PickCache.getInstance().storeRemoved(caller,removed);
-
-                    PickCache.getInstance().getObserver(callerUuid.toString()).doSomeUpdate(getActivity());
                     getDialog().dismiss();
                 }
             });
@@ -234,16 +164,16 @@ public class PickDialogFragment extends DialogFragment {
         }
     }
 
-    public static PickDialogFragment getInstance(@NonNull UUID callerContainerIsId, DialogPickObserver observer,int youWantFromPDF, int requesterFromPDF)
+    public static PickDialogFragment getInstance(@NonNull String id, DialogPickObserver observer,List<UUID> picked,List<? extends Pickable> pickFrom)
     {
         PickDialogFragment fragment=new PickDialogFragment();
 
-        Bundle bundle=new Bundle(3);
-        bundle.putInt(REQUEST_CODE,youWantFromPDF);
-        bundle.putInt(REQUESTER_CODE,requesterFromPDF);
-        bundle.putSerializable(CALLER_CODE,callerContainerIsId);
+        Bundle bundle=new Bundle(1);
+        bundle.putString(CALLER_CODE,id);
 
-        PickCache.getInstance().addObserver(callerContainerIsId.toString(),observer);
+        PickCache.getInstance().addObserver(id,observer);
+        PickCache.getInstance().storePickables(id,pickFrom);
+        PickCache.getInstance().storePicked(id,picked);
 
         fragment.setArguments(bundle);
 

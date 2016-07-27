@@ -30,7 +30,7 @@ public class SimpleListDialogFragment extends DialogFragment {
         View view= LayoutInflater.from(getActivity()).inflate(R.layout.recycler_fragment,null,false);
 
         final String caller=getArguments().getString(CALLER_CODE);
-        List<Pickable> pickableList = PickCache.getInstance().getPickables(caller);
+        List<? extends Pickable> pickableList = PickCache.getInstance().getPickables(caller);
 
         if(pickableList.isEmpty())
         {

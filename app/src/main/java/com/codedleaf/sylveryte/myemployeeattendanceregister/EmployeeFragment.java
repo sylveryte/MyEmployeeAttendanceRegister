@@ -160,7 +160,10 @@ public class EmployeeFragment extends Fragment implements LabObserver {
                                 {
 
                                     //assign sites
-                                    PickDialogFragment.getInstance(mEmployee.getId(),mEmployee,PickDialogFragment.SITE,PickDialogFragment.EMPLOYEE)
+                                    PickDialogFragment.getInstance(mEmployee.getId().toString()+"s",
+                                            mEmployee,
+                                            mEmployee.getSites(),
+                                            SitesLab.getInstanceOf(getActivity()).getSites())
                                             .show(getActivity().getSupportFragmentManager(),DIALOG_PICK_FRAGMENT_CODE);
                                     break;
 
@@ -169,7 +172,10 @@ public class EmployeeFragment extends Fragment implements LabObserver {
                                 {
 
                                     //assign desgs
-                                    PickDialogFragment.getInstance(mEmployee.getId(),mEmployee,PickDialogFragment.DESIGNATION,PickDialogFragment.EMPLOYEE)
+                                    PickDialogFragment.getInstance(mEmployee.getId().toString()+"d",
+                                            mEmployee,
+                                            mEmployee.getDesignations(),
+                                            DesignationLab.getInstanceOf(getActivity()).getDesignations())
                                             .show(getActivity().getSupportFragmentManager(),DIALOG_PICK_FRAGMENT_CODE);
                                     break;
                                 }

@@ -12,14 +12,14 @@ public class PickCache {
     private static PickCache sPickCache;
 
     private HashMap<String,List<UUID>> mForPickMap;
-    private HashMap<String,List<Pickable>> mForShowMap;
+    private HashMap<String,List<? extends Pickable>> mForShowMap;
     private HashMap<String,DialogPickObserver> ObserverMap;
 
     private PickCache()
     {
-        mForPickMap =new HashMap<>(1);
-        mForShowMap =new HashMap<>(1);
-        ObserverMap=new HashMap<>(1);
+        mForPickMap =new HashMap<>(3);
+        mForShowMap =new HashMap<>(3);
+        ObserverMap=new HashMap<>(3);
     }
 
     public void storePicked(String id, List<UUID> list)
@@ -27,11 +27,11 @@ public class PickCache {
         mForPickMap.put(id,list);
     }
 
-    public void storePickables(String id,List<Pickable> pickables)
+    public void storePickables(String id,List<? extends Pickable> pickables)
     {
         mForShowMap.put(id,pickables);
     }
-    public List<Pickable> getPickables(String id)
+    public List<? extends Pickable> getPickables(String id)
     {
         return mForShowMap.get(id);
     }
@@ -47,7 +47,6 @@ public class PickCache {
         if (mForPickMap.containsKey(id))
         {
             toReturn= mForPickMap.get(id);
-            mForPickMap.remove(id);
         }
 
         return toReturn;
