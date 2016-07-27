@@ -33,20 +33,19 @@ import java.util.UUID;
 
 /**
  * Created by sylveryte on 27/6/16.
+ *
+ * Copyright (C) 2016 sylveryte@codedleaf <codedlaf@gmail.com>
+ *
+ * This file is part of My Employee Attendance Register.
+ *
  */
 public class SiteAttendanceFragment extends Fragment {
 
     private static final String ARGS_CODE="siteattendanceargs";
 
-    private Site mSite;
-    private RecyclerView mRecyclerView;
-    private EmployeeAttendanceAdapter mEmployeeAttendanceAdpater;
-
     HashMap<UUID,List<Entry>> mEntriesMap;
     List<UUID> mEmployees;
     List<LocalDate> mLocalDates;
-
-    private LinearLayout dateContainer;
 
     private int NoOfDays;
 
@@ -61,15 +60,15 @@ public class SiteAttendanceFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.attendance_fragment, container, false);
-        dateContainer=(LinearLayout)view.findViewById(R.id.date_container_ll);
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.attendance_fragment_recycler_view);
+        LinearLayout dateContainer = (LinearLayout) view.findViewById(R.id.date_container_ll);
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.attendance_fragment_recycler_view);
 
         NoOfDays=calculateNoOfDatesShould();
         mLocalDates=new ArrayList<>();
         LocalDate date=new LocalDate();
 
 
-        inflateSquareDatesViews(inflater,dateContainer,date);
+        inflateSquareDatesViews(inflater, dateContainer,date);
         inflateEntries();
 
 
@@ -80,9 +79,9 @@ public class SiteAttendanceFragment extends Fragment {
 
         if (mEmployees!=null)
         {
-            mEmployeeAttendanceAdpater = new EmployeeAttendanceAdapter(mEmployees);
-            mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-            mRecyclerView.setAdapter(mEmployeeAttendanceAdpater);
+            EmployeeAttendanceAdapter employeeAttendanceAdpater = new EmployeeAttendanceAdapter(mEmployees);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+            recyclerView.setAdapter(employeeAttendanceAdpater);
         }
         return view;
     }
@@ -135,10 +134,10 @@ public class SiteAttendanceFragment extends Fragment {
     public void inflateEntries()
     {
         UUID siteId=(UUID)getArguments().getSerializable(ARGS_CODE);
-        mSite=SitesLab.getInstanceOf(getActivity()).getSiteById(siteId);
+        Site site = SitesLab.getInstanceOf(getActivity()).getSiteById(siteId);
 
         mEntriesMap=new HashMap<>();
-        mEmployees=mSite.getEmployeesInvolved();
+        mEmployees= site.getEmployeesInvolved();
 
         if (mEmployees!=null)
         {

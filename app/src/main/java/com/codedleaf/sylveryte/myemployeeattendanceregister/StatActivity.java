@@ -2,17 +2,18 @@ package com.codedleaf.sylveryte.myemployeeattendanceregister;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
 
 import java.util.UUID;
 
+/**
+ * Created by sylveryte on 11/7/16.
+ *
+ * Copyright (C) 2016 sylveryte@codedleaf <codedlaf@gmail.com>
+ *
+ * This file is part of My Employee Attendance Register.
+ *
+ */
 public class StatActivity extends SingleFragmentActivity {
 
 
@@ -22,10 +23,6 @@ public class StatActivity extends SingleFragmentActivity {
 
     @Override
     protected Fragment createFragment() {
-
-        DesignationLab designationLab = DesignationLab.getInstanceOf(this);
-        SitesLab sitesLab = SitesLab.getInstanceOf(this);
-        EmployeeLab employeeLab = EmployeeLab.getInstanceOf(this);
 
         Intent intent=getIntent();
         int i=intent.getIntExtra(FRAGMENT_CODE,RegisterConstants.SITE);
@@ -47,7 +44,6 @@ public class StatActivity extends SingleFragmentActivity {
             }
         }
 
-        Site site= sitesLab.getSites().get(0);
         return SiteStatFragment.createInstance(uuid);
     }
 

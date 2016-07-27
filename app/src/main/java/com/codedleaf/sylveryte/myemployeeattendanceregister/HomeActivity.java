@@ -13,6 +13,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+/**
+ * Created by sylveryte on 27/6/16.
+ *
+ * Copyright (C) 2016 sylveryte@codedleaf <codedlaf@gmail.com>
+ *
+ * This file is part of My Employee Attendance Register.
+ *
+ */
+
 public class HomeActivity extends AppCompatActivity {
 
 

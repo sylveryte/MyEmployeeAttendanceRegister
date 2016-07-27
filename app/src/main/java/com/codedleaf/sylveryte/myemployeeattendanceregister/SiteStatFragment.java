@@ -27,18 +27,20 @@ import java.util.UUID;
 
 /**
  * Created by sylveryte on 11/7/16.
+ *
+ * Copyright (C) 2016 sylveryte@codedleaf <codedlaf@gmail.com>
+ *
+ * This file is part of My Employee Attendance Register.
+ *
  */
 public class SiteStatFragment extends Fragment {
 
-    private static final String ARGS_CODE="site_stat_budle_code";
     private static final String ITEM_CODE="site_code";
 
 
     private Site mSite;
 
     private LocalDate mDate;
-
-    private PieChart mPieChart;
 
     @Nullable
     @Override
@@ -58,24 +60,24 @@ public class SiteStatFragment extends Fragment {
         mDate=new LocalDate();
 
 
-        mPieChart =(PieChart)view.findViewById(R.id.piechartsite);
+        PieChart pieChart = (PieChart) view.findViewById(R.id.piechartsite);
 
 
         Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), "OpenSans-Light.ttf");
 
-        mPieChart.setCenterTextTypeface(tf);
+        pieChart.setCenterTextTypeface(tf);
        // mPieChart.setCenterText(generateCenterText());
        // mPieChart.setCenterTextSize(10f);
       //  mPieChart.setCenterTextTypeface(tf);
 
-        mPieChart.setHoleRadius(30f);
-        mPieChart.setTransparentCircleRadius(50f);
+        pieChart.setHoleRadius(30f);
+        pieChart.setTransparentCircleRadius(50f);
 
-        Legend l = mPieChart.getLegend();
+        Legend l = pieChart.getLegend();
         l.setPosition(Legend.LegendPosition.RIGHT_OF_CHART);
 
-        mPieChart.setData(getPieData());
-        mPieChart.setCenterText("codedleaf");
+        pieChart.setData(getPieData());
+        pieChart.setCenterText("codedleaf");
 
 /*
 

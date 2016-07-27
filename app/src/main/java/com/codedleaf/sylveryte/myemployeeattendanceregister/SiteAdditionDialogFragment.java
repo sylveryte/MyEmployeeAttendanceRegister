@@ -15,6 +15,11 @@ import java.util.UUID;
 
 /**
  * Created by sylveryte on 19/7/16.
+ *
+ * Copyright (C) 2016 sylveryte@codedleaf <codedlaf@gmail.com>
+ *
+ * This file is part of My Employee Attendance Register.
+ *
  */
 public class SiteAdditionDialogFragment extends DialogFragment {
 
@@ -22,7 +27,6 @@ public class SiteAdditionDialogFragment extends DialogFragment {
 
     private EditText mEditText_siteName;
     private EditText mEditText_description;
-    private Button mAddButton;
 
     private Site mSite;
 
@@ -35,8 +39,8 @@ public class SiteAdditionDialogFragment extends DialogFragment {
 
         mEditText_siteName=(EditText)view.findViewById(R.id.editText_site_name);
         mEditText_description=(EditText)view.findViewById(R.id.editText_site_description);
-        mAddButton = (Button)view.findViewById(R.id.button_add_site);
-        mAddButton.setOnClickListener(new View.OnClickListener() {
+        Button addButton = (Button) view.findViewById(R.id.button_add_site);
+        addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 

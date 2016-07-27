@@ -23,12 +23,16 @@ import java.util.List;
 
 /**
  * Created by sylveryte on 11/6/16.
+ *
+ * Copyright (C) 2016 sylveryte@codedleaf <codedlaf@gmail.com>
+ *
+ * This file is part of My Employee Attendance Register.
+ *
  */
 public class SitesFragment extends Fragment implements LabObserver {
 
 
     private SitesLab mSitesLab;
-    private RecyclerView mRecyclerView;
     private SiteAdapter mSiteAdapter;
 
     @Override
@@ -45,7 +49,7 @@ public class SitesFragment extends Fragment implements LabObserver {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view=inflater.inflate(R.layout.recycler_fragment,container,false);
-        mRecyclerView =(RecyclerView)view.findViewById(R.id.fragment_recycler_view);
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.fragment_recycler_view);
 
       /*  //for automatic
         //// TODO: 22/6/16  looks suspicious
@@ -56,10 +60,10 @@ public class SitesFragment extends Fragment implements LabObserver {
 
         mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(spans,StaggeredGridLayoutManager.VERTICAL));*/
 
-        mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(),2));
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(),2));
 
         mSiteAdapter=new SiteAdapter(mSitesLab.getSites());
-        mRecyclerView.setAdapter(mSiteAdapter);
+        recyclerView.setAdapter(mSiteAdapter);
 
         return view;
     }
