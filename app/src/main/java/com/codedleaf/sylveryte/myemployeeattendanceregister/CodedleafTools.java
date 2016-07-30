@@ -23,6 +23,8 @@ public class CodedleafTools {
     public static final String localDateFormatString="yyyy-MM-dd";
     public static final String prettyLocalDateFormatString="E-dd-M-yyy";
 
+    public static final String monthFormat="MMMM-yyy";
+
     public static String getStringOfBoolean(boolean b)
     {
         return b?"1":"0";
@@ -63,14 +65,24 @@ public class CodedleafTools {
         return uuidList;
     }
 
-    public static String getStringFromLocalDate(LocalDate date)
+    public static String getString(LocalDate date)
     {
         if (date==null)
-            return null;
+            return " ";
 
         return date.toString(localDateFormatString);
 
     }
+
+    public static String getMonthYearString(LocalDate date)
+    {
+        if (date==null)
+            return " ";
+
+        return date.toString(monthFormat);
+
+    }
+
 
     public static String getPrettyStringFromLocalDate(LocalDate date)
     {

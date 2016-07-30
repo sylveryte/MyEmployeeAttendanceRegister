@@ -25,10 +25,6 @@
             android:layout_gravity="right"
             android:id="@+id/date_container_ll"
             android:layout_height="wrap_content">
-
-
-
-
         </LinearLayout>
     </LinearLayout>
 

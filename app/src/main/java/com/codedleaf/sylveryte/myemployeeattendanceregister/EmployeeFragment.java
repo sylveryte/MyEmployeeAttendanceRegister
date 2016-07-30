@@ -116,7 +116,7 @@ public class EmployeeFragment extends Fragment implements LabObserver {
                 @Override
                 public void onClick(View v) {
 
-                    CharSequence choices[] = new CharSequence[] {"Edit","Active??","Show Site(s)","Show Designation(s)","Assign Site(s)","Assign Designation(s)","Delete"};
+                    CharSequence choices[] = new CharSequence[] {"Edit","Active??","Show Stat","Show Site(s)","Show Designation(s)","Assign Site(s)","Assign Designation(s)","Delete"};
 
                     if (mEmployee.isActive())
                     {
@@ -135,7 +135,7 @@ public class EmployeeFragment extends Fragment implements LabObserver {
 
                             switch (which)
                             {
-                                case 6:
+                                case 7:
                                 {
                                     new AlertDialog.Builder(getActivity())
                                             .setTitle("Delete "+mEmployee.getTitle())
@@ -159,7 +159,13 @@ public class EmployeeFragment extends Fragment implements LabObserver {
                                     break;
                                 }
 
-                                case 4:
+                                case 2:
+                                {
+                                    startActivity(StatActivity.fetchIntent(getActivity(),RegisterConstants.EMPLOYEE,mEmployee.getId()));
+                                    break;
+                                }
+
+                                case 5:
                                 {
 
                                     //assign sites
@@ -171,7 +177,7 @@ public class EmployeeFragment extends Fragment implements LabObserver {
                                     break;
 
                                 }
-                                case 5:
+                                case 6:
                                 {
 
                                     //assign desgs
@@ -197,7 +203,7 @@ public class EmployeeFragment extends Fragment implements LabObserver {
 
                                     break;
                                 }
-                                case 2: {
+                                case 3: {
 
                                     //hah haha :<
                                     //after few weeks :grin:
@@ -207,7 +213,7 @@ public class EmployeeFragment extends Fragment implements LabObserver {
 
                                     break;
                                 }
-                                case 3:
+                                case 4:
                                 {
                                     SimpleListDialogFragment.getInstance(mEmployee.getId().toString(),
                                             DesignationLab.getInstanceOf(getActivity()).getPickables(mEmployee.getDesignations()))

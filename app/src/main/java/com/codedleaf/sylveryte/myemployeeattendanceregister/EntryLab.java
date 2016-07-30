@@ -254,7 +254,7 @@ public class EntryLab {
         }
 
         if (i<1)
-            return null;
+            return new ArrayList<>();
 
         return entries;
     }
@@ -285,6 +285,25 @@ public class EntryLab {
         catch (Exception e)
         {
             e.printStackTrace();
+        }
+        if (entry==null)
+        {
+            entry=new Entry(empId,siteId);
+            entry.setNew(true);
+        }
+        return entry;
+    }
+
+    public Entry getEntry(@NonNull LocalDate date,@NonNull UUID empId)
+    {
+        Entry entry=null;
+        List<Entry> liss=getEntries(date.getDayOfMonth(),date.getMonthOfYear(),date.getYear(),null,null,empId);
+        if (liss!=null&&!liss.isEmpty())
+            entry=liss.get(0);
+        if (entry==null)
+        {
+            entry=new Entry(empId,null,date);
+            entry.setNew(true);
         }
         return entry;
     }

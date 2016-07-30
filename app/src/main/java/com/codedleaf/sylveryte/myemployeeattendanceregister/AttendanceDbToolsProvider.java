@@ -37,8 +37,8 @@ public class AttendanceDbToolsProvider {
         values.put(SitesTable.Cols.TITLE,site.getTitle());
         values.put(SitesTable.Cols.DESC,site.getDescriptionPure());
         values.put(SitesTable.Cols.ACTIVE,CodedleafTools.getStringOfBoolean(site.isActive()));
-        values.put(SitesTable.Cols.BEGINDATE,CodedleafTools.getStringFromLocalDate(site.getBeginDate()));
-        values.put(SitesTable.Cols.ENDDATE,CodedleafTools.getStringFromLocalDate(site.getFinishedDate()));
+        values.put(SitesTable.Cols.BEGINDATE,CodedleafTools.getString(site.getBeginDate()));
+        values.put(SitesTable.Cols.ENDDATE,CodedleafTools.getString(site.getFinishedDate()));
 
         return values;
     }

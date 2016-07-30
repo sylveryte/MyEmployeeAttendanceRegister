@@ -72,9 +72,6 @@ public class SiteAttendanceFragment extends Fragment {
         inflateEntries();
 
 
-
-
-
         //// TODO: 23/7/16 do something about this one
 
         if (mEmployees!=null)
@@ -87,12 +84,11 @@ public class SiteAttendanceFragment extends Fragment {
     }
 
 
-
     private int calculateNoOfDatesShould()
     {
         int count;
         DisplayMetrics matrices=getActivity().getResources().getDisplayMetrics();
-        count=(int)(matrices.heightPixels/matrices.density)/(2*75);
+        count=(int)(matrices.heightPixels/matrices.density)/(2*85);
 
         if (count<1)
         {
@@ -215,7 +211,7 @@ public class SiteAttendanceFragment extends Fragment {
         }
 
         //gola view class
-        private class GolaView extends View
+        public class GolaView extends View
         {
             private Entry mEntry;
             private CardView mGolaCard;
@@ -232,55 +228,16 @@ public class SiteAttendanceFragment extends Fragment {
                 mGolaCard =(CardView) mLayoutView.findViewById(R.id.attendance_gola_b);
                 mTextView=(TextView)mLayoutView.findViewById(R.id.gola_text);
                 mDate=date;
-
-                String s=date.getDayOfMonth()+" ";
-
+                String s=date.getDayOfMonth()+"";
                 mTextView.setText(s);
-
-                mLayoutView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        CharSequence choices[] = new CharSequence[] {"Present", "Late", "Halftime", "Overtime","Absent","Not Specified","Edit Note"};
-
-                        if (mEntry.getNote()==null) {
-                            choices[6] = "Add Note";
-                        }
-                        else if (mEntry.getNote().trim().isEmpty())
-                        {
-                            choices[6] = "Add Note";
-                        }
-
-
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                        builder.setTitle("Set status");
-                        builder.setItems(choices, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                setColorOfCardAndState(which);
-
-                                if (mEntry.isNew())
-                                {
-                                    EntryLab.getInstanceOf(getActivity()).addEntryToDatabase(mEntry);
-                                    mEntry.setNew(false);
-                                }
-                                updateEntry();
-                            }
-                        });
-                        builder.show();
-                    }
-                });
             }
 
             public void setEntry(Entry entry)
             {
                 if (entry.getDate().equals(mDate))
                 mEntry = entry;
-                setColorOfCardAndState(mEntry.getRemark()%10);
-
-                if (mEntry.isNew())
-                {
-                    mGolaCard.setCardBackgroundColor(ContextCompat.getColor(getActivity(),R.color.white));
-                }
+                CustomAttendanceCardListner.setColor(mEntry,getActivity(),mGolaCard);
+                mLayoutView.setOnClickListener(new CustomAttendanceCardListner(getActivity(),mEntry,mGolaCard));
             }
 
             public void setClicability()
@@ -299,69 +256,7 @@ public class SiteAttendanceFragment extends Fragment {
                 return mLayoutView;
             }
 
-            public void setColorOfCardAndState(int which)
-            {
-                switch (which)
-                {
-                    case 0: mEntry.setRemark(Entry.PRESENT);
-                        mGolaCard.setCardBackgroundColor(ContextCompat.getColor(getActivity(),R.color.attendancePresent));
-                        break;
-                    case 1: mEntry.setRemark(Entry.LATE);
-                        mGolaCard.setCardBackgroundColor(ContextCompat.getColor(getActivity(),R.color.attendanceLate));
-                        break;
-                    case 2: mEntry.setRemark(Entry.HALF_TIME);
-                        mGolaCard.setCardBackgroundColor(ContextCompat.getColor(getActivity(),R.color.attendanceHalfTime));
-                        break;
-                    case 3: mEntry.setRemark(Entry.OVER_TIME);
-                        mGolaCard.setCardBackgroundColor(ContextCompat.getColor(getActivity(),R.color.attendanceOvertime));break;
-                    case 4: mEntry.setRemark(Entry.ABSENT);
-                        mGolaCard.setCardBackgroundColor(ContextCompat.getColor(getActivity(),R.color.attendanceAbsent));
-                        break;
-                    case 5: mEntry.setRemark(Entry.NOTSPECIFIED);
-                        mGolaCard.setCardBackgroundColor(ContextCompat.getColor(getActivity(),R.color.attendanceNotSpecified));
-                        break;
-                    case 6:
-                    {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                        builder.setTitle("Enter Note");
 
-                        // Set up the input
-                        final EditText input = new EditText(getActivity());
-                        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
-
-                        LinearLayout layout=new LinearLayout(getActivity());
-                        layout.setPadding(35,15,35,15);
-                        layout.addView(input);
-                        input.setInputType(InputType.TYPE_CLASS_TEXT);
-
-                        input.setText(mEntry.getNote());
-
-                        builder.setView(layout);
-
-                        // Set up the buttons
-                        builder.setPositiveButton("Set", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                mEntry.setNote(input.getText().toString());
-                                updateEntry();
-                            }
-                        });
-                        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                            }
-                        });
-
-                        builder.show();
-                    }
-                }
-            }
-
-            public void updateEntry()
-            {
-                EntryLab.getInstanceOf(getActivity()).updateEntry(mEntry);
-            }
         }
     }
 

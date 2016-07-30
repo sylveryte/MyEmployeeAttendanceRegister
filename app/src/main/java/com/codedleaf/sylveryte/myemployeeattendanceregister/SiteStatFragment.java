@@ -128,10 +128,7 @@ public class SiteStatFragment extends Fragment {
 
     private void updatePieMonthText()
     {
-
-        String monthFormat="MMMM-yyy";
-
-        pieMonth.setText(mDateForPie.toString(monthFormat));
+        pieMonth.setText(CodedleafTools.getMonthYearString(mDateForPie));
     }
 
     private void update()
