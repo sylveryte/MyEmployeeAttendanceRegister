@@ -13,6 +13,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.codedleaf.sylveryte.myemployeeattendanceregister.Editing.DesignationAdditionDialogFragment;
+import com.codedleaf.sylveryte.myemployeeattendanceregister.Editing.EmployeeAdditionFragmentDialog;
+import com.codedleaf.sylveryte.myemployeeattendanceregister.Editing.SiteAdditionDialogFragment;
+import com.codedleaf.sylveryte.myemployeeattendanceregister.GeneralFragments.DesignationFragment;
+import com.codedleaf.sylveryte.myemployeeattendanceregister.GeneralFragments.EmployeeFragment;
+import com.codedleaf.sylveryte.myemployeeattendanceregister.GeneralFragments.SitesFragment;
+
 /**
  * Created by sylveryte on 27/6/16.
  *

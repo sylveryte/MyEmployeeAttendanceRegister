@@ -1,9 +1,11 @@
 package com.codedleaf.sylveryte.myemployeeattendanceregister.SiteAttendance;
 
 import android.content.Context;
+import android.graphics.PointF;
 import android.support.v7.widget.CardView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -13,10 +15,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.codedleaf.sylveryte.myemployeeattendanceregister.CodedleafTools;
-import com.codedleaf.sylveryte.myemployeeattendanceregister.Employee;
-import com.codedleaf.sylveryte.myemployeeattendanceregister.EmployeeLab;
-import com.codedleaf.sylveryte.myemployeeattendanceregister.Entry;
-import com.codedleaf.sylveryte.myemployeeattendanceregister.EntryLab;
+import com.codedleaf.sylveryte.myemployeeattendanceregister.Models.Employee;
+import com.codedleaf.sylveryte.myemployeeattendanceregister.Labs.EmployeeLab;
+import com.codedleaf.sylveryte.myemployeeattendanceregister.Models.Entry;
+import com.codedleaf.sylveryte.myemployeeattendanceregister.Labs.EntryLab;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.R;
 
 import org.joda.time.LocalDate;
@@ -67,23 +69,59 @@ public class MonthView{
         weekDateGrid=(GridView)mView.findViewById(R.id.gridview_dates);
         mMonthText=(TextView)mView.findViewById(R.id.calendar_month_year);
 
-        Button leftArrow=(Button)mView.findViewById(R.id.left_arrow);
-        Button rightArrow=(Button)mView.findViewById(R.id.right_arrow);
+        final Button leftArrow=(Button)mView.findViewById(R.id.left_arrow);
+        final Button rightArrow=(Button)mView.findViewById(R.id.right_arrow);
 
         rightArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mDate=mDate.plusMonths(1);
-                refreshMonth(mContext);
+                rightAction();
             }
         });
         leftArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mDate=mDate.minusMonths(1);
-                refreshMonth(mContext);
+                leftAction();
             }
         });
+
+        mView.setOnTouchListener(new View.OnTouchListener() {
+            float x=0;
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                switch (event.getAction())
+                {
+                    case MotionEvent.ACTION_DOWN:
+                        x=event.getX();
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        float dif=x-event.getX();
+                        if (Math.abs(dif)>200) {
+                            if (dif< 0)
+                                leftAction();
+                            else rightAction();
+                        }
+                        break;
+                    case MotionEvent.ACTION_CANCEL:
+                        break;
+                }
+
+                return true;
+            }
+        });
+    }
+
+    private void leftAction() {
+        mDate=mDate.minusMonths(1);
+        refreshMonth(mContext);
+    }
+
+    private void rightAction() {
+        mDate=mDate.plusMonths(1);
+        refreshMonth(mContext);
     }
 
     public View getView()
@@ -135,12 +173,12 @@ public class MonthView{
 
     private View getDayName(int day)
     {
-        LinearLayout view=(LinearLayout)mInflater.inflate(R.layout.calendar_gola_weekdays_name,null,false);
+        LinearLayout view=(LinearLayout)mInflater.inflate(R.layout.entry_unit_head,null,false);
 
 
         view.setGravity(Gravity.CENTER);
 
-        TextView textView=(TextView) view.findViewById(R.id.gola_text);
+        TextView textView=(TextView) view.findViewById(R.id.entry_unit_text);
 
         textView.setText(weekDaysNames[day]);
 
@@ -224,13 +262,13 @@ public class MonthView{
         {
             mLocalDate=date;
             mEntry= EntryLab.getInstanceOf(mContext).getEntry(mLocalDate,mSiteId,mEmployee.getId());
-            mView=mInflater.inflate(R.layout.calendar_gola,null,false);
-            mGolaCard=(CardView)mView.findViewById(R.id.calendar_gola);
-            mTextView=(TextView)mView.findViewById(R.id.gola_text);
-            mGolaCard.setOnClickListener(new CustomAttendanceCardListner(mContext,mEntry,mGolaCard));
+            mView=mInflater.inflate(R.layout.entry_unit,null,false);
+            mGolaCard=(CardView)mView.findViewById(R.id.entry_card);
+            mTextView=(TextView)mView.findViewById(R.id.entry_unit_text);
+            mGolaCard.setOnClickListener(new EntryUnitCardListner(mContext,mEntry,mGolaCard));
             mTextView.setText(String.valueOf(mLocalDate.getDayOfMonth()));
             invisible=false;
-            CustomAttendanceCardListner.setColor(mEntry,mContext,mGolaCard);
+            EntryUnitCardListner.setColor(mEntry,mContext,mGolaCard);
         }
 
         public void setInvisible(boolean invisible) {

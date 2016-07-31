@@ -2,6 +2,7 @@ package com.codedleaf.sylveryte.myemployeeattendanceregister.SiteAttendance;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -39,6 +40,12 @@ public class MonthViewDialogFragment extends DialogFragment {
         return new AlertDialog.Builder(getActivity())
                 .setView(monthView.getView())
                 .create();
+
+//        Dialog dialog=new AlertDialog.Builder(getActivity())
+//                .setView(monthView.getView())
+//                .create();
+//        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+//        return dialog;
     }
 
     public static MonthViewDialogFragment getInstance(UUID empid, UUID siteId)

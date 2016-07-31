@@ -19,13 +19,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".AttendanceActivity"
+            android:name=".SiteAttendance.AttendanceActivity"
             android:label="AttendanceActivity"
             android:parentActivityName=".HomeActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
-            android:name=".StatActivity"
+            android:name=".Stats.StatActivity"
             android:label="@string/title_activity_stat"
             android:parentActivityName=".HomeActivity"
             android:theme="@style/AppTheme.NoActionBar">
