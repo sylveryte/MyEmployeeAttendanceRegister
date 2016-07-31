@@ -1,26 +1,25 @@
-package com.codedleaf.sylveryte.myemployeeattendanceregister;
+package com.codedleaf.sylveryte.myemployeeattendanceregister.SiteAttendance;
 
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.res.Configuration;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.InputType;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.codedleaf.sylveryte.myemployeeattendanceregister.Employee;
+import com.codedleaf.sylveryte.myemployeeattendanceregister.EmployeeLab;
+import com.codedleaf.sylveryte.myemployeeattendanceregister.Entry;
+import com.codedleaf.sylveryte.myemployeeattendanceregister.EntryLab;
+import com.codedleaf.sylveryte.myemployeeattendanceregister.R;
+import com.codedleaf.sylveryte.myemployeeattendanceregister.Site;
+import com.codedleaf.sylveryte.myemployeeattendanceregister.SitesLab;
 
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
@@ -69,7 +68,6 @@ public class SiteAttendanceFragment extends Fragment {
 
 
         inflateSquareDatesViews(inflater, dateContainer,date);
-        inflateEntries();
 
 
         //// TODO: 23/7/16 do something about this one
@@ -124,6 +122,8 @@ public class SiteAttendanceFragment extends Fragment {
             dateContainer.addView(view);
         }
 
+        inflateEntries();
+
         dateContainer.invalidate();
     }
 
@@ -150,15 +150,7 @@ public class SiteAttendanceFragment extends Fragment {
         for (int i=0;i<NoOfDays;i++)
         {
             Entry entry;
-            entry=EntryLab.getInstanceOf(getActivity()).getEntry(mLocalDates.get(i),siteId,empId);
-            //for new entries
-
-            if (entry==null)
-            {
-                entry = new Entry(empId,siteId,mLocalDates.get(i));
-                entry.setNew(true);
-            }
-
+            entry= EntryLab.getInstanceOf(getActivity()).getEntry(mLocalDates.get(i),siteId,empId);
             toReturnEntries.add(entry);
         }
         return toReturnEntries;
@@ -183,26 +175,25 @@ public class SiteAttendanceFragment extends Fragment {
             mGolaViews=new ArrayList<>();
             for (int i=0;i<NoOfDays;i++)
             {
-                GolaView golaView=new GolaView(getActivity(),mLocalDates.get(i));
+                GolaView golaView=new GolaView(mLocalDates.get(i),getActivity());
 
                 mGolaContainer.addView(golaView.getLayoutView());
                 mGolaViews.add(golaView);
             }
         }
-
         private void bind(UUID empId)
         {
-            mEmployee=EmployeeLab.getInstanceOf(getActivity()).getEmployeeById(empId);
-            mTextViewName.setText(mEmployee.getTitle());
             mEntryList=mEntriesMap.get(empId);
-            if (mEntryList==null)
-                mEntryList=new ArrayList<>();
-
-
             for (int i=0;i<NoOfDays;i++)
             {
                 mGolaViews.get(i).setEntry(mEntryList.get(i));
             }
+
+            mEmployee= EmployeeLab.getInstanceOf(getActivity()).getEmployeeById(empId);
+            mTextViewName.setText(mEmployee.getTitle());
+            int t=mEntriesMap.size();
+            String s=mEntriesMap.toString();
+
 
             for (GolaView golaView: mGolaViews)
             {
@@ -210,54 +201,7 @@ public class SiteAttendanceFragment extends Fragment {
             }
         }
 
-        //gola view class
-        public class GolaView extends View
-        {
-            private Entry mEntry;
-            private CardView mGolaCard;
-            private LinearLayout mLayoutView;
-            private LocalDate mDate;
 
-            private TextView mTextView;
-
-            public GolaView(Context context,LocalDate date)
-            {
-                super(context);
-                mLayoutView=(LinearLayout)LayoutInflater.from(getActivity()).inflate(R.layout.attendance_gola,null,true);
-                mLayoutView.setGravity(Gravity.CENTER);
-                mGolaCard =(CardView) mLayoutView.findViewById(R.id.attendance_gola_b);
-                mTextView=(TextView)mLayoutView.findViewById(R.id.gola_text);
-                mDate=date;
-                String s=date.getDayOfMonth()+"";
-                mTextView.setText(s);
-            }
-
-            public void setEntry(Entry entry)
-            {
-                if (entry.getDate().equals(mDate))
-                mEntry = entry;
-                CustomAttendanceCardListner.setColor(mEntry,getActivity(),mGolaCard);
-                mLayoutView.setOnClickListener(new CustomAttendanceCardListner(getActivity(),mEntry,mGolaCard));
-            }
-
-            public void setClicability()
-            {
-                if (mEntry==null)
-                    mLayoutView.setClickable(false);
-                else
-                    mLayoutView.setClickable(true);
-            }
-
-            public LinearLayout getLayoutView() {
-
-                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT,1.0f);
-                lp.gravity=Gravity.CENTER;
-                mLayoutView.setLayoutParams(lp);
-                return mLayoutView;
-            }
-
-
-        }
     }
 
 
@@ -269,7 +213,6 @@ public class SiteAttendanceFragment extends Fragment {
         {
             mEntries=entries;
         }
-
         @Override
         public EmployeeAttendanceHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater layoutInflater=getActivity().getLayoutInflater();
@@ -294,12 +237,6 @@ public class SiteAttendanceFragment extends Fragment {
         super.onSaveInstanceState(outState);
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        //// TODO: 23/7/16 dont forget to update
-       // EntryLab.getInstanceOf(getActivity()).updateEntries(mEntries);
-    }
 
     public static SiteAttendanceFragment createInstance(UUID siteId)
     {
@@ -312,14 +249,4 @@ public class SiteAttendanceFragment extends Fragment {
         return siteAttendanceFragment;
     }
 
-    private void recreateMe()
-    {
-
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        recreateMe();
-    }
 }

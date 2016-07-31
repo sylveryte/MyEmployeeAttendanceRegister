@@ -1,4 +1,4 @@
-package com.codedleaf.sylveryte.myemployeeattendanceregister;
+package com.codedleaf.sylveryte.myemployeeattendanceregister.SiteAttendance;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,6 +9,10 @@ import android.text.InputType;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+
+import com.codedleaf.sylveryte.myemployeeattendanceregister.Entry;
+import com.codedleaf.sylveryte.myemployeeattendanceregister.EntryLab;
+import com.codedleaf.sylveryte.myemployeeattendanceregister.R;
 
 /**
  * Created by sylveryte on 29/7/16.
@@ -34,7 +38,7 @@ public class CustomAttendanceCardListner implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        CharSequence choices[] = new CharSequence[] {"Present", "Late", "Halftime", "Overtime","Absent","Not Specified","Edit Note"};
+        CharSequence choices[] = new CharSequence[] {"Present", "Late", "Halftime", "Overtime","Absent","Delete","Edit Note"};
 
         if (mEntry.getNote()==null) {
             choices[6] = "Add Note";
@@ -141,11 +145,8 @@ public class CustomAttendanceCardListner implements View.OnClickListener {
             case Entry.ABSENT:
                 cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.attendanceAbsent));
                 break;
-        }
-        if (entry.isNew())
-        {
-            cardView.setCardBackgroundColor(ContextCompat.getColor(context,R.color.grey_600));
-
+            default:
+                cardView.setCardBackgroundColor(ContextCompat.getColor(context,R.color.grey_600));
         }
     }
 }
