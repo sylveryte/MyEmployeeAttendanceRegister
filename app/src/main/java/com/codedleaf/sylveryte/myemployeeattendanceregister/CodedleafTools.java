@@ -68,7 +68,7 @@ public class CodedleafTools {
     public static String getString(LocalDate date)
     {
         if (date==null)
-            return " ";
+            return "";
 
         return date.toString(localDateFormatString);
 
@@ -77,7 +77,7 @@ public class CodedleafTools {
     public static String getMonthYearString(LocalDate date)
     {
         if (date==null)
-            return " ";
+            return "";
 
         return date.toString(monthFormat);
 
@@ -97,7 +97,7 @@ public class CodedleafTools {
 
     public static LocalDate getLocalDateFromString(String dateString)
     {
-        if (dateString==null)
+        if (dateString==null||dateString.trim().isEmpty())
             return null;
 
         return LocalDate.parse(dateString);

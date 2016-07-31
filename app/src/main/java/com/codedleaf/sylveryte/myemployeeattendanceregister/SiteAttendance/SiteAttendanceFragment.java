@@ -46,6 +46,8 @@ public class SiteAttendanceFragment extends Fragment {
     List<UUID> mEmployees;
     List<LocalDate> mLocalDates;
 
+    private UUID siteId;
+
     private int NoOfDays;
 
     @Override
@@ -61,6 +63,8 @@ public class SiteAttendanceFragment extends Fragment {
         View view = inflater.inflate(R.layout.attendance_fragment, container, false);
         LinearLayout dateContainer = (LinearLayout) view.findViewById(R.id.date_container_ll);
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.attendance_fragment_recycler_view);
+
+        siteId=(UUID)getArguments().getSerializable(ARGS_CODE);
 
         NoOfDays=calculateNoOfDatesShould();
         mLocalDates=new ArrayList<>();
@@ -129,7 +133,6 @@ public class SiteAttendanceFragment extends Fragment {
 
     public void inflateEntries()
     {
-        UUID siteId=(UUID)getArguments().getSerializable(ARGS_CODE);
         Site site = SitesLab.getInstanceOf(getActivity()).getSiteById(siteId);
 
         mEntriesMap=new HashMap<>();
@@ -158,17 +161,30 @@ public class SiteAttendanceFragment extends Fragment {
 
     private class EmployeeAttendanceHolder extends RecyclerView.ViewHolder
     {
+        private static final String DILOG_TAG="monthciewdialogtag";
+
         private Employee mEmployee;
         private List<Entry> mEntryList;
         private List<GolaView> mGolaViews;
 
         private LinearLayout mGolaContainer;
 
+        private LinearLayout mEmployeeNameContainer;
+
         private TextView mTextViewName;
+
 
         public EmployeeAttendanceHolder(View itemView) {
             super(itemView);
 
+            mEmployeeNameContainer=(LinearLayout)itemView.findViewById(R.id.name_container_site_attendance);
+            mEmployeeNameContainer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    MonthViewDialogFragment.getInstance(mEmployee.getId(),siteId)
+                            .show(getFragmentManager(),DILOG_TAG);
+                }
+            });
             mTextViewName=(TextView)itemView.findViewById(R.id.employee_attendance_name);
             mGolaContainer=(LinearLayout)itemView.findViewById(R.id.gola_container);
 
@@ -191,9 +207,6 @@ public class SiteAttendanceFragment extends Fragment {
 
             mEmployee= EmployeeLab.getInstanceOf(getActivity()).getEmployeeById(empId);
             mTextViewName.setText(mEmployee.getTitle());
-            int t=mEntriesMap.size();
-            String s=mEntriesMap.toString();
-
 
             for (GolaView golaView: mGolaViews)
             {

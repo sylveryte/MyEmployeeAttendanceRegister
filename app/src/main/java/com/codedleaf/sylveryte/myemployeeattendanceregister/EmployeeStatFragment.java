@@ -34,6 +34,8 @@ public class EmployeeStatFragment extends Fragment {
 
         LinearLayout monthContainer=(LinearLayout)view.findViewById(R.id.month_container);
 
+        //since site is required now
+/*
         Bundle arguments=getArguments();
         if (arguments!=null) {
             mEmployee= EmployeeLab.getInstanceOf(getActivity())
@@ -43,7 +45,7 @@ public class EmployeeStatFragment extends Fragment {
             MonthView monthView = MonthView.getInstance(inflater, getContext(), new LocalDate(), mEmployee);
             monthContainer.addView(monthView.getView());
 
-        }
+        }*/
         return view;
     }
 
