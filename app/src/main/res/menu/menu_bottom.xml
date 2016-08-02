@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/employee_bottomo_menu"
+        android:icon="@drawable/ic_crab_white"
+        android:title="Employee" />
+    <item
+        android:id="@+id/site_bottom_menu"
+        android:icon="@drawable/ic_butterfly_white"
+        android:title="Site" />
+    <item
+        android:id="@+id/designation_bottom_menu"
+        android:icon="@drawable/ic_spider_white"
+        android:title="Designation" />
+
+
+    <!--remove this one--><!--
+    <item
+        android:id="@+id/yuu"
+        android:icon="@drawable/ic_spider_white"
+        android:title="other" />-->
+</menu>

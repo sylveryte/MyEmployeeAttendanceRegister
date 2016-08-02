@@ -31,4 +31,5 @@ dependencies {
     compile 'com.android.support:percent:23.3.0'
     compile 'joda-time:joda-time:2.9.4'
     compile 'com.github.PhilJay:MPAndroidChart:v3.0.0-beta1'
+    compile 'com.roughike:bottom-bar:1.4.0.1'
 }
