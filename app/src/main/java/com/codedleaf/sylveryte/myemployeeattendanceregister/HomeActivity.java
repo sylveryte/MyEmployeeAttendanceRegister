@@ -1,12 +1,14 @@
 package com.codedleaf.sylveryte.myemployeeattendanceregister;
 
 import android.content.res.Configuration;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -21,8 +23,6 @@ import com.codedleaf.sylveryte.myemployeeattendanceregister.GeneralFragments.Emp
 import com.codedleaf.sylveryte.myemployeeattendanceregister.GeneralFragments.SitesFragment;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnMenuTabClickListener;
-
-import java.util.HashMap;
 
 /**
  * Created by sylveryte on 27/6/16.
@@ -43,14 +43,12 @@ public class HomeActivity extends AppCompatActivity {
 
     private FragmentManager mFragmentManager;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_home);
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         setTitle("Register");
 
@@ -105,17 +103,17 @@ public class HomeActivity extends AppCompatActivity {
                                                      {
                                                          case R.id.employee_bottomo_menu :
                                                          {
-                                                              startFragment(RegisterConstants.EMPLOYEE);
+                                                              changeFragment(RegisterConstants.EMPLOYEE);
                                                              break;
                                                          }
                                                          case R.id.site_bottom_menu :
                                                          {
-                                                             startFragment(RegisterConstants.SITE);
+                                                             changeFragment(RegisterConstants.SITE);
                                                              break;
                                                          }
                                                          case R.id.designation_bottom_menu :
                                                          {
-                                                             startFragment(RegisterConstants.DESIGNATION);
+                                                             changeFragment(RegisterConstants.DESIGNATION);
                                                              break;
                                                          }
                                                      }
@@ -134,14 +132,38 @@ public class HomeActivity extends AppCompatActivity {
 
         //for some reason this aint working
         bottomBar.mapColorForTab(0, ContextCompat.getColor(this,R.color.colorEmployeeCardDeactivated));
+
         bottomBar.mapColorForTab(1, ContextCompat.getColor(this,R.color.colorSiteCardDeactivated));
-        bottomBar.mapColorForTab(2, ContextCompat.getColor(this,R.color.colorDesignationCard));
+
+        bottomBar.mapColorForTab(2, ContextCompat.getColor(this,R.color.colorDesignationCardDeactivated));
+
     }
 
 
-    private void startFragment(int code) {
+    private void changeFragment(int code) {
         Fragment fragment=mFragmentManager.findFragmentByTag(String.valueOf(code));
         detachFrag();
+
+        ActionBar bar=getSupportActionBar();
+        //for color
+        if (bar!=null)
+        {
+            switch (code) {
+                case RegisterConstants.EMPLOYEE: {
+                    bar.setBackgroundDrawable(new ColorDrawable(ContextCompat.getColor(this,R.color.colorEmployeeCardDeactivated)));
+                    break;
+                }
+                case RegisterConstants.SITE: {
+                    bar.setBackgroundDrawable(new ColorDrawable(ContextCompat.getColor(this,R.color.colorSiteCardDeactivated)));
+                    break;
+                }
+                case RegisterConstants.DESIGNATION: {
+                    bar.setBackgroundDrawable(new ColorDrawable(ContextCompat.getColor(this,R.color.colorDesignationCardDeactivated)));
+                    break;
+                }
+            }
+        }
+
         if (fragment==null)
         {
             switch (code)
