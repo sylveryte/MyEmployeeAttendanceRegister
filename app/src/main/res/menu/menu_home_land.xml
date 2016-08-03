@@ -12,17 +12,17 @@
         android:orderInCategory="2"
         android:title="@string/add_site"
         android:icon="@drawable/ic_butterfly_white"
-        app:showAsAction="never"/>
+        app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/addEmployee"
         android:orderInCategory="1"
         android:title="@string/add_employee"
         android:icon="@drawable/ic_crab_white"
-        app:showAsAction="never"/>
+        app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/addDesignation"
         android:orderInCategory="3"
         android:icon="@drawable/ic_spider_white"
         android:title="@string/add_designation"
-        app:showAsAction="never"/>
+        app:showAsAction="ifRoom"/>
 </menu>
