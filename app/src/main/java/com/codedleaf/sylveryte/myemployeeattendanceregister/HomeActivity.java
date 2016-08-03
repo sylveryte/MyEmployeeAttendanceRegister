@@ -183,6 +183,18 @@ public class HomeActivity extends AppCompatActivity {
                     mFragmentManager.beginTransaction()
                             .add(R.id.fragment_container_home,fragment,String.valueOf(RegisterConstants.SITE))
                             .commitAllowingStateLoss();
+
+                    //to load employee fragment
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Fragment fragment1=EmployeeFragment.newInstance();
+                            mFragmentManager.beginTransaction()
+                                    .add(R.id.fragment_container_home,fragment1,String.valueOf(RegisterConstants.EMPLOYEE))
+                                    .detach(fragment1)
+                                    .commitAllowingStateLoss();
+                        }
+                    }).start();
                     return;
                 }
                 case RegisterConstants.DESIGNATION:
