@@ -288,10 +288,10 @@ public class EmployeeAdditionFragmentDialog extends DialogFragment implements Pi
             EmployeeLab.getInstanceOf(getActivity()).addEmployee(mEmployee);
         }
         mEmployee.setActive(true);
-        mEmployee.setName(mName.getText().toString());
+        mEmployee.setName(mName.getText().toString().trim());
         mEmployee.setAge(Integer.parseInt(mAge.getText().toString()));
-        mEmployee.setAddress(mAddress.getText().toString());
-        mEmployee.setNote(mNote.getText().toString());
+        mEmployee.setAddress(mAddress.getText().toString().trim());
+        mEmployee.setNote(mNote.getText().toString().trim());
         mEmployee.setMale(mRadioButtonMale.isChecked());
 
         mEmployee.setDesignations(designationPicked,getActivity());

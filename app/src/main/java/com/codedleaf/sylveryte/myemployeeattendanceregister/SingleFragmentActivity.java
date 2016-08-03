@@ -28,8 +28,6 @@ public abstract class SingleFragmentActivity extends AppCompatActivity {
             Toolbar toolbar = (Toolbar) findViewById(R.id.fragmenttoolbar);
             setSupportActionBar(toolbar);
 
-//         causing to go to home activity to sites
-
             if (fragment == null) {
                 fragment = createFragment();
                 fm.beginTransaction()

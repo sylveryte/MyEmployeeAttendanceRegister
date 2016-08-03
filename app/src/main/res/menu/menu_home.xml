@@ -11,15 +11,18 @@
         android:id="@+id/addSite"
         android:orderInCategory="2"
         android:title="@string/add_site"
-        app:showAsAction="never"/>
+        android:icon="@drawable/ic_butterfly_white"
+        app:showAsAction="ifRoom|"/>
     <item
         android:id="@+id/addEmployee"
         android:orderInCategory="1"
         android:title="@string/add_employee"
-        app:showAsAction="never"/>
+        android:icon="@drawable/ic_crab_white"
+        app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/addDesignation"
         android:orderInCategory="3"
+        android:icon="@drawable/ic_spider_white"
         android:title="@string/add_designation"
-        app:showAsAction="never"/>
+        app:showAsAction="ifRoom"/>
 </menu>

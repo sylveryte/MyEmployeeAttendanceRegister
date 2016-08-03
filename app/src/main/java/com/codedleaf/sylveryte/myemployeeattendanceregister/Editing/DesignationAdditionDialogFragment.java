@@ -89,8 +89,8 @@ public class DesignationAdditionDialogFragment extends DialogFragment {
             DesignationLab.getInstanceOf(getActivity()).addDesignation(mDesignation);
         }
 
-        mDesignation.setTitle(mEditText_designationName.getText().toString());
-        mDesignation.setDescription(mEditText_description.getText().toString());
+        mDesignation.setTitle(mEditText_designationName.getText().toString().trim());
+        mDesignation.setDescription(mEditText_description.getText().toString().trim());
 
         mDesignation.updateMyDB(getActivity());
     }

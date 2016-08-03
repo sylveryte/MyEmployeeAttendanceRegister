@@ -2,6 +2,7 @@ package com.codedleaf.sylveryte.myemployeeattendanceregister;
 
 import android.os.Bundle;
 import android.support.annotation.IdRes;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
@@ -20,6 +21,8 @@ import com.codedleaf.sylveryte.myemployeeattendanceregister.GeneralFragments.Sit
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnMenuTabClickListener;
 
+import java.util.HashMap;
+
 /**
  * Created by sylveryte on 27/6/16.
  *
@@ -37,7 +40,8 @@ public class HomeActivity extends AppCompatActivity {
 
     private com.getbase.floatingactionbutton.FloatingActionsMenu mMenu;
 
-    private FragmentManager mmFragmentManagerr;
+    private FragmentManager mFragmentManager;
+
 
 
     @Override
@@ -47,7 +51,7 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        setTitle("Register");
 
         final com.getbase.floatingactionbutton.FloatingActionButton addSite=(com.getbase.floatingactionbutton.FloatingActionButton)findViewById(R.id.floating_add_site);
         final com.getbase.floatingactionbutton.FloatingActionButton addDesignation=(com.getbase.floatingactionbutton.FloatingActionButton)findViewById(R.id.floating_add_designation);
@@ -83,10 +87,16 @@ public class HomeActivity extends AppCompatActivity {
             });
         }
 
-        mmFragmentManagerr = getSupportFragmentManager();
+        mFragmentManager = getSupportFragmentManager();
 
-        BottomBar bottomBar = BottomBar.attach(this, savedInstanceState);
+//        BottomBar bottomBar = BottomBar.attach(this, savedInstanceState);
+        BottomBar bottomBar = BottomBar.attachShy((CoordinatorLayout) findViewById(R.id.main_content),
+                findViewById(R.id.fragment_container_home), savedInstanceState);
+
+        bottomBar.setMaxFixedTabs(2);
+
         bottomBar.setItems(R.menu.menu_bottom);
+        bottomBar.setDefaultTabPosition(1);
         bottomBar.setOnMenuTabClickListener(new OnMenuTabClickListener() {
                                                  @Override
                                                  public void onMenuTabSelected(@IdRes int menuItemId) {
@@ -94,17 +104,17 @@ public class HomeActivity extends AppCompatActivity {
                                                      {
                                                          case R.id.employee_bottomo_menu :
                                                          {
-                                                              startFragment(EmployeeFragment.newInstance());
+                                                              startFragment(RegisterConstants.EMPLOYEE);
                                                              break;
                                                          }
                                                          case R.id.site_bottom_menu :
                                                          {
-                                                             startFragment(SitesFragment.newInstance());
+                                                             startFragment(RegisterConstants.SITE);
                                                              break;
                                                          }
                                                          case R.id.designation_bottom_menu :
                                                          {
-                                                             startFragment(DesignationFragment.newInstance());
+                                                             startFragment(RegisterConstants.DESIGNATION);
                                                              break;
                                                          }
                                                      }
@@ -118,20 +128,63 @@ public class HomeActivity extends AppCompatActivity {
                                              });
 
 
+//        bottomBar.useDarkTheme();
+
+
         //for some reason this aint working
-        bottomBar.mapColorForTab(0, ContextCompat.getColor(this,R.color.colorEmployeeCard));
-        bottomBar.mapColorForTab(1, ContextCompat.getColor(this,R.color.colorSiteCard));
+        bottomBar.mapColorForTab(0, ContextCompat.getColor(this,R.color.colorEmployeeCardDeactivated));
+        bottomBar.mapColorForTab(1, ContextCompat.getColor(this,R.color.colorSiteCardDeactivated));
         bottomBar.mapColorForTab(2, ContextCompat.getColor(this,R.color.colorDesignationCard));
     }
 
 
-    private void startFragment(Fragment fragment) {
-        if (fragment == null) {
-            fragment=SitesFragment.newInstance();
+    private void startFragment(int code) {
+        Fragment fragment=mFragmentManager.findFragmentByTag(String.valueOf(code));
+        detachFrag();
+        if (fragment==null)
+        {
+            switch (code)
+            {
+                case RegisterConstants.EMPLOYEE:
+                {
+                    fragment=EmployeeFragment.newInstance();
+
+                    mFragmentManager.beginTransaction()
+                            .add(R.id.fragment_container_home,fragment,String.valueOf(RegisterConstants.EMPLOYEE))
+                            .commitAllowingStateLoss();
+                    return;
+                }
+                case RegisterConstants.SITE:
+                {
+                    fragment=SitesFragment.newInstance();
+                    mFragmentManager.beginTransaction()
+                            .add(R.id.fragment_container_home,fragment,String.valueOf(RegisterConstants.SITE))
+                            .commitAllowingStateLoss();
+                    return;
+                }
+                case RegisterConstants.DESIGNATION:
+                {
+                    fragment= DesignationFragment.newInstance();
+                    mFragmentManager.beginTransaction()
+                            .add(R.id.fragment_container_home,fragment,String.valueOf(RegisterConstants.DESIGNATION))
+                            .commitAllowingStateLoss();
+                    return;
+                }
             }
-            mmFragmentManagerr.beginTransaction()
-                    .add(R.id.fragment_container_home, fragment)
+        }
+            mFragmentManager.beginTransaction()
+                    .attach(fragment)
                     .commit();
+    }
+
+    private void detachFrag()
+    {
+        Fragment fragment=mFragmentManager.findFragmentById(R.id.fragment_container_home);
+        if (fragment==null)
+            return;
+        mFragmentManager.beginTransaction()
+                .detach(mFragmentManager.findFragmentById(R.id.fragment_container_home))
+                .commit();
     }
 
     private void startAddEmployee() {

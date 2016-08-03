@@ -11,10 +11,11 @@
 
 
     <color name="colorEmployeeCard">#ce7292</color>
-    <color name="colorEmployeeCardDeactivated">#815c69</color>
+    <color name="colorEmployeeCardDeactivated">#a9174a</color>
     <color name="colorSiteCard">#7fde9f</color>
-    <color name="colorSiteCardDeactivated">#73897a</color>
+    <color name="colorSiteCardDeactivated">#0db643</color>
     <color name="colorDesignationCard">#f5a24f</color>
+    <color name="colorDesignationCardDeactivated">#d46a01</color>
     <color name="colorPickCard">#d590ea</color>
 
     <color name="colorLightGrey">#c1c1c1</color>

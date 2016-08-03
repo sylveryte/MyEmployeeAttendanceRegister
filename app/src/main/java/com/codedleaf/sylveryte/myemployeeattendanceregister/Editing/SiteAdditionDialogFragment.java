@@ -90,8 +90,8 @@ public class SiteAdditionDialogFragment extends DialogFragment {
             SitesLab.getInstanceOf(getActivity()).addSite(site);
         }
 
-        site.setTitle(mEditText_siteName.getText().toString());
-        site.setDescription(mEditText_description.getText().toString());
+        site.setTitle(mEditText_siteName.getText().toString().trim());
+        site.setDescription(mEditText_description.getText().toString().trim());
 
         site.updateMyDB(getActivity());
     }
