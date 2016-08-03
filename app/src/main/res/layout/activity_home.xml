@@ -39,9 +39,10 @@
     <com.getbase.floatingactionbutton.FloatingActionsMenu
         android:layout_gravity="bottom|end"
         android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp"
         android:layout_marginBottom="60dp"
         android:id="@+id/floating_add_menu"
-        fab:fab_addButtonColorNormal="@color/colorAccent"
+        fab:fab_addButtonColorNormal="@color/colorPrimaryDark"
         app:fab_expandDirection="up"
         fab:fab_addButtonColorPressed="@color/white_pressed"
         fab:fab_addButtonPlusIconColor="@color/white"
