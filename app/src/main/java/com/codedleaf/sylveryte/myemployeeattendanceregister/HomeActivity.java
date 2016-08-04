@@ -41,6 +41,8 @@ public class HomeActivity extends AppCompatActivity {
 
     private com.getbase.floatingactionbutton.FloatingActionsMenu mMenu;
 
+    private BottomBar mBottomBar;
+
     private FragmentManager mFragmentManager;
 
     @Override
@@ -88,15 +90,15 @@ public class HomeActivity extends AppCompatActivity {
 
         mFragmentManager = getSupportFragmentManager();
 
-//        BottomBar bottomBar = BottomBar.attach(this, savedInstanceState);
-        BottomBar bottomBar = BottomBar.attachShy((CoordinatorLayout) findViewById(R.id.main_content),
+        mBottomBar = BottomBar.attachShy((CoordinatorLayout) findViewById(R.id.main_content),
                 findViewById(R.id.fragment_container_home), savedInstanceState);
 
-        bottomBar.setMaxFixedTabs(2);
+        mBottomBar.setMaxFixedTabs(2);
+        mBottomBar.noTabletGoodness();
 
-        bottomBar.setItems(R.menu.menu_bottom);
-        bottomBar.setDefaultTabPosition(1);
-        bottomBar.setOnMenuTabClickListener(new OnMenuTabClickListener() {
+        mBottomBar.setItems(R.menu.menu_bottom);
+        mBottomBar.setDefaultTabPosition(1);
+        mBottomBar.setOnMenuTabClickListener(new OnMenuTabClickListener() {
                                                  @Override
                                                  public void onMenuTabSelected(@IdRes int menuItemId) {
                                                      switch (menuItemId)
@@ -127,16 +129,13 @@ public class HomeActivity extends AppCompatActivity {
                                              });
 
 
-//        bottomBar.useDarkTheme();
-
 
         //for some reason this aint working
-        bottomBar.mapColorForTab(0, ContextCompat.getColor(this,R.color.colorEmployeeCardDeactivated));
+        mBottomBar.mapColorForTab(0, ContextCompat.getColor(this,R.color.colorEmployeeCardDeactivated));
 
-        bottomBar.mapColorForTab(1, ContextCompat.getColor(this,R.color.colorSiteCardDeactivated));
+        mBottomBar.mapColorForTab(1, ContextCompat.getColor(this,R.color.colorSiteCardDeactivated));
 
-        bottomBar.mapColorForTab(2, ContextCompat.getColor(this,R.color.colorDesignationCardDeactivated));
-
+        mBottomBar.mapColorForTab(2, ContextCompat.getColor(this,R.color.colorDesignationCardDeactivated));
     }
 
 
@@ -295,4 +294,9 @@ public class HomeActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mBottomBar.onSaveInstanceState(outState);
+    }
 }

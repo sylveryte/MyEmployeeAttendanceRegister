@@ -38,10 +38,9 @@ import java.util.UUID;
  * This file is part of My Employee Attendance Register.
  *
  */
-public class EmployeeAdditionFragmentDialog extends DialogFragment implements PickDialogObserver {
+public class EmployeeAdditionFragmentDialog extends DialogFragment{
 
     private static final String ARGS_CODE="empargscode";
-    private static final String DIALOG_FRAGMENT_CODE="emppickdialogcode";
 
     private EditText mName;
     private EditText mAddress;
@@ -53,32 +52,19 @@ public class EmployeeAdditionFragmentDialog extends DialogFragment implements Pi
 
     private Employee mEmployee;
 
-    private LinearLayout mDesignationsLinearLayout;
-    private LinearLayout mSitesLinearLayout;
-
-    private PickDialogObserver mItSelf;
-
-    private List<UUID> designationPicked;
-    private List<UUID> sitesPicked;
-
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        mItSelf=this;
         View view= LayoutInflater.from(getActivity()).inflate(R.layout.employee_addition_fragment,null,false);
 
         mName=(EditText)view.findViewById(R.id.employee_add_name);
         mAddress=(EditText)view.findViewById(R.id.employee_add_address);
         mNote=(EditText)view.findViewById(R.id.employee_add_note);
         mAge=(EditText)view.findViewById(R.id.employee_add_age);
-        mDesignationsLinearLayout =(LinearLayout) view.findViewById(R.id.employee_add_designation_linear_layout);
-        mSitesLinearLayout =(LinearLayout)view.findViewById(R.id.employee_add_sites_linear_layout);
         RadioGroup radioGroupMaleFemale = (RadioGroup) view.findViewById(R.id.employee_add_radiobuttongroup_malefemale);
         mRadioButtonFemale=(RadioButton)view.findViewById(R.id.employee_add_radiobutton_female);
         mRadioButtonMale=(RadioButton)view.findViewById(R.id.employee_add_radiobutton_male);
-        Button chooseDesignationButton = (Button) view.findViewById(R.id.employee_choose_designation_button);
-        Button chooseSiteButton = (Button) view.findViewById(R.id.employee_choose_site_button);
         ImageButton done = (ImageButton) view.findViewById(R.id.emp_addition_done);
 
         done.setOnClickListener(new View.OnClickListener() {
@@ -108,33 +94,6 @@ public class EmployeeAdditionFragmentDialog extends DialogFragment implements Pi
                 getDialog().dismiss();
             }
         });
-        //choose
-        chooseDesignationButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                PickDialogFragment.getInstance(mEmployee.getId().toString()+"d",
-                        mItSelf,
-                        designationPicked,
-                        DesignationLab.getInstanceOf(getActivity()).getDesignations()
-                        )
-                    .show(getActivity().getSupportFragmentManager(),DIALOG_FRAGMENT_CODE);
-            }
-        });
-
-        chooseSiteButton.setOnClickListener(new View.OnClickListener() {
-
-
-            @Override
-            public void onClick(View v) {
-
-               PickDialogFragment.getInstance(mEmployee.getId().toString()+"s",
-                       mItSelf,
-                       sitesPicked,
-                       SitesLab.getInstanceOf(getActivity()).getSites())
-                       .show(getActivity().getSupportFragmentManager(),DIALOG_FRAGMENT_CODE);
-            }
-        });
 
         radioGroupMaleFemale.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -161,18 +120,7 @@ public class EmployeeAdditionFragmentDialog extends DialogFragment implements Pi
             UUID uuid=(UUID)args.getSerializable(ARGS_CODE);
 
             mEmployee= EmployeeLab.getInstanceOf(getActivity()).getEmployeeById(uuid);
-            designationPicked=mEmployee.getDesignations();
-            sitesPicked=mEmployee.getSites();
             updateData();
-        }
-
-        if (designationPicked==null)
-        {
-            designationPicked=new ArrayList<>();
-        }
-        if (sitesPicked==null)
-        {
-            sitesPicked=new ArrayList<>();
         }
 
         return new AlertDialog.Builder(getActivity())
@@ -198,111 +146,24 @@ public class EmployeeAdditionFragmentDialog extends DialogFragment implements Pi
 
 
             mAge.setText(mEmployee.getAgeString());
-
-            updateDesgsAndSites();
         }
-
-
-    private void updateDesgsAndSites()
-    {
-
-        designationPicked= PickCache.getInstance().getPicked(mEmployee.getId()+"d");
-        sitesPicked=PickCache.getInstance().getPicked(mEmployee.getSites()+"s");
-
-        LayoutInflater layoutInflater=LayoutInflater.from(getActivity());
-
-        mDesignationsLinearLayout.removeAllViews();
-        mSitesLinearLayout.removeAllViews();
-
-        for (UUID uuid:designationPicked)
-        {
-            new SimpleDesignationView(mDesignationsLinearLayout,layoutInflater,uuid);
-        }
-
-        for (UUID uuid:sitesPicked)
-        {
-            new SimpleSiteView(mSitesLinearLayout,layoutInflater,uuid);
-        }
-    }
-
-    @Override
-    public void doSomeUpdate(Context context) {
-        updateDesgsAndSites();
-    }
-
-    private class SimpleDesignationView
-    {
-        private LinearLayout mLinearLayout;
-        private View mView;
-        private UUID mUUID;
-
-        public SimpleDesignationView(LinearLayout linearLayout, LayoutInflater layoutInflater, UUID uuid)
-        {
-            mLinearLayout=linearLayout;
-            mUUID=uuid;
-            mView=layoutInflater.inflate(R.layout.simple_tex_with_close_card,null);
-            TextView textView=(TextView)mView.findViewById(R.id.simple_with_close_text);
-            textView.setText(DesignationLab.getInstanceOf(getActivity()).getDesignationStringById(uuid));
-            ImageButton closeButton=(ImageButton)mView.findViewById(R.id.simple_with_close_close_Button);
-            closeButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    designationPicked.remove(mUUID);
-                    mLinearLayout.removeView(mView);
-                }
-            });
-
-            mLinearLayout.addView(mView);
-        }
-    }
-    private class SimpleSiteView
-    {
-        LinearLayout mLinearLayout;
-        private View mView;
-        private UUID mUUID;
-
-        public SimpleSiteView(LinearLayout linearLayout, LayoutInflater layoutInflater, UUID uuid)
-        {
-            mLinearLayout=linearLayout;
-            mUUID=uuid;
-            mView=layoutInflater.inflate(R.layout.simple_tex_with_close_card,null);
-            TextView textView=(TextView)mView.findViewById(R.id.simple_with_close_text);
-            textView.setText(SitesLab.getInstanceOf(getActivity()).getSiteStringById(uuid));
-            ImageButton closeButton=(ImageButton)mView.findViewById(R.id.simple_with_close_close_Button);
-            closeButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    sitesPicked.remove(mUUID);
-                    mLinearLayout.removeView(mView);
-                }
-            });
-            mLinearLayout.addView(mView);
-        }
-    }
 
     private void  saveEmployee(Employee employee)
     {
         if (employee==null)
         {
             mEmployee=new Employee();
-            EmployeeLab.getInstanceOf(getActivity()).addEmployee(mEmployee);
         }
+        EmployeeLab.getInstanceOf(getActivity()).addEmployee(mEmployee);
         mEmployee.setActive(true);
         mEmployee.setName(mName.getText().toString().trim());
         mEmployee.setAge(Integer.parseInt(mAge.getText().toString()));
         mEmployee.setAddress(mAddress.getText().toString().trim());
         mEmployee.setNote(mNote.getText().toString().trim());
         mEmployee.setMale(mRadioButtonMale.isChecked());
-
-        mEmployee.setDesignations(designationPicked,getActivity());
-        mEmployee.setSites(sitesPicked,getActivity());
-
         mEmployee.updateMyDB(getActivity());
     }
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-    }
+
 
     public static EmployeeAdditionFragmentDialog getDialogFrag(@Nullable UUID uuid)
     {

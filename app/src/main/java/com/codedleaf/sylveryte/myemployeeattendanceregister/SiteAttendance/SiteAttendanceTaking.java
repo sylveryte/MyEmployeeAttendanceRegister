@@ -1,5 +1,6 @@
 package com.codedleaf.sylveryte.myemployeeattendanceregister.SiteAttendance;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -82,7 +83,9 @@ public class SiteAttendanceTaking extends Fragment {
     {
         int count;
         DisplayMetrics matrices=getActivity().getResources().getDisplayMetrics();
-        count=(int)(matrices.heightPixels/matrices.density)/(2*85);
+
+        count=(int)(matrices.widthPixels/matrices.density)/(2*60);
+
         if (count<1)
         {
             count=2;

@@ -147,12 +147,6 @@ public class EntryUnitCardListner implements View.OnClickListener {
             default:
                 cardView.setCardBackgroundColor(ContextCompat.getColor(context,R.color.grey_600));
         }
-        setText(cardView,entry);
     }
 
-    private static void setText(CardView cardView,Entry entry)
-    {
-        TextView textView=(TextView)cardView.findViewById(R.id.entry_unit_text);
-        textView.setText(String.valueOf(entry.getDate().getDayOfMonth()));
-    }
 }
