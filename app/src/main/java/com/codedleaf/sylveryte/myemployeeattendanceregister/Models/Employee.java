@@ -214,11 +214,6 @@ public class Employee implements Pickable,PickDialogObserver {
         return mEmployeeId;
     }
 
-
-
-
-
-
     public void delete(Context context)
     {
         DesignationLab designationLab=DesignationLab.getInstanceOf(context);

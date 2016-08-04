@@ -256,7 +256,8 @@ public class HomeActivity extends AppCompatActivity {
             //Do some stuff
             getMenuInflater().inflate(R.menu.menu_home_land, menu);
         }
-        getMenuInflater().inflate(R.menu.menu_home,menu);
+        else
+            getMenuInflater().inflate(R.menu.menu_home,menu);
         return true;
     }
 

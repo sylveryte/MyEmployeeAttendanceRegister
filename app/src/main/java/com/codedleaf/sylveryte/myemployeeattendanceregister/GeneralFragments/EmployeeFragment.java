@@ -9,9 +9,13 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -28,6 +32,7 @@ import com.codedleaf.sylveryte.myemployeeattendanceregister.RegisterConstants;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.Picknation.SimpleListDialogFragment;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.Stats.StatActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -39,11 +44,13 @@ import java.util.Locale;
  * This file is part of My Employee Attendance Register.
  *
  */
-public class EmployeeFragment extends Fragment implements LabObserver {
+public class EmployeeFragment extends Fragment implements LabObserver,SearchView.OnQueryTextListener {
 
     private EmployeeLab mLab;
     private RecyclerView mRecyclerView;
     private EmployeeAdapter mEmployeeAdapter;
+
+    private List<Employee> mEmployeeList;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,7 +67,18 @@ public class EmployeeFragment extends Fragment implements LabObserver {
 
         View view=inflater.inflate(R.layout.recycler_fragment,container,false);
 
+        setHasOptionsMenu(true);
+
         mRecyclerView =(RecyclerView)view.findViewById(R.id.fragment_recycler_view);
+
+
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
 
         //for automatic
         //// TODO: 22/6/16  looks suspicious
@@ -71,21 +89,19 @@ public class EmployeeFragment extends Fragment implements LabObserver {
 
         mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(spans,StaggeredGridLayoutManager.VERTICAL));
 
-      //  mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(1,StaggeredGridLayoutManager.VERTICAL));
-        mEmployeeAdapter=new EmployeeAdapter(mLab.getEmployees());
+
+        mEmployeeList=new ArrayList<>(mLab.getEmployees());
+        mEmployeeAdapter=new EmployeeAdapter(mEmployeeList);
         mRecyclerView.setAdapter(mEmployeeAdapter);
-
-        return view;
     }
-
 
     private class EmployeeAdapter extends RecyclerView.Adapter<EmployeeHolder>
     {
-        List<Employee> mEmployeeList;
 
+        List<Employee> mAdapterEmployees;
         public EmployeeAdapter(List<Employee> employees)
         {
-            mEmployeeList=employees;
+            mAdapterEmployees=new ArrayList<>(employees);
         }
 
         @Override
@@ -97,15 +113,115 @@ public class EmployeeFragment extends Fragment implements LabObserver {
 
         @Override
         public void onBindViewHolder(EmployeeHolder holder, int position) {
-            holder.bind(mEmployeeList.get(position));
+            holder.bind(mAdapterEmployees.get(position));
         }
 
         @Override
         public int getItemCount() {
-            return mEmployeeList.size();
+            return mAdapterEmployees.size();
+        }
+
+        public Employee removeItem(int position)
+        {
+            final Employee employee=mAdapterEmployees.remove(position);
+            notifyItemRemoved(position);
+            return employee;
+        }
+
+        public void addItem(int position, Employee employee)
+        {
+            mAdapterEmployees.add(position,employee);
+            notifyItemInserted(position);
+        }
+
+        public void moveItem(int fromPosition,int toPosition)
+        {
+            final Employee employee=mAdapterEmployees.remove(fromPosition);
+            mAdapterEmployees.add(toPosition,employee);
+            notifyItemMoved(fromPosition,toPosition);
+        }
+
+        public void animateTo(List<Employee> employees)
+        {
+            applyAndAnimateRemovals(employees);
+            applyAndAnimateAddition(employees);
+            applyAndAnimateMovedItems(employees);
+        }
+
+        private void applyAndAnimateRemovals(List<Employee> employees)
+        {
+            for (int i=mAdapterEmployees.size()-1;i>=0;i--)
+            {
+                final Employee employee=mAdapterEmployees.get(i);
+                if (!employees.contains(employee))
+                {
+                    removeItem(i);
+                }
+            }
+        }
+
+        private void applyAndAnimateAddition(List<Employee> employees)
+        {
+            for (int i=0,count=employees.size();i<count;i++)
+            {
+                final Employee employee=employees.get(i);
+                if (!mAdapterEmployees.contains(employee))
+                {
+                    addItem(i,employee);
+                }
+            }
+        }
+
+        private void applyAndAnimateMovedItems(List<Employee> employees)
+        {
+            for (int toPosition=employees.size()-1;toPosition >= 0; toPosition--)
+            {
+                final Employee employee=employees.get(toPosition);
+                final int fromPosition=mAdapterEmployees.indexOf(employee);
+                if (fromPosition>=0&&fromPosition!=toPosition)
+                {
+                    moveItem(fromPosition,toPosition);
+                }
+            }
         }
     }
+    //end of adapter class
 
+
+    //onquery
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        final List<Employee> filteredEmployees=filter(mEmployeeList,newText);
+        mEmployeeAdapter.animateTo(filteredEmployees);
+//        mRecyclerView.scrollTo(0,0);
+        mRecyclerView.scrollToPosition(0);
+        return true;
+    }
+
+    private List<Employee> filter(List<Employee> employeeList, String newText)
+    {
+        newText=newText.toLowerCase();
+
+        final List<Employee> filteredEmloyeeList=new ArrayList<>();
+
+        for (Employee employee:employeeList)
+        {
+            final String text=employee.getTitle().toLowerCase();
+            if (text.contains(newText))
+            {
+                filteredEmloyeeList.add(employee);
+            }
+        }
+        return filteredEmloyeeList;
+    }
+
+
+    //start of holder class
     private class EmployeeHolder extends RecyclerView.ViewHolder
     {
 
@@ -155,6 +271,7 @@ public class EmployeeFragment extends Fragment implements LabObserver {
                                             .setPositiveButton("YES", new DialogInterface.OnClickListener() {
                                                 public void onClick(DialogInterface dialog, int which) {
                                                     // continue with delete
+                                                    mEmployeeAdapter.removeItem(mEmployeeList.indexOf(mEmployee));
                                                     mLab.deleteEmployee(mEmployee,getActivity());
                                                     update();
                                                     getActivity().invalidateOptionsMenu();
@@ -264,6 +381,15 @@ public class EmployeeFragment extends Fragment implements LabObserver {
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+
+        MenuItem item=menu.findItem(R.id.action_search);
+        SearchView searchView=(SearchView) item.getActionView();
+        searchView.setOnQueryTextListener(this);
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         update();
@@ -278,7 +404,11 @@ public class EmployeeFragment extends Fragment implements LabObserver {
     @Override
     public void update() {
         if (mEmployeeAdapter!=null)
-            mEmployeeAdapter.notifyDataSetChanged();
+        {
+            List<Employee> employees=new ArrayList<>(EmployeeLab.getInstanceOf(getActivity()).getEmployees());
+            mEmployeeList=employees;
+            mEmployeeAdapter.animateTo(employees);
+        }
     }
 
     public static Fragment newInstance()
