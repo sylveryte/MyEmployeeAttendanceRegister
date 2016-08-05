@@ -91,9 +91,10 @@ public class SitesLab implements LabObeservable {
     }
     public void deleteSite(Site site,Context context)
     {
-        site.delete(context);
         mSites.remove(site);
         alertAllObservers();
+
+        site.delete(context);
 
         String siteIdString=site.getId().toString();
         mDatabase.delete(SitesTable.NAME, SitesTable.Cols.UID+"=?",new String[]{siteIdString});

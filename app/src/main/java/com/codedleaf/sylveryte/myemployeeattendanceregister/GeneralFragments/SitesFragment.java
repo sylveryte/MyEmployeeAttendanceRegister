@@ -10,11 +10,17 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.codedleaf.sylveryte.myemployeeattendanceregister.Models.Designation;
+import com.codedleaf.sylveryte.myemployeeattendanceregister.Models.Employee;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.SiteAttendance.AttendanceActivity;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.CodedleafTools;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.Labs.LabObserver;
@@ -30,6 +36,7 @@ import com.codedleaf.sylveryte.myemployeeattendanceregister.Stats.StatActivity;
 
 import org.joda.time.LocalDate;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -40,11 +47,15 @@ import java.util.List;
  * This file is part of My Employee Attendance Register.
  *
  */
-public class SitesFragment extends Fragment implements LabObserver {
+public class SitesFragment extends Fragment implements LabObserver,SearchView.OnQueryTextListener {
 
 
     private SitesLab mSitesLab;
     private SiteAdapter mSiteAdapter;
+
+    private RecyclerView mRecyclerView;
+
+    private List<Site> mSites;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,7 +71,18 @@ public class SitesFragment extends Fragment implements LabObserver {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view=inflater.inflate(R.layout.recycler_fragment,container,false);
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.fragment_recycler_view);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.fragment_recycler_view);
+
+        setHasOptionsMenu(true);
+
+
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
 
       /*  //for automatic
         //// TODO: 22/6/16  looks suspicious
@@ -71,22 +93,22 @@ public class SitesFragment extends Fragment implements LabObserver {
 
         mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(spans,StaggeredGridLayoutManager.VERTICAL));*/
 
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(),2));
+        mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(),2));
 
-        mSiteAdapter=new SiteAdapter(mSitesLab.getSites());
-        recyclerView.setAdapter(mSiteAdapter);
+        mSites=mSitesLab.getSites();
 
-        return view;
+        mSiteAdapter=new SiteAdapter(mSites);
+        mRecyclerView.setAdapter(mSiteAdapter);
+
     }
-
 
     private class SiteAdapter extends RecyclerView.Adapter<SiteHolder>
     {
-        List<Site> mLocalSites;
+        List<Site> mAdapterSites;
 
         public SiteAdapter(List<Site> sites)
         {
-            mLocalSites=sites;
+            mAdapterSites =new ArrayList<>(sites);
         }
         @Override
         public SiteHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -98,15 +120,117 @@ public class SitesFragment extends Fragment implements LabObserver {
 
         @Override
         public void onBindViewHolder(SiteHolder holder, int position) {
-            holder.bind(mLocalSites.get(position));
+            holder.bind(mAdapterSites.get(position));
         }
 
         @Override
         public int getItemCount() {
-            return mLocalSites.size();
+            return mAdapterSites.size();
         }
+
+        public Site removeItem(int position)
+        {
+            final Site site=mAdapterSites.remove(position);
+            notifyItemRemoved(position);
+            return site;
+        }
+
+        public void addItem(int position, Site site)
+        {
+            mAdapterSites.add(position,site);
+            notifyItemInserted(position);
+        }
+
+        public void moveItem(int fromPosition,int toPosition)
+        {
+            final Site site=mAdapterSites.remove(fromPosition);
+            mAdapterSites.add(toPosition,site);
+            notifyItemMoved(fromPosition,toPosition);
+        }
+
+        public void animateTo(List<Site> sites)
+        {
+            applyAndAnimateRemovals(sites);
+            applyAndAnimateAddition(sites);
+            applyAndAnimateMovedItems(sites);
+        }
+
+        private void applyAndAnimateRemovals(List<Site> sites)
+        {
+            for (int i=mAdapterSites.size()-1;i>=0;i--)
+            {
+                final Site site=mAdapterSites.get(i);
+                if (!sites.contains(site))
+                {
+                    removeItem(i);
+                }
+            }
+        }
+
+        private void applyAndAnimateAddition(List<Site> sites)
+        {
+            for (int i=0,count=sites.size();i<count;i++)
+            {
+                final Site site=sites.get(i);
+                if (!mAdapterSites.contains(site))
+                {
+                    addItem(i,site);
+                }
+            }
+        }
+
+        private void applyAndAnimateMovedItems(List<Site> sites)
+        {
+            for (int toPosition=sites.size()-1;toPosition >= 0; toPosition--)
+            {
+                final Site site=sites.get(toPosition);
+                final int fromPosition=mAdapterSites.indexOf(site);
+                if (fromPosition>=0&&fromPosition!=toPosition)
+                {
+                    moveItem(fromPosition,toPosition);
+                }
+            }
+        }
+        }
+    //end of adapter class
+
+
+    //onquery
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
     }
 
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        final List<Site> filteredSites=filter(mSites,newText);
+        mSiteAdapter.animateTo(filteredSites);
+//        mRecyclerView.scrollTo(0,0);
+
+        //this one is buggy glitchy
+//        mRecyclerView.scrollToPosition(0);
+        return true;
+    }
+
+    private List<Site> filter(List<Site> siteList, String newText)
+    {
+        newText=newText.toLowerCase();
+
+        final List<Site> filteredSites=new ArrayList<>();
+
+        for (Site site:siteList)
+        {
+            final String text=site.getTitle().toLowerCase();
+            if (text.contains(newText))
+            {
+                filteredSites.add(site);
+            }
+        }
+        return filteredSites;
+    }
+
+
+    //start of holder class
     private class SiteHolder extends RecyclerView.ViewHolder
     {
         private static final String DIALOG_FRAGMENT_CODE = "editdialogsite";
@@ -255,6 +379,15 @@ public class SitesFragment extends Fragment implements LabObserver {
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+
+        MenuItem item=menu.findItem(R.id.action_search);
+        SearchView searchView=(SearchView) item.getActionView();
+        searchView.setOnQueryTextListener(this);
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         update();
@@ -270,7 +403,13 @@ public class SitesFragment extends Fragment implements LabObserver {
     @Override
     public void update() {
         if (mSiteAdapter!=null)
-        mSiteAdapter.notifyDataSetChanged();
+        {
+            List<Site> sites=new ArrayList<>(SitesLab.getInstanceOf(getActivity()).getSites());
+            mSites=sites;
+            mSiteAdapter.animateTo(sites);
+
+            mSiteAdapter.notifyDataSetChanged();
+        }
     }
 
     public static Fragment newInstance()

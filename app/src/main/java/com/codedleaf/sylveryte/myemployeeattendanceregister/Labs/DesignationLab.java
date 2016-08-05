@@ -80,10 +80,11 @@ public class DesignationLab implements LabObeservable {
 
     public void deleteDesignation(Designation designation,Context context)
     {
-        designation.delete(context);
 
         mDesignations.remove(designation);
         alertAllObservers();
+
+        designation.delete(context);
 
         String designationIdString=designation.getId().toString();
         mDatabase.delete(DesignationsTable.NAME,DesignationsTable.Cols.UID+"=?",new String[]{designationIdString});
