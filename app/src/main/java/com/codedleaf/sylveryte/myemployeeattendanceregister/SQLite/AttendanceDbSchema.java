@@ -10,6 +10,23 @@ package com.codedleaf.sylveryte.myemployeeattendanceregister.SQLite;
  */
 public class AttendanceDbSchema {
 
+    public static final class MoneyTable
+    {
+        public static final String NAME="moneytable";
+        public static final class Cols
+        {
+            public static final String AMOUNT="amount";
+            public static final String HOUR="hour";
+            public static final String MINUTE="minute";
+            public static final String DAY="day";
+            public static final String MONTH="month";
+            public static final String YEAR="year";
+            public static final String NOTE="note";
+            public static final String SITEID="siteuuid";
+            public static final String EMPLOYEEID="employeeuuid";
+        }
+    }
+
     public static final class EntriesTable
     {
         public static final String NAME="entries";

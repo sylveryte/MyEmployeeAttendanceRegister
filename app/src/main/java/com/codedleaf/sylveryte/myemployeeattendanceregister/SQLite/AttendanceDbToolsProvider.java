@@ -2,15 +2,19 @@ package com.codedleaf.sylveryte.myemployeeattendanceregister.SQLite;
 
 import android.content.ContentValues;
 
+import com.codedleaf.sylveryte.myemployeeattendanceregister.Models.Money;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.SQLite.AttendanceDbSchema.DesignationsTable;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.SQLite.AttendanceDbSchema.EmployeesTable;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.SQLite.AttendanceDbSchema.EntriesTable;
+import com.codedleaf.sylveryte.myemployeeattendanceregister.SQLite.AttendanceDbSchema.MoneyTable;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.SQLite.AttendanceDbSchema.SitesTable;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.CodedleafTools;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.Models.Designation;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.Models.Employee;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.Models.Entry;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.Models.Site;
+
+import org.joda.time.DateTime;
 
 /**
  * Created by sylveryte on 6/7/16.
@@ -44,6 +48,22 @@ public class AttendanceDbToolsProvider {
         values.put(SitesTable.Cols.ACTIVE, CodedleafTools.getStringOfBoolean(site.isActive()));
         values.put(SitesTable.Cols.BEGINDATE,CodedleafTools.getString(site.getBeginDate()));
         values.put(SitesTable.Cols.ENDDATE,CodedleafTools.getString(site.getFinishedDate()));
+
+        return values;
+    }
+
+    public static ContentValues getContentValues(Money money)
+    {
+        ContentValues values=new ContentValues();
+        values.put(MoneyTable.Cols.NOTE,money.getNote());
+        values.put(MoneyTable.Cols.EMPLOYEEID,money.getEmployeeId().toString());
+        values.put(MoneyTable.Cols.SITEID,money.getSiteId().toString());
+        values.put(MoneyTable.Cols.AMOUNT,money.getAmount());
+        values.put(MoneyTable.Cols.MINUTE,money.getDate().getMinuteOfHour());
+        values.put(MoneyTable.Cols.HOUR,money.getDate().getHourOfDay());
+        values.put(MoneyTable.Cols.DAY,money.getDate().getDayOfMonth());
+        values.put(MoneyTable.Cols.MONTH,money.getDate().getMonthOfYear());
+        values.put(MoneyTable.Cols.YEAR,money.getDate().getYear());
 
         return values;
     }

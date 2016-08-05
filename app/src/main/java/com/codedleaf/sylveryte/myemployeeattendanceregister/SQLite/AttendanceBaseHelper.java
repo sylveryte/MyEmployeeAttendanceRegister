@@ -28,6 +28,21 @@ public class AttendanceBaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
 
+        db.execSQL("create table " + AttendanceDbSchema.MoneyTable.NAME + "("+
+                " _id integer primary key autoincrement, " +
+                AttendanceDbSchema.MoneyTable.Cols.MINUTE+" INTEGER,"+
+                AttendanceDbSchema.MoneyTable.Cols.HOUR+" INTEGER,"+
+                AttendanceDbSchema.MoneyTable.Cols.DAY+" INTEGER,"+
+                AttendanceDbSchema.MoneyTable.Cols.MONTH+" INTEGER,"+
+                AttendanceDbSchema.MoneyTable.Cols.YEAR+" INTEGER,"+
+                AttendanceDbSchema.MoneyTable.Cols.AMOUNT+" INTEGER,"+
+                AttendanceDbSchema.MoneyTable.Cols.NOTE+","+
+                AttendanceDbSchema.MoneyTable.Cols.EMPLOYEEID+","+
+                AttendanceDbSchema.MoneyTable.Cols.SITEID+
+                ")"
+
+        );
+
         db.execSQL("create table " + AttendanceDbSchema.EntriesTable.NAME + "("+
         " _id integer primary key autoincrement, " +
                 AttendanceDbSchema.EntriesTable.Cols.EMPLOYEEID+","+
