@@ -123,10 +123,10 @@ public class EmployeeLab implements LabObeservable {
 
     public void deleteEmployee(Employee employee,Context context)
     {
-        employee.delete(context);
         mEmployees.remove(employee);
         alertAllObservers();
 
+        employee.delete(context);
         String empIdString=employee.getId().toString();
         mDatabase.delete(AttendanceDbSchema.EmployeesTable.NAME, AttendanceDbSchema.EmployeesTable.Cols.UID+"=?",new String[]{empIdString});
     }

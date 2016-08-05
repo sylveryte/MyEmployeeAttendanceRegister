@@ -199,7 +199,9 @@ public class EmployeeFragment extends Fragment implements LabObserver,SearchView
         final List<Employee> filteredEmployees=filter(mEmployeeList,newText);
         mEmployeeAdapter.animateTo(filteredEmployees);
 //        mRecyclerView.scrollTo(0,0);
-        mRecyclerView.scrollToPosition(0);
+
+        //this one is buggy glitchy
+//        mRecyclerView.scrollToPosition(0);
         return true;
     }
 
@@ -207,17 +209,17 @@ public class EmployeeFragment extends Fragment implements LabObserver,SearchView
     {
         newText=newText.toLowerCase();
 
-        final List<Employee> filteredEmloyeeList=new ArrayList<>();
+        final List<Employee> filteredEmployeeList=new ArrayList<>();
 
         for (Employee employee:employeeList)
         {
             final String text=employee.getTitle().toLowerCase();
             if (text.contains(newText))
             {
-                filteredEmloyeeList.add(employee);
+                filteredEmployeeList.add(employee);
             }
         }
-        return filteredEmloyeeList;
+        return filteredEmployeeList;
     }
 
 
@@ -408,6 +410,8 @@ public class EmployeeFragment extends Fragment implements LabObserver,SearchView
             List<Employee> employees=new ArrayList<>(EmployeeLab.getInstanceOf(getActivity()).getEmployees());
             mEmployeeList=employees;
             mEmployeeAdapter.animateTo(employees);
+            //causing no animation
+            mEmployeeAdapter.notifyDataSetChanged();
         }
     }
 

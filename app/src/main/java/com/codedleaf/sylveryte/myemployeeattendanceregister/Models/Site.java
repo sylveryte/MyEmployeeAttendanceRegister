@@ -181,7 +181,8 @@ public class Site implements Pickable,PickDialogObserver {
         mEmployeesInvolved.remove(uuid);
         Employee employee=EmployeeLab.getInstanceOf(context).getEmployeeById(uuid);
         //fucking cant believe it below was remove designation
-        employee.removeSiteByid(getId(),context);
+        if (employee!=null)
+            employee.removeSiteByid(getId(),context);
     }
 
     public void updateMyDB(Context context)

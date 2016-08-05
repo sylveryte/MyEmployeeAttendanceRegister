@@ -266,7 +266,8 @@ public class Employee implements Pickable,PickDialogObserver {
             return;
         mSites.remove(uuid);
         Site site=SitesLab.getInstanceOf(context).getSiteById(uuid);
-        site.removeEmployeeById(getId(),context);
+        if (site!=null)
+            site.removeEmployeeById(getId(),context);
         updateMyDB(context);
     }
 
@@ -295,7 +296,8 @@ public class Employee implements Pickable,PickDialogObserver {
         mDesignations.remove(uuid);
         mDesignationsString=getDesignationString(context);
         Designation designation=DesignationLab.getInstanceOf(context).getDesigantionById(uuid);
-        designation.removeEmployeeInvolvedById(getId(),context);
+        if (designation!=null)
+            designation.removeEmployeeInvolvedById(getId(),context);
 
         updateMyDB(context);
     }
@@ -325,6 +327,7 @@ public class Employee implements Pickable,PickDialogObserver {
         }
 
         updateMyDB(context);
+        EmployeeLab.getInstanceOf(context).alertAllObservers();
     }
 
     public void updateMyDB(Context context)
