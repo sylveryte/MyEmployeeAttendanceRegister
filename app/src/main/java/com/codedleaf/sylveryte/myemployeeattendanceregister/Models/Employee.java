@@ -5,6 +5,7 @@ import android.content.Context;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.Labs.DesignationLab;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.Labs.EmployeeLab;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.Labs.EntryLab;
+import com.codedleaf.sylveryte.myemployeeattendanceregister.Labs.MoneyLab;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.Labs.SitesLab;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.Picknation.PickCache;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.Picknation.PickDialogObserver;
@@ -239,6 +240,7 @@ public class Employee implements Pickable,PickDialogObserver {
             }
         }
 
+        MoneyLab.getInstanceOf(context).cleanseMoneyLogOfEmployeeId(mEmployeeId);
         EntryLab.getInstanceOf(context).cleanseEntriesOfEmployeeId(mEmployeeId);
     }
 

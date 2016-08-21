@@ -2,8 +2,13 @@ package com.codedleaf.sylveryte.myemployeeattendanceregister.Labs;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
+import android.database.CursorWrapper;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.annotation.Nullable;
 
+import com.codedleaf.sylveryte.myemployeeattendanceregister.Models.Designation;
+import com.codedleaf.sylveryte.myemployeeattendanceregister.Models.Entry;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.Models.Money;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.SQLite.AttendanceBaseHelper;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.SQLite.AttendanceDbSchema;
@@ -12,6 +17,8 @@ import com.codedleaf.sylveryte.myemployeeattendanceregister.SQLite.AttendanceDbT
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -51,12 +58,10 @@ public class MoneyLab {
     public void cleanseMoneyLogOfEmployeeId(UUID empId)
     {
         ///delete from db
-        // TODO: 5/8/16 include this while deleting employeeeeee
         deleteMoneyLogByEmpId(empId);
     }
 
-    //think this should be not there and make sure if site not found you better watchout for that
-
+    //think this should be not there and make sure if site not found you better watchout
 /*    private void delteMoneyLogBySiteId(UUID siteId)
     {
 
@@ -70,6 +75,156 @@ public class MoneyLab {
         delteMoneyLogBySiteId(siteId);
     }
 */
+
+    public List<Money> getMoneyLogs(UUID empId,int year)
+    {
+        List<Money> moneys=new ArrayList<>();
+        int i=0;
+
+        String emp;
+        if (empId==null)
+            emp = "";
+        else emp=empId.toString();
+
+        MoneyCursorWrapper cursorWrapper= queryMoneyOfYear(
+                null
+                ,null
+                ,year
+                ,emp);
+        try
+        {
+            cursorWrapper.moveToFirst();
+            while (!cursorWrapper.isAfterLast())
+            {
+                i++;
+                moneys.add(cursorWrapper.getMoney());
+                cursorWrapper.moveToNext();
+            }
+        }
+        finally
+        {
+            cursorWrapper.close();
+        }
+
+        if (i<1)
+            return new ArrayList<>();
+
+        return moneys;
+
+    }
+
+
+    private MoneyCursorWrapper queryMoneyOfYear(@Nullable  Integer day,@Nullable Integer month,Integer year,String empId)
+    {
+
+        //// TODO: 21/8/16 someday you might wanna optimize this one
+
+        String sqlStatementString="SELECT * FROM "+AttendanceDbSchema.MoneyTable.NAME+" WHERE ";
+
+        ArrayList<String> args=new ArrayList<>();
+
+        int conditionsCounter=0;
+
+        boolean last=false;//to know if last one was true [in down ifs]
+
+        if (day!=null)
+        {
+            sqlStatementString+=AttendanceDbSchema.MoneyTable.Cols.DAY+"=? ";
+            args.add(String.valueOf(day));
+
+            last=true;
+            conditionsCounter++;
+        }
+        if (month!=null)
+        {
+            if (last)
+                sqlStatementString+=" AND ";
+
+            sqlStatementString+=AttendanceDbSchema.MoneyTable.Cols.MONTH+"=? ";
+            args.add(String.valueOf(month));
+
+            last=true;
+            conditionsCounter++;
+        }
+        if (year!=null)
+        {
+            if (last)
+                sqlStatementString+=" AND ";
+
+            sqlStatementString+=AttendanceDbSchema.MoneyTable.Cols.YEAR+"=? ";
+            args.add(String.valueOf(year));
+
+            last=true;
+            conditionsCounter++;
+        }
+        if (empId!=null)
+        {
+            if (last)
+                sqlStatementString+=" AND ";
+
+            sqlStatementString+=AttendanceDbSchema.MoneyTable.Cols.EMPLOYEEID+"=? ";
+            args.add(empId);
+
+            last=true;
+            conditionsCounter++;
+        }
+
+        if (!last)
+            sqlStatementString="SELECT * FROM "+AttendanceDbSchema.MoneyTable.NAME;
+
+
+        String[] argsArray=new String[conditionsCounter];
+
+
+        if (!last)
+            argsArray=null;
+        else
+        {
+            for (int i=0;i<args.size();i++)
+            {
+                argsArray[i]=args.get(i);
+
+            }
+        }
+
+
+        Cursor cursor=mDatabase.rawQuery(sqlStatementString,argsArray);
+
+        return new MoneyCursorWrapper(cursor);
+    }
+
+    private  class MoneyCursorWrapper extends CursorWrapper
+    {
+        public MoneyCursorWrapper(Cursor cursor)
+        {
+            super(cursor);
+        }
+
+        public Money getMoney()
+        {
+            String empIdString=getString(getColumnIndex(AttendanceDbSchema.MoneyTable.Cols.EMPLOYEEID));
+            String siteIdString=getString(getColumnIndex(AttendanceDbSchema.MoneyTable.Cols.SITEID));
+
+
+            int amount=getInt(getColumnIndex(AttendanceDbSchema.MoneyTable.Cols.AMOUNT));
+
+            int minute=getInt(getColumnIndex(AttendanceDbSchema.MoneyTable.Cols.MINUTE));
+            int hout=getInt(getColumnIndex(AttendanceDbSchema.MoneyTable.Cols.HOUR));
+            int day=getInt(getColumnIndex(AttendanceDbSchema.MoneyTable.Cols.DAY));
+            int month=getInt(getColumnIndex(AttendanceDbSchema.MoneyTable.Cols.MONTH));
+            int year=getInt(getColumnIndex(AttendanceDbSchema.MoneyTable.Cols.YEAR));
+
+            String note=getString(getColumnIndex(AttendanceDbSchema.MoneyTable.Cols.NOTE));
+
+            DateTime dateTime=new DateTime(year,month,day,hout,minute);
+
+            Money money=new Money(UUID.fromString(empIdString),UUID.fromString(siteIdString),dateTime);
+            money.setAmount(amount);
+            money.setNote(note);
+
+            return money;
+        }
+    }
 
     public void updateMoney(Money money)
     {
