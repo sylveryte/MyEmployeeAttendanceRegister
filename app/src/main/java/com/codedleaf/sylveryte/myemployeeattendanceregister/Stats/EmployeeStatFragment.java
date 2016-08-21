@@ -8,8 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.codedleaf.sylveryte.myemployeeattendanceregister.Labs.EmployeeLab;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.Models.Employee;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.R;
+import com.codedleaf.sylveryte.myemployeeattendanceregister.Stats.EmpStat.MoneyContainer;
 
 import java.util.UUID;
 
@@ -26,27 +28,27 @@ public class EmployeeStatFragment extends Fragment {
     private static final String ITEM_CODE = "retrievId";
     private Employee mEmployee;
 
+    private MoneyContainer mMoneyContainer;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.employee_stat_fragment,container,false);
-
-        LinearLayout monthContainer=(LinearLayout)view.findViewById(R.id.month_container);
-
-        //since site is required now
-/*
+        mMoneyContainer=(MoneyContainer) view.findViewById(R.id.moneyContainer);
+        //since site is requi/*d now
         Bundle arguments=getArguments();
         if (arguments!=null) {
             mEmployee= EmployeeLab.getInstanceOf(getActivity())
                     .getEmployeeById((UUID) arguments.getSerializable(ITEM_CODE));
+        }
+                return view;
+    }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
-            MonthView monthView = MonthView.getInstance(inflater, getContext(), new LocalDate(), mEmployee);
-            monthContainer.addView(monthView.getView());
-
-        }*/
-        return view;
+        mMoneyContainer.initialize(mEmployee.getId(),getFragmentManager());
     }
 
     public static EmployeeStatFragment createInstance(UUID empId)

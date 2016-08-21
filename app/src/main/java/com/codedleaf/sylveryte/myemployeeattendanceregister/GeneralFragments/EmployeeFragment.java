@@ -39,7 +39,7 @@ import java.util.Locale;
 /**
  * Created by sylveryte on 14/6/16.
  *
- * Copyright (C) 2016 sylveryte@codedleaf <codedlaf@gmail.com>
+ * Copyright (C) 2016 sylveryte@codedleaf <codedleaf@gmail.com>
  *
  * This file is part of My Employee Attendance Register.
  *
@@ -339,7 +339,7 @@ public class EmployeeFragment extends Fragment implements LabObserver,SearchView
                                     //hah haha :<
                                     //after few weeks :grin:
                                     SimpleListDialogFragment.getInstance(mEmployee.getId().toString(),
-                                            SitesLab.getInstanceOf(getActivity()).getPickables(mEmployee.getSites()))
+                                            SitesLab.getInstanceOf(getActivity()).getPickables(mEmployee.getSites()),SimpleListDialogFragment.NORMAL_MODE)
                                             .show(getActivity().getSupportFragmentManager(),DIALOG_FRAGMENT_CODE);
 
                                     break;
@@ -347,7 +347,7 @@ public class EmployeeFragment extends Fragment implements LabObserver,SearchView
                                 case 4:
                                 {
                                     SimpleListDialogFragment.getInstance(mEmployee.getId().toString(),
-                                            DesignationLab.getInstanceOf(getActivity()).getPickables(mEmployee.getDesignations()))
+                                            DesignationLab.getInstanceOf(getActivity()).getPickables(mEmployee.getDesignations()),SimpleListDialogFragment.NORMAL_MODE)
                                             .show(getActivity().getSupportFragmentManager(),DIALOG_FRAGMENT_CODE);
                                 }
                             }

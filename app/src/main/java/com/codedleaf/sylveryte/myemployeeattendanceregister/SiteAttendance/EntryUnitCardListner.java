@@ -18,7 +18,7 @@ import com.codedleaf.sylveryte.myemployeeattendanceregister.R;
 /**
  * Created by sylveryte on 29/7/16.
  * <p/>
- * Copyright (C) 2016 sylveryte@codedleaf <codedlaf@gmail.com>
+ * Copyright (C) 2016 sylveryte@codedleaf <codedleaf@gmail.com>
  * <p/>
  * This file is part of My Employee Attendance Register.
  */

@@ -20,7 +20,7 @@ import java.util.UUID;
 /**
  * Created by sylveryte on 19/7/16.
  *
- * Copyright (C) 2016 sylveryte@codedleaf <codedlaf@gmail.com>
+ * Copyright (C) 2016 sylveryte@codedleaf <codedleaf@gmail.com>
  *
  * This file is part of My Employee Attendance Register.
  *
@@ -54,7 +54,7 @@ public class SiteAdditionDialogFragment extends DialogFragment {
                     return;
                 }
 
-                saveDesignation(mSite);
+                saveSite(mSite);
                 getDialog().dismiss();
             }
         });
@@ -82,7 +82,7 @@ public class SiteAdditionDialogFragment extends DialogFragment {
 
 
 
-    public void saveDesignation(Site site)
+    public void saveSite(Site site)
     {
         if (site==null)
         {

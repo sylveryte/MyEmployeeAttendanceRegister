@@ -1,5 +1,7 @@
 package com.codedleaf.sylveryte.myemployeeattendanceregister.Picknation;
 
+import com.codedleaf.sylveryte.myemployeeattendanceregister.GeneralObserver;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,7 +10,7 @@ import java.util.UUID;
 /**
  * Created by sylveryte on 20/7/16.
  *
- * Copyright (C) 2016 sylveryte@codedleaf <codedlaf@gmail.com>
+ * Copyright (C) 2016 sylveryte@codedleaf <codedleaf@gmail.com>
  *
  * This file is part of My Employee Attendance Register.
  *
@@ -18,13 +20,23 @@ public class PickCache {
 
     private HashMap<String,List<UUID>> mForPickMap;
     private HashMap<String,List<? extends Pickable>> mForShowMap;
-    private HashMap<String,PickDialogObserver> ObserverMap;
+    private HashMap<String,GeneralObserver> ObserverMap;
+
+    private Pickable mPickable;
 
     private PickCache()
     {
         mForPickMap =new HashMap<>(3);
         mForShowMap =new HashMap<>(3);
         ObserverMap=new HashMap<>(3);
+    }
+
+    public Pickable getPickable() {
+        return mPickable;
+    }
+
+    public void setPickable(Pickable pickable) {
+        mPickable = pickable;
     }
 
     public void storePicked(String id, List<UUID> list)
@@ -63,11 +75,11 @@ public class PickCache {
     }
 
 
-    public void addObserver(String id,PickDialogObserver observer)
+    public void addObserver(String id,GeneralObserver observer)
     {
         ObserverMap.put(id,observer);
     }
-    public PickDialogObserver getObserver(String id)
+    public GeneralObserver getObserver(String id)
     {
         return ObserverMap.get(id);
     }

@@ -1,18 +1,23 @@
 package com.codedleaf.sylveryte.myemployeeattendanceregister;
 
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.DateTimeParser;
 
 import java.util.ArrayList;
+import java.util.Currency;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.UUID;
 
 /**
  * Created by sylveryte on 6/7/16.
  *
- * Copyright (C) 2016 sylveryte@codedleaf <codedlaf@gmail.com>
+ * Copyright (C) 2016 sylveryte@codedleaf <codedleaf@gmail.com>
  *
  * This file is part of My Employee Attendance Register.
  *
@@ -22,6 +27,7 @@ public class CodedleafTools {
 
     public static final String localDateFormatString="yyyy-MM-dd";
     public static final String prettyLocalDateFormatString="E-dd-M-yyy";
+    public static final String prettyDateTimeFormatString="h:m a E-dd-M-yyy";
 
     public static final String monthFormat="MMMM-yyy";
 
@@ -65,7 +71,7 @@ public class CodedleafTools {
         return uuidList;
     }
 
-    public static String getString(LocalDate date)
+    public static String getDateString(LocalDate date)
     {
         if (date==null)
             return "";
@@ -84,7 +90,7 @@ public class CodedleafTools {
     }
 
 
-    public static String getPrettyStringFromLocalDate(LocalDate date)
+    public static String getPrettyDateString(LocalDate date)
     {
         if (date==null)
             return "";
@@ -95,11 +101,43 @@ public class CodedleafTools {
 
     }
 
+    public static String getPrettyDateString(DateTime date)
+    {
+        if (date==null)
+            return "";
+
+        DateTimeFormatter format=DateTimeFormat.forPattern(prettyDateTimeFormatString);
+        return format.print(date);
+    }
+
+
     public static LocalDate getLocalDateFromString(String dateString)
     {
         if (dateString==null||dateString.trim().isEmpty())
             return null;
 
         return LocalDate.parse(dateString);
+    }
+
+
+    public static String getCurrencySymbol(String currencyCode)
+    {
+        return "$";
+//        final Map<String,String> MYCURRENCIES= new HashMap<String, String>(){
+//            {
+//                for (Locale ll:Locale.getAvailableLocales())
+//                {
+//                    try {
+//                        Currency a=Currency.getInstance(ll);
+//                        put(a.getCurrencyCode(),a.getSymbol());
+//                    }
+//                    catch (Exception e)
+//                    {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
+//        };
+//        return MYCURRENCIES.get(currencyCode);
     }
 }

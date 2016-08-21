@@ -12,7 +12,7 @@ import java.util.UUID;
 /**
  * Created by sylveryte on 11/7/16.
  *
- * Copyright (C) 2016 sylveryte@codedleaf <codedlaf@gmail.com>
+ * Copyright (C) 2016 sylveryte@codedleaf <codedleaf@gmail.com>
  *
  * This file is part of My Employee Attendance Register.
  *

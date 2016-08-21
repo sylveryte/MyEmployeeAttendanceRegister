@@ -5,7 +5,7 @@ import android.content.Context;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.Labs.DesignationLab;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.Labs.EmployeeLab;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.Picknation.PickCache;
-import com.codedleaf.sylveryte.myemployeeattendanceregister.Picknation.PickDialogObserver;
+import com.codedleaf.sylveryte.myemployeeattendanceregister.GeneralObserver;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.Picknation.Pickable;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.RegisterConstants;
 
@@ -16,12 +16,12 @@ import java.util.UUID;
 /**
  * Created by sylveryte on 12/6/16.
  *
- * Copyright (C) 2016 sylveryte@codedleaf <codedlaf@gmail.com>
+ * Copyright (C) 2016 sylveryte@codedleaf <codedleaf@gmail.com>
  *
  * This file is part of My Employee Attendance Register.
  *
  */
-public class Designation implements Pickable,PickDialogObserver {
+public class Designation implements Pickable,GeneralObserver {
     @Override
     public int getType() {
         return RegisterConstants.DESIGNATION;

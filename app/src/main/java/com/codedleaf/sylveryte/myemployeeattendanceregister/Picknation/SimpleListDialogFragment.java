@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.codedleaf.sylveryte.myemployeeattendanceregister.GeneralObserver;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.R;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.Stats.StatActivity;
 
@@ -21,7 +22,7 @@ import java.util.List;
 /**
  * Created by sylveryte on 21/7/16.
  *
- * Copyright (C) 2016 sylveryte@codedleaf <codedlaf@gmail.com>
+ * Copyright (C) 2016 sylveryte@codedleaf <codedleaf@gmail.com>
  *
  * This file is part of My Employee Attendance Register.
  *
@@ -29,13 +30,21 @@ import java.util.List;
 public class SimpleListDialogFragment extends DialogFragment {
 
     private static final String CALLER_CODE = "callerofshow";
+    public static final int PICK_MODE=21;
+    public static final int NORMAL_MODE=22;
+    private static final String BEHAVIOR="picking_mode";
+
+
+    private String caller;
+
+    private boolean pickMode=false;
 
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         View view= LayoutInflater.from(getActivity()).inflate(R.layout.recycler_fragment,null,false);
-
-        final String caller=getArguments().getString(CALLER_CODE);
+        caller = getArguments().getString(CALLER_CODE);
+        pickMode=getArguments().getBoolean(BEHAVIOR);
         List<? extends Pickable> pickableList = PickCache.getInstance().getPickables(caller);
 
         if(pickableList.isEmpty())
@@ -96,7 +105,16 @@ public class SimpleListDialogFragment extends DialogFragment {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    startActivity(StatActivity.fetchIntent(getActivity(),mPickable.getType(),mPickable.getId()));
+                    if (pickMode)
+                    {
+                        PickCache.getInstance().setPickable(mPickable);
+                        final GeneralObserver observer=PickCache.getInstance().getObserver(caller);
+                        if (observer!=null)
+                            observer.doSomeUpdate(getActivity());
+                        getDialog().dismiss();
+                    }
+                    else
+                        startActivity(StatActivity.fetchIntent(getActivity(),mPickable.getType(),mPickable.getId()));
                 }
             });
         }
@@ -111,12 +129,13 @@ public class SimpleListDialogFragment extends DialogFragment {
 
 
 
-    public static SimpleListDialogFragment getInstance(@NonNull String callerId, @Nullable List<Pickable> showThese)
+    public static SimpleListDialogFragment getInstance(@NonNull String callerId, @Nullable List<Pickable> showThese,int mode)
     {
         SimpleListDialogFragment fragment=new SimpleListDialogFragment();
 
-        Bundle bundle=new Bundle(1);
+        Bundle bundle=new Bundle(2);
         bundle.putString(CALLER_CODE,callerId);
+        bundle.putBoolean(BEHAVIOR,mode==PICK_MODE);
         fragment.setArguments(bundle);
 
         PickCache.getInstance().storePickables(callerId,showThese);

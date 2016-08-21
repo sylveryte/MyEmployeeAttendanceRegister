@@ -14,12 +14,10 @@ import com.codedleaf.sylveryte.myemployeeattendanceregister.Models.Employee;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.Models.Entry;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.Models.Site;
 
-import org.joda.time.DateTime;
-
 /**
  * Created by sylveryte on 6/7/16.
  *
- * Copyright (C) 2016 sylveryte@codedleaf <codedlaf@gmail.com>
+ * Copyright (C) 2016 sylveryte@codedleaf <codedleaf@gmail.com>
  *
  * This file is part of My Employee Attendance Register.
  *
@@ -46,8 +44,8 @@ public class AttendanceDbToolsProvider {
         values.put(SitesTable.Cols.TITLE,site.getTitle());
         values.put(SitesTable.Cols.DESC,site.getDescriptionPure());
         values.put(SitesTable.Cols.ACTIVE, CodedleafTools.getStringOfBoolean(site.isActive()));
-        values.put(SitesTable.Cols.BEGINDATE,CodedleafTools.getString(site.getBeginDate()));
-        values.put(SitesTable.Cols.ENDDATE,CodedleafTools.getString(site.getFinishedDate()));
+        values.put(SitesTable.Cols.BEGINDATE,CodedleafTools.getDateString(site.getBeginDate()));
+        values.put(SitesTable.Cols.ENDDATE,CodedleafTools.getDateString(site.getFinishedDate()));
 
         return values;
     }
@@ -57,7 +55,7 @@ public class AttendanceDbToolsProvider {
         ContentValues values=new ContentValues();
         values.put(MoneyTable.Cols.NOTE,money.getNote());
         values.put(MoneyTable.Cols.EMPLOYEEID,money.getEmployeeId().toString());
-        values.put(MoneyTable.Cols.SITEID,money.getSiteId().toString());
+        values.put(MoneyTable.Cols.SITEID,money.getSiteId()==null?" ":money.getSiteId().toString());
         values.put(MoneyTable.Cols.AMOUNT,money.getAmount());
         values.put(MoneyTable.Cols.MINUTE,money.getDate().getMinuteOfHour());
         values.put(MoneyTable.Cols.HOUR,money.getDate().getHourOfDay());

@@ -35,7 +35,7 @@ import java.util.UUID;
 /**
  * Created by sylveryte on 11/7/16.
  *
- * Copyright (C) 2016 sylveryte@codedleaf <codedlaf@gmail.com>
+ * Copyright (C) 2016 sylveryte@codedleaf <codedleaf@gmail.com>
  *
  * This file is part of My Employee Attendance Register.
  *
@@ -102,7 +102,7 @@ public class SiteStatFragment extends Fragment {
         empcounter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SimpleListDialogFragment.getInstance(mSite.getId().toString(), EmployeeLab.getInstanceOf(getActivity()).getPickables(mSite.getEmployeesInvolved()))
+                SimpleListDialogFragment.getInstance(mSite.getId().toString(), EmployeeLab.getInstanceOf(getActivity()).getPickables(mSite.getEmployeesInvolved()),SimpleListDialogFragment.NORMAL_MODE)
                         .show(getFragmentManager(),DIALOG_CODE);
             }
         });
@@ -139,8 +139,8 @@ public class SiteStatFragment extends Fragment {
     {
         title.setText(mSite.getTitle());
         desc.setText(mSite.getDescriptionPure());
-        begindate.setText(CodedleafTools.getPrettyStringFromLocalDate(mSite.getBeginDate()));
-        finishdate.setText(CodedleafTools.getPrettyStringFromLocalDate(mSite.getFinishedDate()));
+        begindate.setText(CodedleafTools.getPrettyDateString(mSite.getBeginDate()));
+        finishdate.setText(CodedleafTools.getPrettyDateString(mSite.getFinishedDate()));
         empcounter.setText(mSite.getEmployeeCountString());
     }
 

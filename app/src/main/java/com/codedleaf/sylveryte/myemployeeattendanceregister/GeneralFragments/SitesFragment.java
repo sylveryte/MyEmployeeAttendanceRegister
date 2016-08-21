@@ -19,8 +19,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.codedleaf.sylveryte.myemployeeattendanceregister.Models.Designation;
-import com.codedleaf.sylveryte.myemployeeattendanceregister.Models.Employee;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.SiteAttendance.AttendanceActivity;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.CodedleafTools;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.Labs.LabObserver;
@@ -42,7 +40,7 @@ import java.util.List;
 /**
  * Created by sylveryte on 11/6/16.
  *
- * Copyright (C) 2016 sylveryte@codedleaf <codedlaf@gmail.com>
+ * Copyright (C) 2016 sylveryte@codedleaf <codedleaf@gmail.com>
  *
  * This file is part of My Employee Attendance Register.
  *
@@ -302,7 +300,7 @@ public class SitesFragment extends Fragment implements LabObserver,SearchView.On
                                 case 2:
                                 {
                                     SimpleListDialogFragment.getInstance(mSite.getId().toString(),
-                                            EmployeeLab.getInstanceOf(getActivity()).getPickables(mSite.getEmployeesInvolved()))
+                                            EmployeeLab.getInstanceOf(getActivity()).getPickables(mSite.getEmployeesInvolved()),SimpleListDialogFragment.NORMAL_MODE)
                                             .show(getActivity().getSupportFragmentManager(),DIALOG_PICK_FRAGMENT_CODE);
                                     break;
                                 }
@@ -367,8 +365,8 @@ public class SitesFragment extends Fragment implements LabObserver,SearchView.On
         {
             mSite=site;
             title.setText(site.getTitle());
-            begindate.setText(CodedleafTools.getPrettyStringFromLocalDate(mSite.getBeginDate()));
-            finisheddate.setText(CodedleafTools.getPrettyStringFromLocalDate(mSite.getFinishedDate()));
+            begindate.setText(CodedleafTools.getPrettyDateString(mSite.getBeginDate()));
+            finisheddate.setText(CodedleafTools.getPrettyDateString(mSite.getFinishedDate()));
             description.setText(site.getDescription());
                 if (mSite.isActive())
                     mCardView.setCardBackgroundColor(ContextCompat.getColor(getActivity(),R.color.colorSiteCard));

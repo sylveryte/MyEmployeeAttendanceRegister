@@ -7,15 +7,12 @@ import android.database.CursorWrapper;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.Nullable;
 
-import com.codedleaf.sylveryte.myemployeeattendanceregister.Models.Designation;
-import com.codedleaf.sylveryte.myemployeeattendanceregister.Models.Entry;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.Models.Money;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.SQLite.AttendanceBaseHelper;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.SQLite.AttendanceDbSchema;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.SQLite.AttendanceDbToolsProvider;
 
 import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +21,7 @@ import java.util.UUID;
 /**
  * Created by sylveryte on 5/8/16.
  * <p>
- * Copyright (C) 2016 sylveryte@codedleaf <codedlaf@gmail.com>
+ * Copyright (C) 2016 sylveryte@codedleaf <codedleaf@gmail.com>
  * <p>
  * This file is part of My Employee Attendance Register.
  */
@@ -59,6 +56,12 @@ public class MoneyLab {
     {
         ///delete from db
         deleteMoneyLogByEmpId(empId);
+    }
+
+    public void addMoney(Money money)
+    {
+        ContentValues values= AttendanceDbToolsProvider.getContentValues(money);
+        mDatabase.insert(AttendanceDbSchema.MoneyTable.NAME,null,values);
     }
 
     //think this should be not there and make sure if site not found you better watchout
@@ -218,7 +221,7 @@ public class MoneyLab {
 
             DateTime dateTime=new DateTime(year,month,day,hout,minute);
 
-            Money money=new Money(UUID.fromString(empIdString),UUID.fromString(siteIdString),dateTime);
+            Money money=new Money(UUID.fromString(empIdString),siteIdString.trim().isEmpty()?null:UUID.fromString(siteIdString),dateTime);
             money.setAmount(amount);
             money.setNote(note);
 
@@ -255,5 +258,31 @@ public class MoneyLab {
                         siteIdString});
 
     }
+    public void deleteMoney(Money money)
+    {
 
+        String empIdString=money.getEmployeeId().toString();
+        String siteIdString=money.getSiteId()==null?" ":money.getSiteId().toString();
+        DateTime date=money.getDate();
+
+
+
+
+        mDatabase.delete(AttendanceDbSchema.MoneyTable.NAME,
+                AttendanceDbSchema.MoneyTable.Cols.EMPLOYEEID+"=? AND "+
+                        AttendanceDbSchema.MoneyTable.Cols.MINUTE+"=? AND "+
+                        AttendanceDbSchema.MoneyTable.Cols.HOUR+"=? AND "+
+                        AttendanceDbSchema.MoneyTable.Cols.DAY+"=? AND "+
+                        AttendanceDbSchema.MoneyTable.Cols.MONTH+"=? AND "+
+                        AttendanceDbSchema.MoneyTable.Cols.YEAR+"=? AND "+
+                        AttendanceDbSchema.MoneyTable.Cols.SITEID+"=? "
+                ,new String[]{empIdString,
+                        String.valueOf(date.getMinuteOfHour()),
+                        String.valueOf(date.getHourOfDay()),
+                        String.valueOf(date.getDayOfMonth()),
+                        String.valueOf(date.getMonthOfYear()),
+                        String.valueOf(date.getYear()),
+                        siteIdString});
+
+    }
 }

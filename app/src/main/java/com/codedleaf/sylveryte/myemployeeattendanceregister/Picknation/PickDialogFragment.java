@@ -14,6 +14,7 @@ import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.codedleaf.sylveryte.myemployeeattendanceregister.GeneralObserver;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.R;
 
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ import java.util.UUID;
 /**
  * Created by sylveryte on 20/7/16.
  *
- * Copyright (C) 2016 sylveryte@codedleaf <codedlaf@gmail.com>
+ * Copyright (C) 2016 sylveryte@codedleaf <codedleaf@gmail.com>
  *
  * This file is part of My Employee Attendance Register.
  *
@@ -170,7 +171,7 @@ public class PickDialogFragment extends DialogFragment {
         }
     }
 
-    public static PickDialogFragment getInstance(@NonNull String id, PickDialogObserver observer, List<UUID> picked, List<? extends Pickable> pickFrom)
+    public static PickDialogFragment getInstance(@NonNull String id, GeneralObserver observer, List<UUID> picked, List<? extends Pickable> pickFrom)
     {
         PickDialogFragment fragment=new PickDialogFragment();
 

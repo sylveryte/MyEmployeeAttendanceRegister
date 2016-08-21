@@ -6,7 +6,7 @@ import com.codedleaf.sylveryte.myemployeeattendanceregister.Labs.EmployeeLab;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.Labs.EntryLab;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.Labs.SitesLab;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.Picknation.PickCache;
-import com.codedleaf.sylveryte.myemployeeattendanceregister.Picknation.PickDialogObserver;
+import com.codedleaf.sylveryte.myemployeeattendanceregister.GeneralObserver;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.Picknation.Pickable;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.RegisterConstants;
 
@@ -19,12 +19,12 @@ import java.util.UUID;
 /**
  * Created by sylveryte on 12/6/16.
  *
- * Copyright (C) 2016 sylveryte@codedleaf <codedlaf@gmail.com>
+ * Copyright (C) 2016 sylveryte@codedleaf <codedleaf@gmail.com>
  *
  * This file is part of My Employee Attendance Register.
  *
  */
-public class Site implements Pickable,PickDialogObserver {
+public class Site implements Pickable,GeneralObserver {
 
 
     private String mTitle;

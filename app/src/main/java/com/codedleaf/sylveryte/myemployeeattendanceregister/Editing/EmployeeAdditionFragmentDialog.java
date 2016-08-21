@@ -2,38 +2,27 @@ package com.codedleaf.sylveryte.myemployeeattendanceregister.Editing;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.TextView;
 
-import com.codedleaf.sylveryte.myemployeeattendanceregister.Labs.DesignationLab;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.Labs.EmployeeLab;
-import com.codedleaf.sylveryte.myemployeeattendanceregister.Labs.SitesLab;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.Models.Employee;
-import com.codedleaf.sylveryte.myemployeeattendanceregister.Picknation.PickCache;
-import com.codedleaf.sylveryte.myemployeeattendanceregister.Picknation.PickDialogFragment;
-import com.codedleaf.sylveryte.myemployeeattendanceregister.Picknation.PickDialogObserver;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.R;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 /**
  * Created by sylveryte on 20/7/16.
  *
- * Copyright (C) 2016 sylveryte@codedleaf <codedlaf@gmail.com>
+ * Copyright (C) 2016 sylveryte@codedleaf <codedleaf@gmail.com>
  *
  * This file is part of My Employee Attendance Register.
  *

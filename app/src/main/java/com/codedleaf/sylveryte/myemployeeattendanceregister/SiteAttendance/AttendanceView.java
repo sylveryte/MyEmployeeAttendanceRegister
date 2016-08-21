@@ -20,7 +20,7 @@ import java.util.UUID;
 /**
  * Created by sylveryte on 31/7/16.
  * <p>
- * Copyright (C) 2016 sylveryte@codedleaf <codedlaf@gmail.com>
+ * Copyright (C) 2016 sylveryte@codedleaf <codedleaf@gmail.com>
  * <p>
  * This file is part of My Employee Attendance Register.
  */
