@@ -2,11 +2,13 @@ package com.codedleaf.sylveryte.myemployeeattendanceregister.Stats.EmpStat;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +28,7 @@ import com.codedleaf.sylveryte.myemployeeattendanceregister.R;
 
 import org.joda.time.LocalDate;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -52,6 +55,8 @@ public class MoneyContainer extends FrameLayout implements GeneralObserver {
 
     private FragmentManager mFragmentManager;
 
+    private Context mContext;
+
     public MoneyContainer(Context context) {
         super(context);
         init(context);
@@ -69,6 +74,7 @@ public class MoneyContainer extends FrameLayout implements GeneralObserver {
 
     private void init(Context context)
     {
+        mContext=context;
         LayoutInflater inflater=(LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view=inflater.inflate(R.layout.money_view_container,this,false);
         addView(view);
@@ -89,12 +95,29 @@ public class MoneyContainer extends FrameLayout implements GeneralObserver {
     {
         mFragmentManager=fragmentManager;
         mEmpID=empId;
-        mMoneyList= MoneyLab.getInstanceOf(getContext()).getMoneyLogs(empId,new LocalDate().getYear());
-
+        mMoneyList= new ArrayList<>();
         mAdapter=new MoneyAdapter();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(mAdapter);
+
+        new MoneyLogFetcher().execute(empId);
     }
+
+//    MoneyLab.getInstanceOf(getContext()).getMoneyLogs(empId,new LocalDate().getYear());
+    class MoneyLogFetcher extends AsyncTask<UUID,Void,Void>
+{
+    @Override
+    protected Void doInBackground(UUID... params) {
+        List<Money> moneys=MoneyLab.getInstanceOf(mContext).getMoneyLogs(params[0],new LocalDate().getYear());
+        for (Money money:moneys)
+        {
+            mMoneyList.add(0,money);
+//            Log.i("Money","added money "+money.getAmountString());
+            mAdapter.notifyItemInserted(0);
+        }
+        return null;
+    }
+}
 
     private class MoneyHolder extends RecyclerView.ViewHolder
     {

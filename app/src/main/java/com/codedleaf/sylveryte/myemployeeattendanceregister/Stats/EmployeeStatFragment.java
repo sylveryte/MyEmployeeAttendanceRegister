@@ -1,5 +1,6 @@
 package com.codedleaf.sylveryte.myemployeeattendanceregister.Stats;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -50,6 +51,8 @@ public class EmployeeStatFragment extends Fragment {
 
         mMoneyContainer.initialize(mEmployee.getId(),getFragmentManager());
     }
+
+
 
     public static EmployeeStatFragment createInstance(UUID empId)
     {

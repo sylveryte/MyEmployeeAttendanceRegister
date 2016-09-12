@@ -2,8 +2,10 @@ package com.codedleaf.sylveryte.myemployeeattendanceregister;
 
 import android.content.res.Configuration;
 import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
+import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -184,16 +186,18 @@ public class HomeActivity extends AppCompatActivity {
                             .commitAllowingStateLoss();
 
                     //to load employee fragment
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Fragment fragment1=EmployeeFragment.newInstance();
-                            mFragmentManager.beginTransaction()
-                                    .add(R.id.fragment_container_home,fragment1,String.valueOf(RegisterConstants.EMPLOYEE))
-                                    .detach(fragment1)
-                                    .commitAllowingStateLoss();
-                        }
-                    }).start();
+                    new LoadFragment().execute();
+//                    //// TODO: 12/9/16 use async
+//                    new Thread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            Fragment fragment1=EmployeeFragment.newInstance();
+//                            mFragmentManager.beginTransaction()
+//                                    .add(R.id.fragment_container_home,fragment1,String.valueOf(RegisterConstants.EMPLOYEE))
+//                                    .detach(fragment1)
+//                                    .commitAllowingStateLoss();
+//                        }
+//                    }).start();
                     return;
                 }
                 case RegisterConstants.DESIGNATION:
@@ -209,6 +213,24 @@ public class HomeActivity extends AppCompatActivity {
             mFragmentManager.beginTransaction()
                     .attach(fragment)
                     .commit();
+    }
+
+    class LoadFragment extends AsyncTask<Void,Void,Fragment>
+    {
+        @Override
+        protected Fragment doInBackground(Void... params) {
+
+            return EmployeeFragment.newInstance();
+        }
+
+        @Override
+        protected void onPostExecute(Fragment fragment) {
+            super.onPostExecute(fragment);
+            mFragmentManager.beginTransaction()
+                    .add(R.id.fragment_container_home,fragment,String.valueOf(RegisterConstants.EMPLOYEE))
+                    .detach(fragment)
+                    .commitAllowingStateLoss();
+        }
     }
 
     private void detachFrag()
