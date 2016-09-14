@@ -8,60 +8,80 @@
     android:id="@+id/employee_card_card"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:padding="10dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="2dp"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="New Text"
-            android:id="@+id/employee_card_name"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="2dp"
-            android:text="New Text"
-            android:id="@+id/employee_card_site"/>
+        android:orientation="horizontal"
+        android:padding="5dp"
+        android:layout_height="wrap_content">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:text="sdfa"
-                android:id="@+id/employee_card_age"
-                />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:text="employee_card_active"
-                android:id="@+id/employee_card_active"
-                />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:text="sdfa"
-                android:id="@+id/employee_card_designation"
-                />
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="match_parent">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/employee_card_photo"/>
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="4"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="2dp"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="New Text"
+                android:id="@+id/employee_card_name"
+                android:maxLines="2"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="2dp"
+                android:text="New Text"
+                android:maxLines="1"
+                android:id="@+id/employee_card_site"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:text="sdfa"
+                    android:id="@+id/employee_card_age"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:text="employee_card_active"
+                    android:id="@+id/employee_card_active"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:text="sdfa"
+                    android:maxLines="1"
+                    android:id="@+id/employee_card_designation"
+                    />
+            </LinearLayout>
+
+
+        </LinearLayout>
 
     </LinearLayout>
 

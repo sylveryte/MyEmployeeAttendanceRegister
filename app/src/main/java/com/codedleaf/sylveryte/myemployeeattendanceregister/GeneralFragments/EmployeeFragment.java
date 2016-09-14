@@ -18,8 +18,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.codedleaf.sylveryte.myemployeeattendanceregister.CircleTransform;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.Models.Employee;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.Editing.EmployeeAdditionFragmentDialog;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.Labs.LabObserver;
@@ -31,7 +33,9 @@ import com.codedleaf.sylveryte.myemployeeattendanceregister.R;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.RegisterConstants;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.Picknation.SimpleListDialogFragment;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.Stats.StatActivity;
+import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -237,6 +241,7 @@ public class EmployeeFragment extends Fragment implements LabObserver,SearchView
         private TextView active;
         private Employee mEmployee;
         private CardView mCardView;
+        private ImageView mPhotoEmp;
 
         public EmployeeHolder(View itemView)
         {
@@ -363,6 +368,7 @@ public class EmployeeFragment extends Fragment implements LabObserver,SearchView
             age=(TextView)itemView.findViewById(R.id.employee_card_age);
             active=(TextView)itemView.findViewById(R.id.employee_card_active);
             mCardView=(CardView)itemView.findViewById(R.id.employee_card_card);
+            mPhotoEmp=(ImageView)itemView.findViewById(R.id.employee_card_photo);
 
         }
 
@@ -379,6 +385,23 @@ public class EmployeeFragment extends Fragment implements LabObserver,SearchView
                 mCardView.setCardBackgroundColor(ContextCompat.getColor(getActivity(),R.color.colorEmployeeCard));
             else
                 mCardView.setCardBackgroundColor(ContextCompat.getColor(getActivity(),R.color.colorEmployeeCardDeactivated));
+
+            //// TODO: 13/9/16 this to a service nigga
+            File mPhotoFile=EmployeeLab.getInstanceOf(getContext()).getEmpPhotoFile(employee);
+            if (mPhotoFile==null)
+                mPhotoFile=EmployeeLab.getInstanceOf(getContext()).getEmpPhotoFile(employee);
+//            mPhotoEmp.setImageBitmap(CodedleafTools.getScaledBitmap(mPhotoFile.getPath(),250,250));
+            if (mPhotoFile.exists())
+                Picasso.with(getContext())
+                        .load(mPhotoFile)
+                        .stableKey(employee.getId().toString())
+                        .transform(new CircleTransform())
+                        .resize(250,250)
+                        .centerCrop()
+//                        .centerInside()
+                        .into(mPhotoEmp);
+            else
+                EmployeeLab.getInstanceOf(getContext()).setEmpPlaceHolder(employee,mPhotoEmp);
         }
     }
 
@@ -413,6 +436,11 @@ public class EmployeeFragment extends Fragment implements LabObserver,SearchView
             //causing no animation
             mEmployeeAdapter.notifyDataSetChanged();
         }
+    }
+
+    @Override
+    public void picassoAlert(String path) {
+        Picasso.with(getContext()).invalidate(path);
     }
 
     public static Fragment newInstance()

@@ -12,6 +12,7 @@ import com.codedleaf.sylveryte.myemployeeattendanceregister.GeneralObserver;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.Picknation.Pickable;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.RegisterConstants;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -25,7 +26,6 @@ import java.util.UUID;
  *
  */
 public class Employee implements Pickable,GeneralObserver {
-
 
 
     private int mAge;
@@ -42,7 +42,7 @@ public class Employee implements Pickable,GeneralObserver {
 
     private List<UUID> mDesignations;
     private List<Designation> mDesignationsActual;
-    private String mDesignationsString="";
+    private String mDesignationsString = "";
     private List<UUID> mSites;
 
     @Override
@@ -50,19 +50,23 @@ public class Employee implements Pickable,GeneralObserver {
         return RegisterConstants.EMPLOYEE;
     }
 
-    public Employee()
-    {
+    public Employee() {
 
-        mIsMale=true;
-        mIsActive =true;
-        mEmployeeId =UUID.randomUUID();
-        mDesignations =new ArrayList<>();
-        mSites=new ArrayList<>();
+        mIsMale = true;
+        mIsActive = true;
+        mEmployeeId = UUID.randomUUID();
+        mDesignations = new ArrayList<>();
+        mSites = new ArrayList<>();
     }
 
     public Employee(UUID employeeId)
     {
         mEmployeeId=employeeId;
+    }
+
+    public String getFileName()
+    {
+        return "IMG_" + mEmployeeId.toString() + ".jpg";
     }
 
     public List<UUID> getDesignations()
@@ -240,6 +244,9 @@ public class Employee implements Pickable,GeneralObserver {
             }
         }
 
+        File photoFile=EmployeeLab.getInstanceOf(context).getEmpPhotoFile(this);
+        if (photoFile.exists())
+            photoFile.delete();
         MoneyLab.getInstanceOf(context).cleanseMoneyLogOfEmployeeId(mEmployeeId);
         EntryLab.getInstanceOf(context).cleanseEntriesOfEmployeeId(mEmployeeId);
     }

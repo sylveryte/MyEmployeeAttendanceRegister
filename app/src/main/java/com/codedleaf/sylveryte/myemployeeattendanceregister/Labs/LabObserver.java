@@ -1,5 +1,7 @@
 package com.codedleaf.sylveryte.myemployeeattendanceregister.Labs;
 
+import java.io.File;
+
 /**
  * Created by sylveryte on 12/6/16.
  *
@@ -11,4 +13,5 @@ package com.codedleaf.sylveryte.myemployeeattendanceregister.Labs;
 public interface LabObserver {
 
     void update();
+    void picassoAlert(String path);
 }

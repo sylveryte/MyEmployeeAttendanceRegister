@@ -343,6 +343,11 @@ public class DesignationFragment extends Fragment implements LabObserver,SearchV
         }
     }
 
+    @Override
+    public void picassoAlert(String path) {
+
+    }
+
     public static Fragment newInstance()
     {
         return new DesignationFragment();

@@ -5,7 +5,13 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.CursorWrapper;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Environment;
+import android.widget.ImageView;
 
+import com.codedleaf.sylveryte.myemployeeattendanceregister.CircleTransform;
+import com.codedleaf.sylveryte.myemployeeattendanceregister.R;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.SQLite.AttendanceBaseHelper;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.SQLite.AttendanceDbSchema;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.SQLite.AttendanceDbSchema.EmployeesTable;
@@ -13,7 +19,10 @@ import com.codedleaf.sylveryte.myemployeeattendanceregister.SQLite.AttendanceDbT
 import com.codedleaf.sylveryte.myemployeeattendanceregister.CodedleafTools;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.Models.Employee;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.Picknation.Pickable;
+import com.squareup.picasso.Picasso;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -30,14 +39,23 @@ public class EmployeeLab implements LabObeservable {
 
     private static EmployeeLab sEmployeeLab;
 
+    private static Bitmap sBitmapMale;
+    private static Bitmap sBitmapFemale;
+
+    private static final String MALE_KEY="derp";
+    private static final String FEMALE_KEY="derpina";
+
     private List<Employee> mEmployees;
     private List<LabObserver> mLabObservers;
 
 
     private SQLiteDatabase mDatabase;
 
+    private Context mContext;
+
     private EmployeeLab(Context context)
     {
+        mContext=context;
         mDatabase= AttendanceBaseHelper.getDatabaseWritable(context);
 
         mEmployees=new ArrayList<>();
@@ -63,7 +81,6 @@ public class EmployeeLab implements LabObeservable {
         }
     }
 
-
     public static EmployeeLab getInstanceOf(Context context)
     {
         if (sEmployeeLab==null)
@@ -73,17 +90,80 @@ public class EmployeeLab implements LabObeservable {
             sEmployeeLab.initializeDatabase(context);
 
 
-           /* //// TODO: 24/7/16 get rid of this
-            for (int i=0;i<15;i++)
-            {
-                Employee employee=new Employee();
-                employee.setName("Emp "+i*3);
-                employee.setMale(i%2==0);
-                employee.setAge(20+i);
-                sEmployeeLab.addEmployee(employee);
-            }*/
+            //// TODO: 24/7/16 get rid of this
+//            for (int i=0;i<20;i++)
+//            {
+//                Employee employee=new Employee();
+//                employee.setName("Emp "+i*3);
+//                employee.setMale(i%2==0);
+//                employee.setAge(20+i);
+//                sEmployeeLab.addEmployee(employee);
+//            }
         }
         return sEmployeeLab;
+    }
+
+    public boolean doesExist(Employee employee)
+    {
+        if (mEmployees.contains(employee))
+            return true;
+        return false;
+    }
+
+    public File getEmpPhotoFile(Employee employee)
+    {
+        File externalFilesDir=mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        if (externalFilesDir==null)
+            return null;
+        return new File(externalFilesDir,employee.getFileName());
+    }
+
+    public Bitmap getEmpPlaceHolder(Employee employee)
+    {
+        if (employee.isMale())
+        {
+//                sBitmapMale=BitmapFactory.decodeResource(mContext.getResources(), R.drawable.derp);
+            if (sBitmapMale==null)
+                try {
+                    sBitmapMale= Picasso.with(mContext)
+                            .load(R.drawable.derp)
+                            .transform(new CircleTransform())
+                            .get();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            return sBitmapMale;
+        }
+        else
+        {
+//                sBitmapFemale=BitmapFactory.decodeResource(mContext.getResources(), R.drawable.derpina);
+            if (sBitmapFemale==null)
+                try {
+                    sBitmapFemale= Picasso.with(mContext)
+                            .load(R.drawable.derpina)
+                            .transform(new CircleTransform())
+                            .get();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            return sBitmapFemale;
+        }
+    }
+
+    public void setEmpPlaceHolder(Employee employee, ImageView imageView)
+    {
+        if (employee.isMale())
+            Picasso.with(mContext)
+            .load(R.drawable.derp)
+            .stableKey(MALE_KEY)
+            .transform(new CircleTransform())
+            .into(imageView);
+        else
+            Picasso.with(mContext)
+                    .load(R.drawable.derpina)
+                    .stableKey(FEMALE_KEY)
+                    .transform(new CircleTransform())
+                    .into(imageView);
     }
 
     public List<Pickable> getPickables(List<UUID> empIds)
@@ -157,6 +237,11 @@ public class EmployeeLab implements LabObeservable {
             labObserver.update();
     }
 
+    public void invalidatePhotoCache(String path)
+    {
+        for (LabObserver labObserver:mLabObservers)
+            labObserver.picassoAlert(path);
+    }
 
     //database codes
 

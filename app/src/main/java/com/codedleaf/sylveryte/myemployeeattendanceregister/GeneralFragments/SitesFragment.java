@@ -410,6 +410,11 @@ public class SitesFragment extends Fragment implements LabObserver,SearchView.On
         }
     }
 
+    @Override
+    public void picassoAlert(String path) {
+
+    }
+
     public static Fragment newInstance()
     {
         return new SitesFragment();
