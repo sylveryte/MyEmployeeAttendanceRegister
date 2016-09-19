@@ -386,7 +386,6 @@ public class EmployeeFragment extends Fragment implements LabObserver,SearchView
             else
                 mCardView.setCardBackgroundColor(ContextCompat.getColor(getActivity(),R.color.colorEmployeeCardDeactivated));
 
-            //// TODO: 13/9/16 this to a service nigga
             File mPhotoFile=EmployeeLab.getInstanceOf(getContext()).getEmpPhotoFile(employee);
             if (mPhotoFile==null)
                 mPhotoFile=EmployeeLab.getInstanceOf(getContext()).getEmpPhotoFile(employee);

@@ -33,4 +33,5 @@ dependencies {
     compile 'com.github.PhilJay:MPAndroidChart:v3.0.0-beta1'
     compile 'com.roughike:bottom-bar:1.4.0.1'
     compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.kbeanie:image-chooser-library:1.5.8@aar'
 }

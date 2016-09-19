@@ -5,14 +5,11 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -22,10 +19,18 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.codedleaf.sylveryte.myemployeeattendanceregister.CircleTransform;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.CodedleafTools;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.Labs.EmployeeLab;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.Models.Employee;
 import com.codedleaf.sylveryte.myemployeeattendanceregister.R;
+import com.kbeanie.imagechooser.api.ChooserType;
+import com.kbeanie.imagechooser.api.ChosenImage;
+import com.kbeanie.imagechooser.api.ChosenImages;
+import com.kbeanie.imagechooser.api.ImageChooserListener;
+import com.kbeanie.imagechooser.api.ImageChooserManager;
+import com.kbeanie.imagechooser.exceptions.ChooserException;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.UUID;
@@ -38,11 +43,14 @@ import java.util.UUID;
  * This file is part of My Employee Attendance Register.
  *
  */
-public class EmployeeAdditionFragmentDialog extends DialogFragment{
+public class EmployeeAdditionFragmentDialog extends DialogFragment implements ImageChooserListener{
 
     private static final String ARGS_CODE="empargscode";
     private static final int TAKE_NEW_PICTURE=0;
     private static final int CHOOSE_FROM_GALLERY=1;
+
+    private static final int IMAGE_WIDTH=600;
+    private static final int IMAGE_HEIGHT=600;
 
     private EditText mName;
     private EditText mAddress;
@@ -60,7 +68,17 @@ public class EmployeeAdditionFragmentDialog extends DialogFragment{
 
     private File mPhotoFile;
 
-    private String mNewPhotoPath;
+    private String mNewFilePath;
+
+    private ImageChooserManager mImageChooserManager;
+    private String mediaPath;
+
+//    private String mNewPhotoPath;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     @NonNull
     @Override
@@ -143,7 +161,7 @@ public class EmployeeAdditionFragmentDialog extends DialogFragment{
 
     class ChooseButtonListner implements View.OnClickListener
     {
-        CharSequence options[]=new CharSequence[]{"Take New Photo","Choose from gallery","Remove Photo"};
+        CharSequence options[]=new CharSequence[]{"Take new Photo","Select from Gallery","Remove Photo"};
         @Override
         public void onClick(View v) {
             AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
@@ -165,18 +183,12 @@ public class EmployeeAdditionFragmentDialog extends DialogFragment{
                     {
                         case 0:
                         {
-                            //new pic
-                            Intent takePicture=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                            takePicture.putExtra(MediaStore.EXTRA_OUTPUT,Uri.fromFile(mPhotoFile));
-                            startActivityForResult(takePicture,TAKE_NEW_PICTURE);
+                            takePicture();
                             break;
                         }
                         case 1:
                         {
-                            //choose from gallery
-                            Intent chooseGallery=new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                            chooseGallery.putExtra(MediaStore.EXTRA_OUTPUT,Uri.fromFile(mPhotoFile));
-                            startActivityForResult(chooseGallery,CHOOSE_FROM_GALLERY);
+                            chooseImage();
                             break;
                         }
                         case 2:
@@ -185,7 +197,7 @@ public class EmployeeAdditionFragmentDialog extends DialogFragment{
                             {
                                 if (mPhotoFile.delete())
                                 {
-                                    mNewPhotoPath=null;
+                                    mNewFilePath=null;
                                     setPlaceHolderPhoto();
                                     Toast.makeText(getContext(),"Photo Removed",Toast.LENGTH_LONG)
                                         .show();
@@ -198,6 +210,41 @@ public class EmployeeAdditionFragmentDialog extends DialogFragment{
                 }
             });
             builder.show();
+        }
+    }
+
+   private void chooseImage()
+   {
+       mImageChooserManager=new ImageChooserManager(this,ChooserType.REQUEST_PICK_PICTURE,false);
+       mImageChooserManager.setImageChooserListener(this);
+       try {
+           mediaPath=mImageChooserManager.choose();
+       } catch (ChooserException e) {
+           e.printStackTrace();
+       }
+   }
+
+    private void takePicture()
+    {
+        mImageChooserManager=new ImageChooserManager(this, ChooserType.REQUEST_CAPTURE_PICTURE);
+        mImageChooserManager.setImageChooserListener(this);
+        try {
+            mediaPath=mImageChooserManager.choose();
+        } catch (ChooserException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            if (mImageChooserManager == null) {
+                mImageChooserManager = new ImageChooserManager(this, requestCode, true);
+                mImageChooserManager.setImageChooserListener(this);
+                mImageChooserManager.reinitialize(mediaPath);
+            }
+            mImageChooserManager.submit(requestCode, data);
         }
     }
 
@@ -240,8 +287,7 @@ public class EmployeeAdditionFragmentDialog extends DialogFragment{
                 return;
             }
         }
-
-        mImagePhoto.setImageBitmap(CodedleafTools.getScaledBitmap(mPhotoFile.getPath(),250,250));
+        setPhoto(mPhotoFile.getPath());
     }
 
     private void  saveEmployee(Employee employee)
@@ -253,8 +299,8 @@ public class EmployeeAdditionFragmentDialog extends DialogFragment{
         if (mPhotoFile==null)
             mPhotoFile=EmployeeLab.getInstanceOf(getContext()).getEmpPhotoFile(mEmployee);
 
-        if (mNewPhotoPath!=null)
-            new savePhoto().execute(new AsyncTaskParas(mNewPhotoPath,mPhotoFile));
+        if (mNewFilePath!=null)
+            new savePhoto().execute(new AsyncTaskParas(mNewFilePath,mPhotoFile));
         else
             invalidatePhoto();
 
@@ -299,30 +345,44 @@ public class EmployeeAdditionFragmentDialog extends DialogFragment{
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (resultCode==Activity.RESULT_OK)
-        {
-            if (data!=null)
-            {
-                mNewPhotoPath=data.getData().getPath();
-                setPhoto(mNewPhotoPath);
-            }
-            else
-            {
-                setPhoto(mPhotoFile.getPath());
-            }
-        }
+    public void onImageChosen(ChosenImage chosenImage) {
+        mNewFilePath=chosenImage.getFilePathOriginal();
+        setPhoto(mNewFilePath);
     }
 
-    private void setPhoto(String path) {
-        mImagePhoto.setImageBitmap(CodedleafTools.getScaledBitmap(path,250,250));
+    @Override
+    public void onError(String s) {
+    }
+
+    @Override
+    public void onImagesChosen(ChosenImages chosenImages) {
+        mNewFilePath=chosenImages.getImage(0).getFilePathOriginal();
+        setPhoto(mNewFilePath);
+        Toast.makeText(getContext(),"How did this happen?",Toast.LENGTH_SHORT)
+                .show();
+    }
+
+    private void setPhoto(final String newFilePath)
+    {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+//                Picasso.with(getContext())
+//                        .load(newFilePath)
+//                        .resize(450,450)
+//                        .transform(new CircleTransform())
+//                        .centerCrop()
+//                        .centerInside()
+//                        .into(mImagePhoto);
+                mImagePhoto.setImageBitmap(CodedleafTools.getScaledBitmap(newFilePath,250,250));
+            }
+        });
+
     }
 
     @Override
     public void onDestroy() {
-        super.onDestroyView();
+        super.onDestroy();
         if (mEmployee!=null)
             if (!EmployeeLab.getInstanceOf(getContext()).doesExist(mEmployee))
             {

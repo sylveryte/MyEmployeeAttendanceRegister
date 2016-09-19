@@ -183,8 +183,31 @@ public class CodedleafTools {
             dst.transferFrom(src,0,src.size());
             src.close();
             dst.close();
+            if (source.exists())
+                source.delete();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public static void saveFile(Bitmap bitmap,File file)
+    {
+        FileOutputStream outputStream = null;
+
+        try {
+            outputStream=new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.JPEG,100,outputStream);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        finally {
+            if (outputStream != null) {
+                try {
+                    outputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
